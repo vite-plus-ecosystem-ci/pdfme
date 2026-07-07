@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { containsCJK, detectCJKInTemplate, detectCJKInInputs } from '../src/cjk-detect.js';
 
 describe('containsCJK', () => {
