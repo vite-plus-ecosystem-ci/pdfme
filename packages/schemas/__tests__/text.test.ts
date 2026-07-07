@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, vi } from 'vitest';
+import { afterEach, vi } from 'vite-plus/test';
 import type { Font as FontKitFont } from 'fontkit';
 import { Font, getDefaultFont, mm2pt } from '@pdfme/common';
 import type { BasePdf, PropPanelSchema, PropPanelWidgetProps } from '@pdfme/common';
