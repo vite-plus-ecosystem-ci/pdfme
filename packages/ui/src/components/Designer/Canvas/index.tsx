@@ -42,12 +42,20 @@ const fmt = (prop: string) => round(fmt4Num(prop) / ZOOM, 2);
 const isTopLeftResize = (d: string) => d === '-1,-1' || d === '-1,0' || d === '0,-1';
 const normalizeRotate = (angle: number) => ((angle % 360) + 360) % 360;
 
-const DeleteButton = ({ activeElements: aes }: { activeElements: HTMLElement[] }) => {
+const DeleteButton = ({
+  activeElements: aes,
+  controlScale,
+}: {
+  activeElements: HTMLElement[];
+  controlScale: number;
+}) => {
   const { token } = theme.useToken();
 
   const size = 26;
   const top = Math.min(...aes.map(({ style }) => fmt4Num(style.top)));
-  const left = Math.max(...aes.map(({ style }) => fmt4Num(style.left) + fmt4Num(style.width))) + 10;
+  const left =
+    Math.max(...aes.map(({ style }) => fmt4Num(style.left) + fmt4Num(style.width))) +
+    10 * controlScale;
 
   return (
     <Button
@@ -67,6 +75,8 @@ const DeleteButton = ({ activeElements: aes }: { activeElements: HTMLElement[] }
         borderRadius: token.borderRadius,
         color: token.colorWhite,
         background: token.colorPrimary,
+        transform: `scale(${controlScale})`,
+        transformOrigin: 'top left',
       }}
     >
       <X style={{ pointerEvents: 'none' }} />
@@ -126,6 +136,7 @@ const Canvas = (props: Props, ref: Ref<HTMLDivElement>) => {
   const verticalGuides = useRef<GuidesInterface[]>([]);
   const horizontalGuides = useRef<GuidesInterface[]>([]);
   const moveable = useRef<MoveableComponent>(null);
+  const controlScale = scale > 0 ? 1 / scale : 1;
 
   const [isPressShiftKey, setIsPressShiftKey] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -429,7 +440,7 @@ const Canvas = (props: Props, ref: Ref<HTMLDivElement>) => {
         renderPaper={({ index, paperSize }) => (
           <>
             {!editing && activeElements.length > 0 && pageCursor === index && (
-              <DeleteButton activeElements={activeElements} />
+              <DeleteButton activeElements={activeElements} controlScale={controlScale} />
             )}
             <Padding basePdf={basePdf} />
             <StaticSchema
@@ -460,6 +471,7 @@ const Canvas = (props: Props, ref: Ref<HTMLDivElement>) => {
                 <Moveable
                   ref={moveable}
                   target={activeElements}
+                  controlScale={controlScale}
                   bounds={{ left: 0, top: 0, bottom: paperSize.height, right: paperSize.width }}
                   horizontalGuidelines={getGuideLines(horizontalGuides.current, index)}
                   verticalGuidelines={getGuideLines(verticalGuides.current, index)}

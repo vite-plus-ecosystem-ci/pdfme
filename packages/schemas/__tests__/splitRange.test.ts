@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import {
   BUILT_IN_DYNAMIC_LAYOUT_SPLIT_UNITS,
   LIST_ITEM_SPLIT_UNIT,

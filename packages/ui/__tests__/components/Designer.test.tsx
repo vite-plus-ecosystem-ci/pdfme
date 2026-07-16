@@ -83,6 +83,50 @@ test('Designer keeps toolbar zoom interactive when options.zoomLevel is only an 
   });
 });
 
+test('Designer keeps canvas controls at a constant screen size when zoomed', async () => {
+  setupUIMock();
+  const { container } = render(
+    <I18nContext.Provider value={i18n}>
+      <FontContext.Provider value={getDefaultFont()}>
+        <PluginsRegistry.Provider value={pluginRegistry(plugins)}>
+          <OptionsContext.Provider value={{ zoomLevel: 3, maxZoom: 400 }}>
+            <Designer
+              template={getSampleTemplate()}
+              onSaveTemplate={console.log}
+              onChangeTemplate={console.log}
+              size={{ width: 1200, height: 1200 }}
+              onPageCursorChange={() => undefined}
+            />
+          </OptionsContext.Provider>
+        </PluginsRegistry.Provider>
+      </FontContext.Provider>
+    </I18nContext.Provider>,
+  );
+
+  await waitFor(() => {
+    expect(container).toHaveTextContent('300%');
+  });
+
+  const moveable = container.querySelector('.moveable-control-box') as HTMLDivElement;
+  expect(Number(moveable.style.getPropertyValue('--zoom'))).toBeCloseTo(1 / 3);
+
+  const schema = container.querySelector(`.${SELECTABLE_CLASSNAME}`) as HTMLDivElement;
+  fireEvent.mouseDown(schema);
+  fireEvent.mouseUp(schema);
+
+  const deleteButton = await waitFor(() => {
+    const button = container.querySelector(
+      `.${DESIGNER_CLASSNAME}delete-button`,
+    ) as HTMLButtonElement | null;
+    expect(button).toBeInTheDocument();
+    return button!;
+  });
+
+  expect(deleteButton.style.transform).toBe(`scale(${1 / 3})`);
+  const schemaRight = Number.parseFloat(schema.style.left) + Number.parseFloat(schema.style.width);
+  expect(Number.parseFloat(deleteButton.style.left) - schemaRight).toBeCloseTo(10 / 3);
+});
+
 test('Designer does not reapply options.zoomLevel when changing pages', async () => {
   setupUIMock(2);
   const { container } = render(

@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite-plus';
 
 const repoRoot = path.dirname(fileURLToPath(import.meta.url));
 const workspaceRoot = process.cwd();
