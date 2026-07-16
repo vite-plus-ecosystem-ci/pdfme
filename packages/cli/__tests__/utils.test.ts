@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { PAGE_SIZE_PRESETS } from '@pdfme/common';
 import { detectPaperSize, parsePageRange, getImageOutputPaths } from '../src/utils.js';
 

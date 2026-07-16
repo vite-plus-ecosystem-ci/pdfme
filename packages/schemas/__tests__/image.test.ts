@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { PDFDocument } from '@pdfme/pdf-lib';
 import * as pdfLib from '@pdfme/pdf-lib';
 import { BLANK_PDF, type Schema, type PDFRenderProps } from '@pdfme/common';

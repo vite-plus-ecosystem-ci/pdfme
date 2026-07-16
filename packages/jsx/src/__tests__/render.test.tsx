@@ -1,5 +1,5 @@
 /** @jsxImportSource @pdfme/jsx */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { isBlankPdf, PAGE_SIZE_PRESETS } from '@pdfme/common';
 
 import {
