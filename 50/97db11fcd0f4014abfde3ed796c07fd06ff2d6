@@ -1,0 +1,115 @@
+.npmrc
+  s_0ac33e64701c66::t_5a7196fdbc3789 3-4
+package.json
+  s_0ac33e64701c66::t_39acfab47a310d 64-66,69-73
+packages/cli/__tests__/cjk-detect.test.ts
+  s_b97fe1ab1e5874::t_2de02959e0ccef 1
+packages/cli/__tests__/contract.test.ts
+  s_b97fe1ab1e5874::t_68d1f3e2960226 1
+packages/cli/__tests__/doctor.test.ts
+  s_b97fe1ab1e5874::t_7ab61d1bbfd98c 1
+packages/cli/__tests__/generate.test.ts
+  s_b97fe1ab1e5874::t_729c34bc2b8df4 1
+packages/cli/__tests__/offline.test.ts
+  s_b97fe1ab1e5874::t_0934764489548e 1
+packages/cli/__tests__/pdf2img.test.ts
+  s_b97fe1ab1e5874::t_bcbeaf535f4194 1
+packages/cli/__tests__/pdf2size.test.ts
+  s_b97fe1ab1e5874::t_1132f7dcd93184 1
+packages/cli/__tests__/schema-plugins.test.ts
+  s_b97fe1ab1e5874::t_250a2585f6454e 1
+packages/cli/__tests__/utils.test.ts
+  s_b97fe1ab1e5874::t_7ede1c5461cc48 1
+packages/cli/__tests__/validate.test.ts
+  s_b97fe1ab1e5874::t_d3557fbced33d9 1
+packages/cli/__tests__/version.test.ts
+  s_b97fe1ab1e5874::t_3df3362533ccb1 1
+packages/cli/package.json
+  s_b97fe1ab1e5874::t_ad318c40938be3 43-44,49
+packages/cli/vite.config.mts
+  s_b97fe1ab1e5874::t_691cae53251ea7 5
+packages/common/__tests__/pageSize.test.ts
+  s_b97fe1ab1e5874::t_444b9651f303a5 1
+packages/common/__tests__/splitRange.test.ts
+  s_b97fe1ab1e5874::t_deea2a480501ff 1
+packages/common/package.json
+  s_b97fe1ab1e5874::t_28ca6e62b72334 43-44,48
+packages/common/vite.config.mts
+  s_b97fe1ab1e5874::t_6ea3e629dbc8b2 5
+packages/converter/package.json
+  s_b97fe1ab1e5874::t_fd7fcc869c098e 50-51,55
+packages/converter/vite.config.mts
+  s_b97fe1ab1e5874::t_85a8a609949c73 5
+packages/generator/package.json
+  s_b97fe1ab1e5874::t_e790d229a2c97a 43-44,48-49
+packages/generator/vite.config.mts
+  s_b97fe1ab1e5874::t_ad48f05f0df464 5
+packages/jsx/package.json
+  s_b97fe1ab1e5874::t_aa4ff6ecb90d72 52-53,57
+packages/jsx/src/__tests__/render.test.tsx
+  s_0ac33e64701c66::t_2aa956accd5608 2
+packages/jsx/vite.config.mts
+  s_b97fe1ab1e5874::t_74dc17a1cb6360 5
+packages/manipulator/package.json
+  s_b97fe1ab1e5874::t_8789151020bdd8 43-44,48-49
+packages/manipulator/vite.config.mts
+  s_b97fe1ab1e5874::t_87b43855864bee 5
+packages/pdf-lib/package.json
+  s_b97fe1ab1e5874::t_f316c2fecf0c35 50-51,55
+packages/pdf-lib/vite.config.mts
+  s_b97fe1ab1e5874::t_ce3da2be89a140 5
+packages/schemas/__tests__/builtins.test.ts
+  s_b97fe1ab1e5874::t_0c0f28181644b4 1
+packages/schemas/__tests__/circleMark.test.ts
+  s_b97fe1ab1e5874::t_ae3a0b13552ac8 3
+packages/schemas/__tests__/image.test.ts
+  s_b97fe1ab1e5874::t_57ce6cc33040bd 1
+packages/schemas/__tests__/signature.test.ts
+  s_b97fe1ab1e5874::t_dcb712603299d6 3
+packages/schemas/__tests__/splitRange.test.ts
+  s_b97fe1ab1e5874::t_243fd3a172a96c 1
+packages/schemas/__tests__/text.test.ts
+  s_b97fe1ab1e5874::t_c8e3010ed256f6 4
+packages/schemas/package.json
+  s_b97fe1ab1e5874::t_96223462338450 78-79,83
+packages/schemas/vite.config.mts
+  s_b97fe1ab1e5874::t_2718d5f6c632bd 5
+packages/ui/__tests__/designerSelection.test.ts
+  s_b97fe1ab1e5874::t_2a3e4f6db7c83e 2
+packages/ui/__tests__/schemaChangeHelpers.test.ts
+  s_b97fe1ab1e5874::t_f3207fe8dd9d89 2
+packages/ui/package.json
+  s_0ac33e64701c66::t_2413a52b574cd0 43-44,48,76
+packages/ui/vite.config.mts
+  s_b97fe1ab1e5874::t_5e1ab669605011 4
+packages/ui/vitest.setup.ts
+  s_b97fe1ab1e5874::t_1eebdacb07facd 4
+playground/vite.config.ts
+  s_b97fe1ab1e5874::t_2cfa12a3d73398 2
+vitest.config.ts
+  s_b97fe1ab1e5874::t_6fa8e59358df4f 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "5097db11fcd0f4014abfde3ed796c07fd06ff2d6",
+  "prompts": {},
+  "sessions": {
+    "s_0ac33e64701c66": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_075d29060ffezQSiOhstWcng5h",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "wan9chi <dk4rest@gmail.com>"
+    },
+    "s_b97fe1ab1e5874": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_075d290f1ffe502H7K9poEoQXv",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "wan9chi <dk4rest@gmail.com>"
+    }
+  }
+}
