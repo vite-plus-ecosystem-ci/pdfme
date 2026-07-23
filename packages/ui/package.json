@@ -73,7 +73,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
     "csstype": "^3.2.3",
-    "vite": "npm:@voidzero-dev/vite-plus-core@0.0.0-commit.9855245a469b178066c25a5d45c971c130565d89",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.0.0-commit.57939439ddcb16d9f54ebf7d41432893182ee46d",
     "vite-plugin-css-injected-by-js": "^5.0.1",
     "vite-tsconfig-paths": "^6.1.1"
   },
