@@ -1,0 +1,21 @@
+package.json
+  s_8488ca7249237e::t_2034d5ed4a8f04 64-65,71
+packages/ui/package.json
+  s_8488ca7249237e::t_799a6307aea8e1 76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "563fac01f646931ce380e7338fe2bbd85929a555",
+  "prompts": {},
+  "sessions": {
+    "s_8488ca7249237e": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_073404b88ffeMxxuMNXPhVDw4Y",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "wan9chi <dk4rest@gmail.com>"
+    }
+  }
+}
