@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
-import { PDFDocument } from '@pdfme/pdf-lib';
-import * as pdfLib from '@pdfme/pdf-lib';
-import { BLANK_PDF, type Schema, type PDFRenderProps } from '@pdfme/common';
-import { image } from '../src/index.js';
+import { describe, it, expect } from "vite-plus/test";
+import { PDFDocument } from "@pdfme/pdf-lib";
+import * as pdfLib from "@pdfme/pdf-lib";
+import { BLANK_PDF, type Schema, type PDFRenderProps } from "@pdfme/common";
+import { image } from "../src/index.js";
 
-describe('image plugin memory-safety', () => {
-  it('does not pin the full base64 input as a cache key', async () => {
+describe("image plugin memory-safety", () => {
+  it("does not pin the full base64 input as a cache key", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
     const _cache = new Map<string | number, unknown>();
@@ -14,12 +14,12 @@ describe('image plugin memory-safety', () => {
     // embedPng to succeed so the render path reaches the cache; the
     // cache key is derived from `value` regardless of image size.
     const minimalPng =
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1J' +
-      'REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=';
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1J" +
+      "REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=";
 
     const schema = {
-      name: 'pic',
-      type: 'image',
+      name: "pic",
+      type: "image",
       content: minimalPng,
       position: { x: 0, y: 0 },
       width: 50,
@@ -51,32 +51,32 @@ describe('image plugin memory-safety', () => {
     expect(keys[0].length).toBeLessThan(100);
     // Schema type must still be part of the key so different plugins
     // can't collide on the same shared cache Map.
-    expect(keys[0].startsWith('image')).toBe(true);
+    expect(keys[0].startsWith("image")).toBe(true);
     // Same input hitting the cache a second time must be a cache hit, not
     // a new entry — proves the fingerprint is deterministic.
     await image.pdf(arg);
     expect([...(_cache.keys() as Iterable<string>)].length).toBe(1);
   });
 
-  it('distinguishes different images via the fingerprint', async () => {
+  it("distinguishes different images via the fingerprint", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
     const _cache = new Map<string | number, unknown>();
 
     const pngA =
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1J' +
-      'REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=';
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1J" +
+      "REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=";
     // Same size/header/trailer shape as pngA but different middle bytes —
     // the fingerprint must still distinguish them. Because the key is a
     // hash over every byte, any differing byte flips the hash with
     // overwhelming probability.
     const pngB =
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAD8S7TTAAAAAXNSR0IArs4c6QAAAA1J' +
-      'REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=';
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAD8S7TTAAAAAXNSR0IArs4c6QAAAA1J" +
+      "REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=";
 
     const base = {
-      name: 'pic',
-      type: 'image',
+      name: "pic",
+      type: "image",
       position: { x: 0, y: 0 },
       width: 50,
       height: 50,
