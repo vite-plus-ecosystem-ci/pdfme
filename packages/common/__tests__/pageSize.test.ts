@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { PAGE_SIZE_PRESETS, detectPaperSize, resolvePageSize } from '../src/index.js';
 
 describe('resolvePageSize', () => {
