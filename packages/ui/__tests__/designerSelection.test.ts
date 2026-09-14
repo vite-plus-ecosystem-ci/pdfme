@@ -1,10 +1,7 @@
 import assert from 'node:assert/strict';
-import { describe, it } from 'vitest';
+import { describe, it } from 'vite-plus/test';
 import type { SchemaForUI } from '@pdfme/common';
-import {
-  createDesignerSelection,
-  getSelectedSchemaIds,
-} from '../src/designerSelection.js';
+import { createDesignerSelection, getSelectedSchemaIds } from '../src/designerSelection.js';
 
 const schema = (id: string, name: string, position = { x: 10, y: 20 }): SchemaForUI => ({
   content: '',

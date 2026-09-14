@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { join, dirname, resolve } from 'node:path';
 import { writeFileSync, mkdirSync, rmSync, existsSync, readFileSync } from 'node:fs';
@@ -199,7 +199,9 @@ describe('generate command', () => {
 
     expect(result.exitCode).toBe(0);
     const output = readFileSync(join(workDir, 'out-1.png'));
-    expect(Array.from(output.subarray(0, 8))).toEqual([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    expect(Array.from(output.subarray(0, 8))).toEqual([
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+    ]);
   });
 
   it('returns structured JSON for argument validation failures', () => {

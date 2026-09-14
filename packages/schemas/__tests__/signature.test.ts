@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BLANK_PDF, Schema } from '@pdfme/common';
 import { image, signature } from '../src/index.js';
 
@@ -116,11 +116,15 @@ describe('signature plugin', () => {
       _cache: new Map(),
     });
 
-    expect(rootElement.textContent).toContain('Invalid saved signature data. Clear and sign again.');
+    expect(rootElement.textContent).toContain(
+      'Invalid saved signature data. Clear and sign again.',
+    );
 
     rootElement.querySelector('button')?.click();
 
     expect(onChange).toHaveBeenCalledWith({ key: 'content', value: '' });
-    expect(rootElement.textContent).not.toContain('Invalid saved signature data. Clear and sign again.');
+    expect(rootElement.textContent).not.toContain(
+      'Invalid saved signature data. Clear and sign again.',
+    );
   });
 });

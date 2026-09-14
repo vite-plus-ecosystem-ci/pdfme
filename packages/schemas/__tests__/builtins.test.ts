@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { builtInPlugins, circleMark, text } from '../src/index.js';
 
 describe('builtInPlugins', () => {
