@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { writeFileSync, mkdirSync, rmSync } from 'node:fs';
@@ -63,10 +63,14 @@ describe('pdf2img command', () => {
     pdfDoc.addPage([595.28, 841.89]);
     writeFileSync(pdfPath, await pdfDoc.save());
 
-    const result = spawnSync('node', [CLI, 'pdf2img', pdfPath, '-o', outputDir, '--verbose', '--json'], {
-      encoding: 'utf8',
-      timeout: 30000,
-    });
+    const result = spawnSync(
+      'node',
+      [CLI, 'pdf2img', pdfPath, '-o', outputDir, '--verbose', '--json'],
+      {
+        encoding: 'utf8',
+        timeout: 30000,
+      },
+    );
 
     expect(result.status).toBe(0);
     const parsed = JSON.parse(result.stdout);

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { writeFileSync, mkdirSync, rmSync, chmodSync } from 'node:fs';
@@ -1411,14 +1411,7 @@ describe('doctor command', () => {
       }),
     );
 
-    const result = runCli([
-      'doctor',
-      file,
-      '-o',
-      outputPath,
-      '--image',
-      '--json',
-    ]);
+    const result = runCli(['doctor', file, '-o', outputPath, '--image', '--json']);
 
     expect(result.exitCode).toBe(0);
     const parsed = JSON.parse(result.stdout);
@@ -1633,15 +1626,7 @@ describe('doctor command', () => {
     );
 
     const result = runCli(
-      [
-        'doctor',
-        'fonts',
-        'job.json',
-        '-o',
-        'output.pdf',
-        '--image',
-        '--json',
-      ],
+      ['doctor', 'fonts', 'job.json', '-o', 'output.pdf', '--image', '--json'],
       { cwd: workDir },
     );
 

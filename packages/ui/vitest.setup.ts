@@ -1,9 +1,12 @@
 import { TextDecoder, TextEncoder } from 'node:util';
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import { afterEach, vi } from 'vitest';
+import { afterEach, vi } from 'vite-plus/test';
 
-if (typeof globalThis.TextDecoder === 'undefined' || typeof globalThis.TextEncoder === 'undefined') {
+if (
+  typeof globalThis.TextDecoder === 'undefined' ||
+  typeof globalThis.TextEncoder === 'undefined'
+) {
   Object.assign(globalThis, { TextDecoder, TextEncoder });
 }
 

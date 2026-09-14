@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, vi } from 'vitest';
+import { afterEach, vi } from 'vite-plus/test';
 import type { Font as FontKitFont } from 'fontkit';
 import { Font, getDefaultFont, mm2pt } from '@pdfme/common';
 import type { BasePdf, PropPanelSchema, PropPanelWidgetProps } from '@pdfme/common';
@@ -305,10 +305,7 @@ describe('text prop panel', () => {
       basePdf: { width: 210, height: 297, padding: [10, 10, 10, 10] },
     });
 
-    expect(getOverflowOptionValues(schema)).toEqual([
-      TEXT_OVERFLOW_VISIBLE,
-      TEXT_OVERFLOW_EXPAND,
-    ]);
+    expect(getOverflowOptionValues(schema)).toEqual([TEXT_OVERFLOW_VISIBLE, TEXT_OVERFLOW_EXPAND]);
   });
 
   it('hides overflow expand for custom basePdf', () => {
@@ -325,10 +322,7 @@ describe('text prop panel', () => {
       activeSchema: { type: 'select' },
     });
 
-    expect(getOverflowOptionValues(schema)).toEqual([
-      TEXT_OVERFLOW_VISIBLE,
-      TEXT_OVERFLOW_EXPAND,
-    ]);
+    expect(getOverflowOptionValues(schema)).toEqual([TEXT_OVERFLOW_VISIBLE, TEXT_OVERFLOW_EXPAND]);
   });
 
   it('keeps dynamic font size controls enabled when custom basePdf has stale overflow expand', () => {
@@ -963,7 +957,7 @@ describe('calculateDynamicFontSize with Default font', () => {
     textSchema.dynamicFontSize = { min: 10, max: 30, fit: 'vertical' };
     const value = 'test with a length string\n and a new line';
     const startingFontSize = 18;
-    const result = calculateDynamicFontSize({textSchema, fontKitFont, value, startingFontSize});
+    const result = calculateDynamicFontSize({ textSchema, fontKitFont, value, startingFontSize });
 
     expect(result).toBe(19.25);
   });
@@ -973,7 +967,7 @@ describe('calculateDynamicFontSize with Default font', () => {
     textSchema.dynamicFontSize = { min: 10, max: 30, fit: 'horizontal' };
     const value = 'test with a length string\n and a new line';
     const startingFontSize = 36;
-    const result = calculateDynamicFontSize({textSchema, fontKitFont, value, startingFontSize});
+    const result = calculateDynamicFontSize({ textSchema, fontKitFont, value, startingFontSize });
 
     expect(result).toBe(11.25);
   });
@@ -993,7 +987,6 @@ describe('calculateDynamicFontSize with Custom font', () => {
   beforeAll(async () => {
     fontKitFont = await getFontKitFont('SauceHanSansJP', getSampleFont(), new Map());
   });
-
 
   it('should return smaller font size when dynamicFontSizeSetting is provided with horizontal fit', async () => {
     const textSchema = getTextSchema();
@@ -1044,7 +1037,7 @@ describe('calculateDynamicFontSize with Custom font', () => {
 describe('getFontDescentInPt test', () => {
   test('it gets a descent size relative to the font size', () => {
     expect(getFontDescentInPt({ descent: -400, unitsPerEm: 1000 } as FontKitFont, 12)).toBe(
-      -4.800000000000001
+      -4.800000000000001,
     );
     expect(getFontDescentInPt({ descent: 54, unitsPerEm: 1000 } as FontKitFont, 20)).toBe(1.08);
     expect(getFontDescentInPt({ descent: -512, unitsPerEm: 2048 } as FontKitFont, 54)).toBe(-13.5);

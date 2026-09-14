@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { describe, it } from 'vitest';
+import { describe, it } from 'vite-plus/test';
 import type { ChangeSchemaItem, SchemaForUI } from '@pdfme/common';
 import {
   expandSameTypeBulkUpdateChanges,
@@ -37,9 +37,7 @@ describe('schema change helpers', () => {
 
   it('expands bulk-safe active schema changes to the same-type selection', () => {
     const activeSchema = schema('field-1');
-    const changes: ChangeSchemaItem[] = [
-      { key: 'fontSize', value: 14, schemaId: activeSchema.id },
-    ];
+    const changes: ChangeSchemaItem[] = [{ key: 'fontSize', value: 14, schemaId: activeSchema.id }];
 
     assert.deepEqual(
       expandSameTypeBulkUpdateChanges({
