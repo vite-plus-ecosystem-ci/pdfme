@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vite-plus/test';
 import { BLANK_PDF, mm2pt, type PDFRenderProps, type UIRenderProps } from '@pdfme/common';
 import * as pdfLib from '@pdfme/pdf-lib';
 import { circleMark } from '../src/index.js';

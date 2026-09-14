@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { createDynamicLayoutSplitRange, getDynamicLayoutSplitRange } from '../src/index.js';
 import { Schema } from '../src/schema.js';
 

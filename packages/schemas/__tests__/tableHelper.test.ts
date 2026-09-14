@@ -1,6 +1,6 @@
 import { getDefaultFont } from '@pdfme/common';
 import type { Schema } from '@pdfme/common';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { createSingleTable } from '../src/tables/tableHelper.js';
 import type { TableSchema } from '../src/tables/types.js';
 
