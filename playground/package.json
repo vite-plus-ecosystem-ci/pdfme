@@ -48,9 +48,13 @@
     "puppeteer": "^25.9.0",
     "tailwindcss": "^4.2.4",
     "typescript": "^7.0.2",
-    "vite": "^8.0.3",
-    "vite-plus": "^0.3.0",
-    "vitest": "^4.1.10",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.0.0-commit.134033efc595ae5efab9df5c177a9ae20904a5d9",
+    "vite-plus": "0.0.0-commit.134033efc595ae5efab9df5c177a9ae20904a5d9",
+    "vitest": "5.0.1",
     "vitest-image-snapshot": "^0.6.52"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.0.0-commit.134033efc595ae5efab9df5c177a9ae20904a5d9",
+    "vitest": "5.0.1"
   }
 }
