@@ -1,5 +1,5 @@
 import { DEFAULT_FONT_NAME, getDefaultFont, mm2pt, pt2mm, type Schema } from '@pdfme/common';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { createBoxDimension, getBoxContentArea, getBoxVerticalInset } from '../src/box.js';
 import { Cell } from '../src/tables/classes.js';
 import { createSingleTable } from '../src/tables/tableHelper.js';
