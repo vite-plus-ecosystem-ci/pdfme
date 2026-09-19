@@ -40,13 +40,13 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "vite build --watch",
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "dev": "vp build --watch",
+    "build": "vp build && tsc -p tsconfig.build.json",
     "clean": "rimraf dist",
     "lint": "vp lint -c ../../.oxlintrc.json src",
     "fmt": "vp fmt -c ../../.oxfmtrc.json src --write",
-    "test": "vitest run --config ../../vitest.config.ts",
-    "test:update-snapshots": "vitest run --config ../../vitest.config.ts -u"
+    "test": "vp test run --config ../../vitest.config.ts",
+    "test:update-snapshots": "vp test run --config ../../vitest.config.ts -u"
   },
   "dependencies": {
     "@pdfme/pdf-lib": "*",
