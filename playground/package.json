@@ -12,9 +12,9 @@
     "copy-vercel-config": "node -e \"require('fs').copyFileSync('vercel.json', 'dist/vercel.json')\"",
     "generate-template-assets": "node scripts/generate-authoring-starter-assets.mjs && node scripts/generate-templates-list-json.mjs && node scripts/generate-templates-thumbnail.mjs",
     "test:exports": "node scripts/verify-package-exports.mjs",
-    "test": "npm run test:exports && vitest run --config ../vitest.config.ts",
-    "test:update-snapshots": "npm run test:exports && vitest run --config ../vitest.config.ts -u",
-    "test:local": "npm run test:exports && LOCAL=true vitest run --config ../vitest.config.ts"
+    "test": "npm run test:exports && vp test run --config ../vitest.config.ts",
+    "test:update-snapshots": "npm run test:exports && vp test run --config ../vitest.config.ts -u",
+    "test:local": "npm run test:exports && LOCAL=true vp test run --config ../vitest.config.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.10",
@@ -48,9 +48,13 @@
     "puppeteer": "^25.9.0",
     "tailwindcss": "^4.2.4",
     "typescript": "^7.0.2",
-    "vite": "^8.0.3",
-    "vite-plus": "^0.3.0",
-    "vitest": "^4.1.10",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.0.0-commit.6b26ec56e76df770e2aa5ad78571d42d20b5383c",
+    "vite-plus": "0.0.0-commit.6b26ec56e76df770e2aa5ad78571d42d20b5383c",
+    "vitest": "5.0.1",
     "vitest-image-snapshot": "^0.6.52"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.0.0-commit.6b26ec56e76df770e2aa5ad78571d42d20b5383c",
+    "vitest": "5.0.1"
   }
 }
