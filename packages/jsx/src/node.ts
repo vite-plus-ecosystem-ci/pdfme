@@ -1,18 +1,18 @@
-import type { BuiltinKind, PdfJsxChild, PdfJsxElement, PdfJsxFragment } from './types.js';
+import type { BuiltinKind, PdfJsxChild, PdfJsxElement, PdfJsxFragment } from "./types.js";
 
-export const Fragment = Symbol.for('@pdfme/jsx.fragment');
+export const Fragment = Symbol.for("@pdfme/jsx.fragment");
 
 export const isPdfJsxElement = (value: unknown): value is PdfJsxElement =>
-  typeof value === 'object' &&
+  typeof value === "object" &&
   value !== null &&
-  'kind' in value &&
-  typeof (value as { kind?: unknown }).kind === 'string';
+  "kind" in value &&
+  typeof (value as { kind?: unknown }).kind === "string";
 
 export const isPdfJsxFragment = (value: unknown): value is PdfJsxFragment =>
-  typeof value === 'object' &&
+  typeof value === "object" &&
   value !== null &&
-  'kind' in value &&
-  (value as { kind?: unknown }).kind === 'fragment';
+  "kind" in value &&
+  (value as { kind?: unknown }).kind === "fragment";
 
 export const normalizeChildren = (children: unknown): PdfJsxChild[] => {
   if (children === undefined) return [];
@@ -37,7 +37,7 @@ export const createFragmentNode = (
   rawProps: Record<string, unknown> | null | undefined,
   key?: string | number | null,
 ): PdfJsxFragment => ({
-  kind: 'fragment',
+  kind: "fragment",
   children: normalizeChildren(rawProps?.children),
   key,
 });

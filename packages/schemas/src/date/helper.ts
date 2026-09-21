@@ -1,48 +1,48 @@
-import type * as CSS from 'csstype';
+import type * as CSS from "csstype";
 
-import AirDatepicker from 'air-datepicker';
-import type { AirDatepickerLocale, AirDatepickerButton, AirDatepickerDate } from 'air-datepicker';
-import localeAr from 'air-datepicker/locale/ar';
-import localeBg from 'air-datepicker/locale/bg';
-import localeCa from 'air-datepicker/locale/ca';
-import localeCs from 'air-datepicker/locale/cs';
-import localeDa from 'air-datepicker/locale/da';
-import localeDe from 'air-datepicker/locale/de';
-import localeEl from 'air-datepicker/locale/el';
-import localeEn from 'air-datepicker/locale/en';
-import localeEs from 'air-datepicker/locale/es';
-import localeEu from 'air-datepicker/locale/eu';
-import localeFi from 'air-datepicker/locale/fi';
-import localeFr from 'air-datepicker/locale/fr';
-import localeHr from 'air-datepicker/locale/hr';
-import localeHu from 'air-datepicker/locale/hu';
-import localeId from 'air-datepicker/locale/id';
-import localeIt from 'air-datepicker/locale/it';
-import localeJa from 'air-datepicker/locale/ja';
-import localeKo from 'air-datepicker/locale/ko';
-import localeNb from 'air-datepicker/locale/nb';
-import localeNl from 'air-datepicker/locale/nl';
-import localeTh from 'air-datepicker/locale/th';
-import localePl from 'air-datepicker/locale/pl';
-import localePtBR from 'air-datepicker/locale/pt-BR';
-import localePt from 'air-datepicker/locale/pt';
-import localeRo from 'air-datepicker/locale/ro';
-import localeRu from 'air-datepicker/locale/ru';
-import localeSi from 'air-datepicker/locale/si';
-import localeSk from 'air-datepicker/locale/sk';
-import localeSl from 'air-datepicker/locale/sl';
-import localeSv from 'air-datepicker/locale/sv';
-import localeTr from 'air-datepicker/locale/tr';
-import localeUk from 'air-datepicker/locale/uk';
-import localeZh from 'air-datepicker/locale/zh';
+import AirDatepicker from "air-datepicker";
+import type { AirDatepickerLocale, AirDatepickerButton, AirDatepickerDate } from "air-datepicker";
+import localeAr from "air-datepicker/locale/ar";
+import localeBg from "air-datepicker/locale/bg";
+import localeCa from "air-datepicker/locale/ca";
+import localeCs from "air-datepicker/locale/cs";
+import localeDa from "air-datepicker/locale/da";
+import localeDe from "air-datepicker/locale/de";
+import localeEl from "air-datepicker/locale/el";
+import localeEn from "air-datepicker/locale/en";
+import localeEs from "air-datepicker/locale/es";
+import localeEu from "air-datepicker/locale/eu";
+import localeFi from "air-datepicker/locale/fi";
+import localeFr from "air-datepicker/locale/fr";
+import localeHr from "air-datepicker/locale/hr";
+import localeHu from "air-datepicker/locale/hu";
+import localeId from "air-datepicker/locale/id";
+import localeIt from "air-datepicker/locale/it";
+import localeJa from "air-datepicker/locale/ja";
+import localeKo from "air-datepicker/locale/ko";
+import localeNb from "air-datepicker/locale/nb";
+import localeNl from "air-datepicker/locale/nl";
+import localeTh from "air-datepicker/locale/th";
+import localePl from "air-datepicker/locale/pl";
+import localePtBR from "air-datepicker/locale/pt-BR";
+import localePt from "air-datepicker/locale/pt";
+import localeRo from "air-datepicker/locale/ro";
+import localeRu from "air-datepicker/locale/ru";
+import localeSi from "air-datepicker/locale/si";
+import localeSk from "air-datepicker/locale/sk";
+import localeSl from "air-datepicker/locale/sl";
+import localeSv from "air-datepicker/locale/sv";
+import localeTr from "air-datepicker/locale/tr";
+import localeUk from "air-datepicker/locale/uk";
+import localeZh from "air-datepicker/locale/zh";
 
-import * as dateFns from 'date-fns/locale';
-import { format } from 'date-fns';
+import * as dateFns from "date-fns/locale";
+import { format } from "date-fns";
 
-import { Plugin, getFallbackFontName, DEFAULT_FONT_NAME, PropPanelSchema } from '@pdfme/common';
-import text from '../text/index.js';
-import { DEFAULT_OPACITY, HEX_COLOR_PATTERN } from '../constants.js';
-import { mapVerticalAlignToFlex } from '../text/uiRender.js';
+import { Plugin, getFallbackFontName, DEFAULT_FONT_NAME, PropPanelSchema } from "@pdfme/common";
+import text from "../text/index.js";
+import { DEFAULT_OPACITY, HEX_COLOR_PATTERN } from "../constants.js";
+import { mapVerticalAlignToFlex } from "../text/uiRender.js";
 import {
   DEFAULT_FONT_SIZE,
   DEFAULT_ALIGNMENT,
@@ -50,10 +50,10 @@ import {
   DEFAULT_LINE_HEIGHT,
   DEFAULT_CHARACTER_SPACING,
   DEFAULT_FONT_COLOR,
-} from '../text/constants.js';
-import { DateSchema } from './types.js';
-import { getExtraFormatterSchema, Formatter } from '../text/extraFormatter.js';
-import { isEditable } from '../utils.js';
+} from "../text/constants.js";
+import { DateSchema } from "./types.js";
+import { getExtraFormatterSchema, Formatter } from "../text/extraFormatter.js";
+import { isEditable } from "../utils.js";
 
 interface AirDatepickerInstance {
   selectedDates: Date[];
@@ -62,7 +62,7 @@ interface AirDatepickerInstance {
   show: () => void;
 }
 
-type PickerType = 'date' | 'time' | 'dateTime';
+type PickerType = "date" | "time" | "dateTime";
 
 interface Locale {
   label: string;
@@ -75,53 +75,53 @@ const normalizeAdLocale = (
 ): AirDatepickerLocale => {
   // Air Datepicker locales can arrive as either the locale object itself or as an
   // ESM default export shim when bundlers interop with the package's CJS build.
-  return 'default' in locale ? locale.default : locale;
+  return "default" in locale ? locale.default : locale;
 };
 
 const LOCALE_MAP: Record<string, Locale> = {
-  ar: { label: 'Arabic', adLocale: normalizeAdLocale(localeAr), formatLocale: dateFns.ar },
-  bg: { label: 'Bulgarian', adLocale: normalizeAdLocale(localeBg), formatLocale: dateFns.bg },
-  ca: { label: 'Catalan', adLocale: normalizeAdLocale(localeCa), formatLocale: dateFns.ca },
-  cs: { label: 'Czech', adLocale: normalizeAdLocale(localeCs), formatLocale: dateFns.cs },
-  da: { label: 'Danish', adLocale: normalizeAdLocale(localeDa), formatLocale: dateFns.da },
-  de: { label: 'German', adLocale: normalizeAdLocale(localeDe), formatLocale: dateFns.de },
-  el: { label: 'Greek', adLocale: normalizeAdLocale(localeEl), formatLocale: dateFns.el },
-  en: { label: 'English', adLocale: normalizeAdLocale(localeEn), formatLocale: dateFns.enUS },
-  es: { label: 'Spanish', adLocale: normalizeAdLocale(localeEs), formatLocale: dateFns.es },
-  eu: { label: 'Basque', adLocale: normalizeAdLocale(localeEu), formatLocale: dateFns.eu },
-  fi: { label: 'Finnish', adLocale: normalizeAdLocale(localeFi), formatLocale: dateFns.fi },
-  fr: { label: 'French', adLocale: normalizeAdLocale(localeFr), formatLocale: dateFns.fr },
-  hr: { label: 'Croatian', adLocale: normalizeAdLocale(localeHr), formatLocale: dateFns.hr },
-  hu: { label: 'Hungarian', adLocale: normalizeAdLocale(localeHu), formatLocale: dateFns.hu },
-  id: { label: 'Indonesian', adLocale: normalizeAdLocale(localeId), formatLocale: dateFns.id },
-  it: { label: 'Italian', adLocale: normalizeAdLocale(localeIt), formatLocale: dateFns.it },
-  ja: { label: 'Japanese', adLocale: normalizeAdLocale(localeJa), formatLocale: dateFns.ja },
-  ko: { label: 'Korean', adLocale: normalizeAdLocale(localeKo), formatLocale: dateFns.ko },
+  ar: { label: "Arabic", adLocale: normalizeAdLocale(localeAr), formatLocale: dateFns.ar },
+  bg: { label: "Bulgarian", adLocale: normalizeAdLocale(localeBg), formatLocale: dateFns.bg },
+  ca: { label: "Catalan", adLocale: normalizeAdLocale(localeCa), formatLocale: dateFns.ca },
+  cs: { label: "Czech", adLocale: normalizeAdLocale(localeCs), formatLocale: dateFns.cs },
+  da: { label: "Danish", adLocale: normalizeAdLocale(localeDa), formatLocale: dateFns.da },
+  de: { label: "German", adLocale: normalizeAdLocale(localeDe), formatLocale: dateFns.de },
+  el: { label: "Greek", adLocale: normalizeAdLocale(localeEl), formatLocale: dateFns.el },
+  en: { label: "English", adLocale: normalizeAdLocale(localeEn), formatLocale: dateFns.enUS },
+  es: { label: "Spanish", adLocale: normalizeAdLocale(localeEs), formatLocale: dateFns.es },
+  eu: { label: "Basque", adLocale: normalizeAdLocale(localeEu), formatLocale: dateFns.eu },
+  fi: { label: "Finnish", adLocale: normalizeAdLocale(localeFi), formatLocale: dateFns.fi },
+  fr: { label: "French", adLocale: normalizeAdLocale(localeFr), formatLocale: dateFns.fr },
+  hr: { label: "Croatian", adLocale: normalizeAdLocale(localeHr), formatLocale: dateFns.hr },
+  hu: { label: "Hungarian", adLocale: normalizeAdLocale(localeHu), formatLocale: dateFns.hu },
+  id: { label: "Indonesian", adLocale: normalizeAdLocale(localeId), formatLocale: dateFns.id },
+  it: { label: "Italian", adLocale: normalizeAdLocale(localeIt), formatLocale: dateFns.it },
+  ja: { label: "Japanese", adLocale: normalizeAdLocale(localeJa), formatLocale: dateFns.ja },
+  ko: { label: "Korean", adLocale: normalizeAdLocale(localeKo), formatLocale: dateFns.ko },
   nb: {
-    label: 'Norwegian Bokmål',
+    label: "Norwegian Bokmål",
     adLocale: normalizeAdLocale(localeNb),
     formatLocale: dateFns.nb,
   },
-  nl: { label: 'Dutch', adLocale: normalizeAdLocale(localeNl), formatLocale: dateFns.nl },
-  pl: { label: 'Polish', adLocale: normalizeAdLocale(localePl), formatLocale: dateFns.pl },
-  'pt-Br': {
-    label: 'Portuguese',
+  nl: { label: "Dutch", adLocale: normalizeAdLocale(localeNl), formatLocale: dateFns.nl },
+  pl: { label: "Polish", adLocale: normalizeAdLocale(localePl), formatLocale: dateFns.pl },
+  "pt-Br": {
+    label: "Portuguese",
     adLocale: normalizeAdLocale(localePtBR),
     formatLocale: dateFns.ptBR,
   },
-  pt: { label: 'Portuguese', adLocale: normalizeAdLocale(localePt), formatLocale: dateFns.pt },
-  ro: { label: 'Romanian', adLocale: normalizeAdLocale(localeRo), formatLocale: dateFns.ro },
-  ru: { label: 'Russian', adLocale: normalizeAdLocale(localeRu), formatLocale: dateFns.ru },
-  si: { label: 'Sinhala', adLocale: normalizeAdLocale(localeSi), formatLocale: dateFns.enUS },
-  sk: { label: 'Slovak', adLocale: normalizeAdLocale(localeSk), formatLocale: dateFns.sk },
-  sl: { label: 'Slovenian', adLocale: normalizeAdLocale(localeSl), formatLocale: dateFns.sl },
-  sv: { label: 'Swedish', adLocale: normalizeAdLocale(localeSv), formatLocale: dateFns.sv },
-  th: { label: 'Thai', adLocale: normalizeAdLocale(localeTh), formatLocale: dateFns.th },
-  tr: { label: 'Turkish', adLocale: normalizeAdLocale(localeTr), formatLocale: dateFns.tr },
-  uk: { label: 'Ukrainian', adLocale: normalizeAdLocale(localeUk), formatLocale: dateFns.uk },
-  zh: { label: 'Chinese', adLocale: normalizeAdLocale(localeZh), formatLocale: dateFns.zhCN },
-  'zh-TW': {
-    label: 'Chinese (Traditional)',
+  pt: { label: "Portuguese", adLocale: normalizeAdLocale(localePt), formatLocale: dateFns.pt },
+  ro: { label: "Romanian", adLocale: normalizeAdLocale(localeRo), formatLocale: dateFns.ro },
+  ru: { label: "Russian", adLocale: normalizeAdLocale(localeRu), formatLocale: dateFns.ru },
+  si: { label: "Sinhala", adLocale: normalizeAdLocale(localeSi), formatLocale: dateFns.enUS },
+  sk: { label: "Slovak", adLocale: normalizeAdLocale(localeSk), formatLocale: dateFns.sk },
+  sl: { label: "Slovenian", adLocale: normalizeAdLocale(localeSl), formatLocale: dateFns.sl },
+  sv: { label: "Swedish", adLocale: normalizeAdLocale(localeSv), formatLocale: dateFns.sv },
+  th: { label: "Thai", adLocale: normalizeAdLocale(localeTh), formatLocale: dateFns.th },
+  tr: { label: "Turkish", adLocale: normalizeAdLocale(localeTr), formatLocale: dateFns.tr },
+  uk: { label: "Ukrainian", adLocale: normalizeAdLocale(localeUk), formatLocale: dateFns.uk },
+  zh: { label: "Chinese", adLocale: normalizeAdLocale(localeZh), formatLocale: dateFns.zhCN },
+  "zh-TW": {
+    label: "Chinese (Traditional)",
     adLocale: normalizeAdLocale(localeZh),
     formatLocale: dateFns.zhTW,
   },
@@ -144,12 +144,12 @@ const airDatepickerCss = `.air-datepicker-cell.-year-.-other-decade-,.air-datepi
 .air-datepicker{background:var(--adp-background-color);border:1px solid var(--adp-border-color);box-shadow:0 4px 12px rgba(0,0,0,.15);border-radius:var(--adp-border-radius);box-sizing:content-box;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4, max-content);grid-template-areas:var(--adp-grid-areas);font-family:var(--adp-font-family),sans-serif;font-size:var(--adp-font-size);color:var(--adp-color);width:var(--adp-width);position:absolute;transition:opacity var(--adp-transition-duration) var(--adp-transition-ease),transform var(--adp-transition-duration) var(--adp-transition-ease);z-index:var(--adp-z-index)}.air-datepicker:not(.-custom-position-){opacity:0}.air-datepicker.-from-top-{transform:translateY(calc(var(--adp-transition-offset) * -1))}.air-datepicker.-from-right-{transform:translateX(var(--adp-transition-offset))}.air-datepicker.-from-bottom-{transform:translateY(var(--adp-transition-offset))}.air-datepicker.-from-left-{transform:translateX(calc(var(--adp-transition-offset) * -1))}.air-datepicker.-active-:not(.-custom-position-){transform:translate(0, 0);opacity:1}.air-datepicker.-active-.-custom-position-{transition:none}.air-datepicker.-inline-{border-color:var(--adp-border-color-inline);box-shadow:none;position:static;left:auto;right:auto;opacity:1;transform:none}.air-datepicker.-inline- .air-datepicker--pointer{display:none}.air-datepicker.-is-mobile-{--adp-font-size: var(--adp-mobile-font-size);--adp-day-cell-height: var(--adp-mobile-day-cell-height);--adp-month-cell-height: var(--adp-mobile-month-cell-height);--adp-year-cell-height: var(--adp-mobile-year-cell-height);--adp-nav-height: var(--adp-mobile-nav-height);--adp-nav-action-size: var(--adp-mobile-nav-height);position:fixed;width:var(--adp-mobile-width);border:none}.air-datepicker.-is-mobile- *{-webkit-tap-highlight-color:rgba(0,0,0,0)}.air-datepicker.-is-mobile- .air-datepicker--pointer{display:none}.air-datepicker.-is-mobile-:not(.-custom-position-){transform:translate(-50%, calc(-50% + var(--adp-transition-offset)))}.air-datepicker.-is-mobile-.-active-:not(.-custom-position-){transform:translate(-50%, -50%)}.air-datepicker.-custom-position-{transition:none}.air-datepicker-global-container{position:absolute;left:0;top:0}.air-datepicker--pointer{--pointer-half-size: calc(var(--adp-pointer-size) / 2);position:absolute;width:var(--adp-pointer-size);height:var(--adp-pointer-size);z-index:-1}.air-datepicker--pointer:after{content:"";position:absolute;background:#fff;border-top:1px solid var(--adp-border-color-inline);border-right:1px solid var(--adp-border-color-inline);border-top-right-radius:var(--adp-poiner-border-radius);width:var(--adp-pointer-size);height:var(--adp-pointer-size);box-sizing:border-box}.-top-left- .air-datepicker--pointer,.-top-center- .air-datepicker--pointer,.-top-right- .air-datepicker--pointer,[data-popper-placement^=top] .air-datepicker--pointer{top:calc(100% - var(--pointer-half-size) + 1px)}.-top-left- .air-datepicker--pointer:after,.-top-center- .air-datepicker--pointer:after,.-top-right- .air-datepicker--pointer:after,[data-popper-placement^=top] .air-datepicker--pointer:after{transform:rotate(135deg)}.-right-top- .air-datepicker--pointer,.-right-center- .air-datepicker--pointer,.-right-bottom- .air-datepicker--pointer,[data-popper-placement^=right] .air-datepicker--pointer{right:calc(100% - var(--pointer-half-size) + 1px)}.-right-top- .air-datepicker--pointer:after,.-right-center- .air-datepicker--pointer:after,.-right-bottom- .air-datepicker--pointer:after,[data-popper-placement^=right] .air-datepicker--pointer:after{transform:rotate(225deg)}.-bottom-left- .air-datepicker--pointer,.-bottom-center- .air-datepicker--pointer,.-bottom-right- .air-datepicker--pointer,[data-popper-placement^=bottom] .air-datepicker--pointer{bottom:calc(100% - var(--pointer-half-size) + 1px)}.-bottom-left- .air-datepicker--pointer:after,.-bottom-center- .air-datepicker--pointer:after,.-bottom-right- .air-datepicker--pointer:after,[data-popper-placement^=bottom] .air-datepicker--pointer:after{transform:rotate(315deg)}.-left-top- .air-datepicker--pointer,.-left-center- .air-datepicker--pointer,.-left-bottom- .air-datepicker--pointer,[data-popper-placement^=left] .air-datepicker--pointer{left:calc(100% - var(--pointer-half-size) + 1px)}.-left-top- .air-datepicker--pointer:after,.-left-center- .air-datepicker--pointer:after,.-left-bottom- .air-datepicker--pointer:after,[data-popper-placement^=left] .air-datepicker--pointer:after{transform:rotate(45deg)}.-top-left- .air-datepicker--pointer,.-bottom-left- .air-datepicker--pointer{left:var(--adp-pointer-offset)}.-top-right- .air-datepicker--pointer,.-bottom-right- .air-datepicker--pointer{right:var(--adp-pointer-offset)}.-top-center- .air-datepicker--pointer,.-bottom-center- .air-datepicker--pointer{left:calc(50% - var(--adp-pointer-size)/2)}.-left-top- .air-datepicker--pointer,.-right-top- .air-datepicker--pointer{top:var(--adp-pointer-offset)}.-left-bottom- .air-datepicker--pointer,.-right-bottom- .air-datepicker--pointer{bottom:var(--adp-pointer-offset)}.-left-center- .air-datepicker--pointer,.-right-center- .air-datepicker--pointer{top:calc(50% - var(--adp-pointer-size)/2)}.air-datepicker--navigation{grid-area:nav}.air-datepicker--content{box-sizing:content-box;padding:var(--adp-padding);grid-area:body}.-only-timepicker- .air-datepicker--content{display:none}.air-datepicker--time{grid-area:timepicker}.air-datepicker--buttons{grid-area:buttons}.air-datepicker--buttons,.air-datepicker--time{padding:var(--adp-padding);border-top:1px solid var(--adp-border-color-inner)}.air-datepicker-overlay{position:fixed;background:var(--adp-overlay-background-color);left:0;top:0;width:0;height:0;opacity:0;transition:opacity var(--adp-overlay-transition-duration) var(--adp-overlay-transition-ease),left 0s,height 0s,width 0s;transition-delay:0s,var(--adp-overlay-transition-duration),var(--adp-overlay-transition-duration),var(--adp-overlay-transition-duration);z-index:var(--adp-overlay-z-index)}.air-datepicker-overlay.-active-{opacity:1;width:100%;height:100%;transition:opacity var(--adp-overlay-transition-duration) var(--adp-overlay-transition-ease),height 0s,width 0s}`;
 
 const injectStyles = (css: string) => {
-  if (typeof document !== 'undefined') {
-    const styleElementId = 'pdfme-air-datepicker-styles';
+  if (typeof document !== "undefined") {
+    const styleElementId = "pdfme-air-datepicker-styles";
     if (!document.getElementById(styleElementId)) {
-      const style = document.createElement('style');
+      const style = document.createElement("style");
       style.id = styleElementId;
-      style.type = 'text/css';
+      style.type = "text/css";
       style.appendChild(document.createTextNode(css));
       document.head.appendChild(style);
     }
@@ -161,10 +161,10 @@ const strDateToDate = (strDate: string, type: PickerType): Date => {
     return new Date();
   }
 
-  if (type === 'time') {
+  if (type === "time") {
     const dateTimePattern = /^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}$/;
     if (dateTimePattern.test(strDate)) {
-      return new Date(strDate.replace(/\//g, '-').replace(' ', 'T'));
+      return new Date(strDate.replace(/\//g, "-").replace(" ", "T"));
     }
     return new Date(`2021-01-01T${strDate}`);
   }
@@ -174,13 +174,13 @@ const strDateToDate = (strDate: string, type: PickerType): Date => {
 
 export const getFormat = (type: PickerType, locale: Locale): string => {
   switch (type) {
-    case 'date': {
+    case "date": {
       return locale.adLocale.dateFormat;
     }
-    case 'time': {
-      return 'HH:mm';
+    case "time": {
+      return "HH:mm";
     }
-    case 'dateTime': {
+    case "dateTime": {
       return `${locale.adLocale.dateFormat} ${locale.adLocale.timeFormat}`;
     }
   }
@@ -190,12 +190,12 @@ export const isValidDateFormat = (
   formatString: string | undefined,
   locale: Locale,
 ): formatString is string => {
-  if (typeof formatString !== 'string') {
+  if (typeof formatString !== "string") {
     return false;
   }
 
   const normalizedFormat = formatString.trim();
-  if (!normalizedFormat || normalizedFormat === 'undefined') {
+  if (!normalizedFormat || normalizedFormat === "undefined") {
     return false;
   }
 
@@ -211,7 +211,7 @@ export const isValidDateFormat = (
 
 export const getSafeFormat = (
   type: PickerType,
-  schema: Pick<DateSchema, 'format'>,
+  schema: Pick<DateSchema, "format">,
   locale: Locale,
 ): string => {
   return isValidDateFormat(schema.format, locale) ? schema.format.trim() : getFormat(type, locale);
@@ -229,28 +229,28 @@ export const getFmtValue = (
     ? format(strDateToDate(value, type), formatString, {
         locale: locale.formatLocale,
       })
-    : '';
+    : "";
 };
 
 const getFmtContent = (date: Date | null, type: PickerType) => {
   const fmt = (() => {
     switch (type) {
-      case 'date': {
-        return 'yyyy/MM/dd';
+      case "date": {
+        return "yyyy/MM/dd";
       }
-      case 'time': {
-        return 'HH:mm';
+      case "time": {
+        return "HH:mm";
       }
-      case 'dateTime': {
-        return 'yyyy/MM/dd HH:mm';
+      case "dateTime": {
+        return "yyyy/MM/dd HH:mm";
       }
     }
   })();
-  return date ? format(date, fmt) : '';
+  return date ? format(date, fmt) : "";
 };
 
 export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) => {
-  const defaultLocale = 'en';
+  const defaultLocale = "en";
   const defaultFormat = getFormat(type, getAirDatepickerLocale(defaultLocale));
 
   const plugin: Plugin<DateSchema> = {
@@ -260,12 +260,12 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
       const locale = getAirDatepickerLocale(schema.locale || options.lang || defaultLocale);
       const formatString = getSafeFormat(type, schema, locale);
 
-      const textElement = document.createElement('div');
+      const textElement = document.createElement("div");
       const textElementStyle: CSS.Properties = {
         width: `${schema.width}mm`,
         height: `${schema.height}mm`,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         justifyContent: mapVerticalAlignToFlex(VERTICAL_ALIGN_MIDDLE),
       };
       Object.assign(textElement.style, textElementStyle);
@@ -273,7 +273,7 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
       await text.ui({
         ...arg,
         rootElement: textElement,
-        mode: 'viewer',
+        mode: "viewer",
         value: getFmtValue(value, type, schema, locale),
         schema: {
           ...schema,
@@ -284,36 +284,36 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
 
       injectStyles(airDatepickerCss);
 
-      const beforeRemoveEvent = new Event('beforeRemove');
+      const beforeRemoveEvent = new Event("beforeRemove");
       rootElement.dispatchEvent(beforeRemoveEvent);
 
-      const input = document.createElement('input');
-      Object.assign(input.style, { visibility: 'hidden', position: 'absolute' });
+      const input = document.createElement("input");
+      Object.assign(input.style, { visibility: "hidden", position: "absolute" });
 
       const commitChange = (date: Date | null) => {
         if (onChange) {
-          onChange({ key: 'content', value: getFmtContent(date, type) });
+          onChange({ key: "content", value: getFmtContent(date, type) });
         }
       };
 
       const adButtons: AirDatepickerButton[] = [
         {
-          content: i18n('cancel'),
+          content: i18n("cancel"),
           onClick: (datepicker) => {
             datepicker.hide();
           },
         },
         {
-          content: i18n('clear'),
+          content: i18n("clear"),
           onClick: (datepicker) => {
             datepicker.hide();
             commitChange(null);
           },
         },
       ];
-      if (type !== 'date') {
+      if (type !== "date") {
         adButtons.push({
-          content: i18n('set'),
+          content: i18n("set"),
           onClick: (datepicker) => {
             datepicker.hide();
             const date = datepicker.selectedDates.length ? datepicker.selectedDates[0] : null;
@@ -326,12 +326,12 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
         selectedDates: value.trim() ? [strDateToDate(value, type)] : [],
         dateFormat: (date: AirDatepickerDate) =>
           format(date, formatString, { locale: locale.formatLocale }),
-        timepicker: type !== 'date',
-        onlyTimepicker: type === 'time',
+        timepicker: type !== "date",
+        onlyTimepicker: type === "time",
         isMobile: window.innerWidth < 768,
         buttons: adButtons,
         position({ $datepicker, $target, $pointer, done }) {
-          $datepicker.style.position = 'fixed';
+          $datepicker.style.position = "fixed";
           const offset = 5;
           const scrollY = window.scrollY;
           const scrollX = window.scrollX;
@@ -355,34 +355,34 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
             left = window.innerWidth - dpWidth - 10;
           }
 
-          $datepicker.style.position = 'absolute';
+          $datepicker.style.position = "absolute";
           $datepicker.style.top = `${top}px`;
           $datepicker.style.left = `${left}px`;
           if ($pointer) {
-            $pointer.style.display = 'block';
-            $pointer.style.position = 'absolute';
-            $pointer.style.left = '10px';
-            $pointer.style.top = showAbove ? 'calc(100% - 5px)' : '-5px';
-            $pointer.style.transform = showAbove ? 'rotate(135deg)' : 'rotate(-45deg)';
+            $pointer.style.display = "block";
+            $pointer.style.position = "absolute";
+            $pointer.style.left = "10px";
+            $pointer.style.top = showAbove ? "calc(100% - 5px)" : "-5px";
+            $pointer.style.transform = showAbove ? "rotate(135deg)" : "rotate(-45deg)";
           }
           return function completeHide() {
             done();
           };
         },
         onSelect: ({ datepicker }: { datepicker: AirDatepickerInstance }) => {
-          if (type === 'date') {
+          if (type === "date") {
             commitChange(datepicker.selectedDates.length ? datepicker.selectedDates[0] : null);
             datepicker.hide();
           }
         },
       });
 
-      rootElement.addEventListener('beforeRemove', () => {
+      rootElement.addEventListener("beforeRemove", () => {
         if (isEditable(mode, schema)) {
           airDatepicker.destroy();
         }
       });
-      textElement.addEventListener('click', () => {
+      textElement.addEventListener("click", () => {
         if (isEditable(mode, schema)) {
           airDatepicker.show();
         }
@@ -407,7 +407,7 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
     },
     propPanel: {
       schema: ({ options, i18n, activeSchema, changeSchemas }) => {
-        const font = options.font || { [DEFAULT_FONT_NAME]: { data: '', fallback: true } };
+        const font = options.font || { [DEFAULT_FONT_NAME]: { data: "", fallback: true } };
         const fontNames = Object.keys(font);
         const fallbackFontName = getFallbackFontName(font);
         const activeDateSchema = activeSchema as { locale?: string; format?: string };
@@ -418,16 +418,16 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
         const defaultFormat = getFormat(type, locale);
         const safeFormat = getSafeFormat(
           type,
-          activeDateSchema as Pick<DateSchema, 'format'>,
+          activeDateSchema as Pick<DateSchema, "format">,
           locale,
         );
         const schemaChanges = [];
 
         if (activeDateSchema.locale === undefined && activeDateSchema.locale !== options.lang) {
-          schemaChanges.push({ schemaId: activeSchema.id, key: 'locale', value: options.lang });
+          schemaChanges.push({ schemaId: activeSchema.id, key: "locale", value: options.lang });
         }
         if (activeDateSchema.format !== safeFormat) {
-          schemaChanges.push({ schemaId: activeSchema.id, key: 'format', value: safeFormat });
+          schemaChanges.push({ schemaId: activeSchema.id, key: "format", value: safeFormat });
         }
         if (schemaChanges.length > 0) {
           changeSchemas(schemaChanges);
@@ -448,74 +448,74 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
 
         const dateSchema: Record<string, PropPanelSchema> = {
           format: {
-            title: i18n('schemas.date.format'),
-            type: 'string',
+            title: i18n("schemas.date.format"),
+            type: "string",
             default: safeFormat,
             placeholder: defaultFormat,
             rules: [
               {
                 validator: validateDateTimeFormat,
-                message: i18n('validation.dateTimeFormat'),
+                message: i18n("validation.dateTimeFormat"),
               },
             ],
             span: 24,
           },
           fontName: {
-            title: i18n('schemas.text.fontName'),
-            type: 'string',
-            widget: 'select',
+            title: i18n("schemas.text.fontName"),
+            type: "string",
+            widget: "select",
             default: fallbackFontName,
             placeholder: fallbackFontName,
             props: { options: fontNames.map((name) => ({ label: name, value: name })) },
             span: 12,
           },
           fontSize: {
-            title: i18n('schemas.text.size'),
-            type: 'number',
-            widget: 'inputNumber',
+            title: i18n("schemas.text.size"),
+            type: "number",
+            widget: "inputNumber",
             span: 6,
             props: { min: 0 },
           },
           characterSpacing: {
-            title: i18n('schemas.text.spacing'),
-            type: 'number',
-            widget: 'inputNumber',
+            title: i18n("schemas.text.spacing"),
+            type: "number",
+            widget: "inputNumber",
             span: 6,
             props: { min: 0 },
           },
           formatter,
           fontColor: {
-            title: i18n('schemas.textColor'),
-            type: 'string',
-            widget: 'color',
+            title: i18n("schemas.textColor"),
+            type: "string",
+            widget: "color",
             props: {
               disabledAlpha: true,
             },
             rules: [
               {
                 pattern: HEX_COLOR_PATTERN,
-                message: i18n('validation.hexColor'),
+                message: i18n("validation.hexColor"),
               },
             ],
           },
           backgroundColor: {
-            title: i18n('schemas.bgColor'),
-            type: 'string',
-            widget: 'color',
+            title: i18n("schemas.bgColor"),
+            type: "string",
+            widget: "color",
             props: {
               disabledAlpha: true,
             },
             rules: [
               {
                 pattern: HEX_COLOR_PATTERN,
-                message: i18n('validation.hexColor'),
+                message: i18n("validation.hexColor"),
               },
             ],
           },
           locale: {
-            title: i18n('schemas.date.locale'),
-            type: 'string',
-            widget: 'select',
+            title: i18n("schemas.date.locale"),
+            type: "string",
+            widget: "select",
             props: {
               options: localeOptions,
             },
@@ -526,7 +526,7 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
         return dateSchema;
       },
       defaultSchema: {
-        name: '',
+        name: "",
         format: defaultFormat,
         type,
         content: getFmtContent(new Date(), type),
@@ -539,7 +539,7 @@ export const getPlugin = ({ type, icon }: { type: PickerType; icon: string }) =>
         characterSpacing: DEFAULT_CHARACTER_SPACING,
         fontColor: DEFAULT_FONT_COLOR,
         fontName: undefined,
-        backgroundColor: '',
+        backgroundColor: "",
         locale: undefined,
         opacity: DEFAULT_OPACITY,
       } as DateSchema,

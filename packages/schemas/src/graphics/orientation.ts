@@ -1,7 +1,7 @@
-import jpegJsModule from 'jpeg-js';
-import UPNGModule from '@pdf-lib/upng';
+import jpegJsModule from "jpeg-js";
+import UPNGModule from "@pdf-lib/upng";
 
-export type ImageFormat = 'jpeg' | 'png' | 'other';
+export type ImageFormat = "jpeg" | "png" | "other";
 
 type JpegJsApi = {
   decode: (
@@ -33,16 +33,16 @@ type UPNGApi = {
 
 const isJpegJsApi = (value: unknown): value is JpegJsApi =>
   !!value &&
-  typeof value === 'object' &&
-  typeof (value as JpegJsApi).decode === 'function' &&
-  typeof (value as JpegJsApi).encode === 'function';
+  typeof value === "object" &&
+  typeof (value as JpegJsApi).decode === "function" &&
+  typeof (value as JpegJsApi).encode === "function";
 
 const isUPNGApi = (value: unknown): value is UPNGApi =>
   !!value &&
-  typeof value === 'object' &&
-  typeof (value as UPNGApi).decode === 'function' &&
-  typeof (value as UPNGApi).toRGBA8 === 'function' &&
-  typeof (value as UPNGApi).encode === 'function';
+  typeof value === "object" &&
+  typeof (value as UPNGApi).decode === "function" &&
+  typeof (value as UPNGApi).toRGBA8 === "function" &&
+  typeof (value as UPNGApi).encode === "function";
 
 const resolveExport = <T>(
   value: unknown,
@@ -50,15 +50,15 @@ const resolveExport = <T>(
   label: string,
 ): T => {
   let current: unknown = value;
-  while (current && typeof current === 'object') {
+  while (current && typeof current === "object") {
     if (guard(current)) return current;
     current = (current as { default?: unknown }).default;
   }
   throw new TypeError(`Failed to resolve ${label} exports`);
 };
 
-const jpegJs = resolveExport(jpegJsModule, isJpegJsApi, 'jpeg-js');
-const UPNG = resolveExport(UPNGModule, isUPNGApi, '@pdf-lib/upng');
+const jpegJs = resolveExport(jpegJsModule, isJpegJsApi, "jpeg-js");
+const UPNG = resolveExport(UPNGModule, isUPNGApi, "@pdf-lib/upng");
 
 const JPEG_ENCODE_QUALITY = 90;
 const JPEG_MAX_MEMORY_MB = 512;
@@ -83,12 +83,12 @@ const isPngSignature = (bytes: Uint8Array): boolean => {
 
 export const detectImageFormat = (bytes: Uint8Array): ImageFormat => {
   if (bytes.length >= 2 && bytes[0] === JPEG_SOI_0 && bytes[1] === JPEG_SOI_1) {
-    return 'jpeg';
+    return "jpeg";
   }
   if (isPngSignature(bytes)) {
-    return 'png';
+    return "png";
   }
-  return 'other';
+  return "other";
 };
 
 /** TIFF/IFD0: returns 1..8 or undefined. Never throws. */
@@ -177,10 +177,10 @@ export const getPngOrientation = (bytes: Uint8Array): number | undefined => {
       bytes[pos + 6],
       bytes[pos + 7],
     );
-    if (type === 'eXIf') {
+    if (type === "eXIf") {
       return parseTiffOrientation(bytes.subarray(pos + 8, pos + 8 + length));
     }
-    if (type === 'IEND') return undefined;
+    if (type === "IEND") return undefined;
     pos += 12 + length;
   }
   return undefined;
@@ -286,7 +286,7 @@ const bakePngOrientation = (bytes: Uint8Array): Uint8Array => {
  */
 export const normalizeImageOrientation = (bytes: Uint8Array): Uint8Array => {
   const kind = detectImageFormat(bytes);
-  if (kind === 'jpeg') return bakeJpegOrientation(bytes);
-  if (kind === 'png') return bakePngOrientation(bytes);
+  if (kind === "jpeg") return bakeJpegOrientation(bytes);
+  if (kind === "png") return bakePngOrientation(bytes);
   return bytes;
 };

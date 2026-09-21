@@ -190,7 +190,7 @@ export interface GlyphRun {
    * The direction requested for shaping, as passed in (either ltr or rtl).
    * If `null`, the default direction of the script is used.
    */
-  direction: 'ltr' | 'rtl' | null;
+  direction: "ltr" | "rtl" | null;
 
   /**
    * The features requested during shaping. This is a combination of user
@@ -215,7 +215,7 @@ export interface GlyphRun {
 }
 
 export interface SubsetStream {
-  on: (eventType: 'data' | 'end', callback: (data: Uint8Array) => any) => SubsetStream;
+  on: (eventType: "data" | "end", callback: (data: Uint8Array) => any) => SubsetStream;
 }
 
 export type Subset = {
@@ -526,7 +526,7 @@ export interface AATFeatures {
   morx?: boolean;
   name?: boolean;
   opbd?: boolean;
-  'OS/2'?: boolean;
+  "OS/2"?: boolean;
   post?: boolean;
   prep?: boolean;
   prop?: boolean;
@@ -578,7 +578,7 @@ export interface Font {
   characterSet: number[] /** Array of all of the unicode code points supported by the font */;
   availableFeatures: (keyof TypeFeatures)[] /** Array of all OpenType feature tags (or mapped AAT tags) supported by the font */;
   cff: any;
-  'OS/2': { sFamilyClass: number };
+  "OS/2": { sFamilyClass: number };
   head: { macStyle: { italic: boolean } };
   post: { isFixedPitch: boolean };
 

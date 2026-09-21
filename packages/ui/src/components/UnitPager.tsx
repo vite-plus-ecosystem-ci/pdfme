@@ -1,12 +1,12 @@
-import React from 'react';
-import { Size } from '@pdfme/common';
-import { theme, Typography, Button } from 'antd';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import React from "react";
+import { Size } from "@pdfme/common";
+import { theme, Typography, Button } from "antd";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 const { Text } = Typography;
 
 type UnitButtonProps = {
-  type: 'left' | 'right' | 'doubleLeft' | 'doubleRight';
+  type: "left" | "right" | "doubleLeft" | "doubleRight";
   onClick: () => void;
   disabled: boolean;
   textStyle: { color: string; fontSize: number; margin: number };
@@ -42,12 +42,12 @@ const UnitPager = ({ size, unitCursor, unitNum, setUnitCursor }: Props) => {
   const { token } = theme.useToken();
 
   const buttonWrapStyle: React.CSSProperties = {
-    pointerEvents: 'initial',
-    position: 'sticky',
+    pointerEvents: "initial",
+    position: "sticky",
     zIndex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    boxSizing: 'border-box',
+    display: "flex",
+    alignItems: "center",
+    boxSizing: "border-box",
     height: 40,
     padding: token.paddingSM,
     borderRadius: token.borderRadius,
@@ -60,19 +60,19 @@ const UnitPager = ({ size, unitCursor, unitNum, setUnitCursor }: Props) => {
   };
 
   return (
-    <div style={{ position: 'absolute', ...size }}>
+    <div style={{ position: "absolute", ...size }}>
       <div
         style={{
-          position: 'sticky',
-          width: '100%',
+          position: "sticky",
+          width: "100%",
           zIndex: 1,
           top: `calc(50% - ${(buttonWrapStyle.height as number) / 2}px)`,
-          display: 'flex',
-          alignItems: 'center',
+          display: "flex",
+          alignItems: "center",
         }}
       >
         {unitCursor > 0 && (
-          <div style={{ left: '1rem', marginLeft: '1rem', ...buttonWrapStyle }}>
+          <div style={{ left: "1rem", marginLeft: "1rem", ...buttonWrapStyle }}>
             <UnitButton
               type="doubleLeft"
               onClick={() => setUnitCursor(0)}
@@ -92,7 +92,7 @@ const UnitPager = ({ size, unitCursor, unitNum, setUnitCursor }: Props) => {
         )}
         {unitCursor + 1 < unitNum && (
           <div
-            style={{ right: '1rem', marginLeft: 'auto', marginRight: '1rem', ...buttonWrapStyle }}
+            style={{ right: "1rem", marginLeft: "auto", marginRight: "1rem", ...buttonWrapStyle }}
           >
             <Text strong style={textStyle}>
               {unitCursor + 1}/{unitNum}

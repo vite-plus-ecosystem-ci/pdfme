@@ -1,21 +1,21 @@
-import { MethodNotImplementedError } from '../errors.js';
-import PDFContext from '../PDFContext.js';
+import { MethodNotImplementedError } from "../errors.js";
+import PDFContext from "../PDFContext.js";
 
 class PDFObject {
   clone(_context?: PDFContext): PDFObject {
-    throw new MethodNotImplementedError(this.constructor.name, 'clone');
+    throw new MethodNotImplementedError(this.constructor.name, "clone");
   }
 
   toString(): string {
-    throw new MethodNotImplementedError(this.constructor.name, 'toString');
+    throw new MethodNotImplementedError(this.constructor.name, "toString");
   }
 
   sizeInBytes(): number {
-    throw new MethodNotImplementedError(this.constructor.name, 'sizeInBytes');
+    throw new MethodNotImplementedError(this.constructor.name, "sizeInBytes");
   }
 
   copyBytesInto(_buffer: Uint8Array, _offset: number): number {
-    throw new MethodNotImplementedError(this.constructor.name, 'copyBytesInto');
+    throw new MethodNotImplementedError(this.constructor.name, "copyBytesInto");
   }
 }
 

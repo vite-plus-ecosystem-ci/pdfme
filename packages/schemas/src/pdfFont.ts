@@ -1,10 +1,10 @@
-import { PDFFont, PDFDocument } from '@pdfme/pdf-lib';
-import { Font } from '@pdfme/common';
-import { fetchRemoteFontData } from './text/helper.js';
+import { PDFFont, PDFDocument } from "@pdfme/pdf-lib";
+import { Font } from "@pdfme/common";
+import { fetchRemoteFontData } from "./text/helper.js";
 
 type PdfFontCache = Record<string, Promise<PDFFont>>;
 
-const PDF_FONT_CACHE_KEY = 'schemas-pdf-font-cache';
+const PDF_FONT_CACHE_KEY = "schemas-pdf-font-cache";
 
 const getPdfFontCache = (_cache: Map<string | number, unknown>): PdfFontCache => {
   let pdfFontCache = _cache.get(PDF_FONT_CACHE_KEY) as PdfFontCache | undefined;
@@ -36,11 +36,11 @@ export const embedAndGetFont = (arg: {
 
   const pdfFontPromise = (async () => {
     let fontData = fontValue.data;
-    if (typeof fontData === 'string' && fontData.startsWith('http')) {
+    if (typeof fontData === "string" && fontData.startsWith("http")) {
       fontData = await fetchRemoteFontData(fontData);
     }
     return pdfDoc.embedFont(fontData, {
-      subset: typeof fontValue.subset === 'undefined' ? true : fontValue.subset,
+      subset: typeof fontValue.subset === "undefined" ? true : fontValue.subset,
     });
   })();
 

@@ -1,13 +1,13 @@
-import generate from '../src/generate.js';
-import { textType } from './assets/templates/index.js';
-import { getInputFromTemplate } from '@pdfme/common';
-import { text, multiVariableText, image, barcodes } from '@pdfme/schemas';
-import { getFont, getImageSnapshotOptions, pdfToImages } from './utils.js';
+import generate from "../src/generate.js";
+import { textType } from "./assets/templates/index.js";
+import { getInputFromTemplate } from "@pdfme/common";
+import { text, multiVariableText, image, barcodes } from "@pdfme/schemas";
+import { getFont, getImageSnapshotOptions, pdfToImages } from "./utils.js";
 
-const PERFORMANCE_THRESHOLD = parseFloat(process.env.PERFORMANCE_THRESHOLD || '2.5');
+const PERFORMANCE_THRESHOLD = parseFloat(process.env.PERFORMANCE_THRESHOLD || "2.5");
 
-describe('generate integration test(textType)', () => {
-  describe.each([textType])('%s', (templateData) => {
+describe("generate integration test(textType)", () => {
+  describe.each([textType])("%s", (templateData) => {
     const entries = Object.entries(templateData);
     for (let l = 0; l < entries.length; l += 1) {
       const [key, template] = entries[l];
@@ -17,7 +17,7 @@ describe('generate integration test(textType)', () => {
         const inputs = getInputFromTemplate(template);
 
         const font = getFont();
-        font['NotoSerifJP-Regular'].fallback = false;
+        font["NotoSerifJP-Regular"].fallback = false;
         font.NotoSerifJP.fallback = false;
         font.NotoSansJP.fallback = false;
 
@@ -36,7 +36,7 @@ describe('generate integration test(textType)', () => {
           expect(execSeconds).toBeLessThan(PERFORMANCE_THRESHOLD);
         } else if (execSeconds >= PERFORMANCE_THRESHOLD) {
           console.warn(
-            `Warning: Execution time for ${key} is ${execSeconds} seconds, which is above the threshold of ${PERFORMANCE_THRESHOLD} seconds.`
+            `Warning: Execution time for ${key} is ${execSeconds} seconds, which is above the threshold of ${PERFORMANCE_THRESHOLD} seconds.`,
           );
         }
 

@@ -6,11 +6,11 @@ import {
   DynamicLayoutArgs,
   DynamicLayoutResult,
   isBlankPdf,
-} from '@pdfme/common';
-import { createSingleTable } from './tableHelper.js';
-import { getBodyWithRange, getBody } from './helper.js';
-import { TableSchema } from './types.js';
-import { createTableBodySplitRange, getTableBodyRange } from '../splitRange.js';
+} from "@pdfme/common";
+import { createSingleTable } from "./tableHelper.js";
+import { getBodyWithRange, getBody } from "./helper.js";
+import { TableSchema } from "./types.js";
+import { createTableBodySplitRange, getTableBodyRange } from "../splitRange.js";
 
 export const getDynamicHeightsForTable = async (
   value: string,
@@ -21,7 +21,7 @@ export const getDynamicHeightsForTable = async (
     _cache: Map<string | number, unknown>;
   },
 ): Promise<number[]> => {
-  if (args.schema.type !== 'table') return Promise.resolve([args.schema.height]);
+  if (args.schema.type !== "table") return Promise.resolve([args.schema.height]);
   const schema = args.schema as TableSchema;
   const bodyRange = getTableBodyRange(schema);
   const body = bodyRange?.start === 0 ? getBody(value) : getBodyWithRange(value, bodyRange);

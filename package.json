@@ -62,10 +62,14 @@
     "react-dom": "^19.2.8",
     "rimraf": "^6.1.3",
     "typescript": "^7.0.2",
-    "vite": "^8.2.2",
-    "vite-plus": "^0.3.0",
-    "vitest": "^4.1.10",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.0.0-commit.6b26ec56e76df770e2aa5ad78571d42d20b5383c",
+    "vite-plus": "0.0.0-commit.6b26ec56e76df770e2aa5ad78571d42d20b5383c",
+    "vitest": "5.0.1",
     "vitest-image-snapshot": "^0.6.52"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.0.0-commit.6b26ec56e76df770e2aa5ad78571d42d20b5383c",
+    "vitest": "5.0.1"
   },
   "packageManager": "npm@11.12.1"
 }

@@ -25,9 +25,9 @@ Next, import the required schemas from `@pdfme/schemas` to `@pdfme/generator` an
 The following code shows an example of importing QR code, signature, and image schemas from `@pdfme/generator` and `@pdfme/ui`.
 
 ```ts
-import type { Template } from '@pdfme/common';
-import { text, image, signature, barcodes } from '@pdfme/schemas';
-import { generate } from '@pdfme/generator';
+import type { Template } from "@pdfme/common";
+import { text, image, signature, barcodes } from "@pdfme/schemas";
+import { generate } from "@pdfme/generator";
 
 const template: Template = {
   // skip... you can use text, image, signature, qrcode schema type in template.
@@ -52,11 +52,11 @@ const pdf = await generate({
 In this `@pdfme/ui` example, we're using the Designer, but you can load plugins in the Form and Viewer in the same way.
 
 ```ts
-import type { Template } from '@pdfme/common';
-import { text, image, signature, barcodes } from '@pdfme/schemas';
-import { Designer } from '@pdfme/ui';
+import type { Template } from "@pdfme/common";
+import { text, image, signature, barcodes } from "@pdfme/schemas";
+import { Designer } from "@pdfme/ui";
 
-const domContainer = document.getElementById('container');
+const domContainer = document.getElementById("container");
 const template: Template = {
   // skip... you can use text, image, signature, qrcode schema type in template.
 };
@@ -153,7 +153,6 @@ Specifically, it should be possible to input the signature using [signature_pad]
 - Demo: https://playground.pdfme.com/
 - Code: [packages/schemas/src/graphics/signature.ts](https://github.com/pdfme/pdfme/blob/main/packages/schemas/src/graphics/signature.ts)
 
-
 ### Caveats for writing Custom Schemas
 
 #### Renderer schema caching
@@ -183,6 +182,7 @@ A lightweight alternative QR code plugin that uses the `qrcode` npm package inst
 To use this plugin:
 
 1. Install the required dependency:
+
    ```bash
    npm install qrcode -S
    ```
@@ -190,18 +190,19 @@ To use this plugin:
 2. Add the plugin code to your project (e.g., in `./src/plugins/qrCode.ts`)
 
 3. Import and use the plugin in your generator or UI components:
+
    ```ts
    import qrCode from "./plugins/qrCode.js";
-   
+
    // In your generator
    const pdf = await generate({
-     template, 
-     inputs, 
+     template,
+     inputs,
      options: { font },
      plugins: {
        // Your other plugins
-       NodeQRCode: qrCode
-     }
+       NodeQRCode: qrCode,
+     },
    });
    ```
 

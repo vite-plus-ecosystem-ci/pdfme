@@ -1,19 +1,19 @@
-import PDFObject from '../objects/PDFObject.js';
-import PDFString from '../objects/PDFString.js';
-import PDFHexString from '../objects/PDFHexString.js';
-import PDFArray from '../objects/PDFArray.js';
-import PDFName from '../objects/PDFName.js';
-import PDFRef from '../objects/PDFRef.js';
-import PDFAcroTerminal from './PDFAcroTerminal.js';
-import { IndexOutOfBoundsError } from '../errors.js';
+import PDFObject from "../objects/PDFObject.js";
+import PDFString from "../objects/PDFString.js";
+import PDFHexString from "../objects/PDFHexString.js";
+import PDFArray from "../objects/PDFArray.js";
+import PDFName from "../objects/PDFName.js";
+import PDFRef from "../objects/PDFRef.js";
+import PDFAcroTerminal from "./PDFAcroTerminal.js";
+import { IndexOutOfBoundsError } from "../errors.js";
 
 class PDFAcroButton extends PDFAcroTerminal {
   Opt(): PDFString | PDFHexString | PDFArray | undefined {
-    return this.dict.lookupMaybe(PDFName.of('Opt'), PDFString, PDFHexString, PDFArray);
+    return this.dict.lookupMaybe(PDFName.of("Opt"), PDFString, PDFHexString, PDFArray);
   }
 
   setOpt(opt: PDFObject[]) {
-    this.dict.set(PDFName.of('Opt'), this.dict.context.obj(opt));
+    this.dict.set(PDFName.of("Opt"), this.dict.context.obj(opt));
   }
 
   getExportValues(): (PDFString | PDFHexString)[] | undefined {
@@ -62,7 +62,7 @@ class PDFAcroButton extends PDFAcroTerminal {
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
       const exportVal =
-        exportValues[idx] ?? PDFHexString.fromText(widget.getOnValue()?.decodeText() ?? '');
+        exportValues[idx] ?? PDFHexString.fromText(widget.getOnValue()?.decodeText() ?? "");
       Opt.push(exportVal);
     }
 

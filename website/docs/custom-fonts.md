@@ -11,7 +11,7 @@ You can use this feature to solve those issues.
 You can import from `@pdfme/common` as below.
 
 ```ts
-import type { Font } from '@pdfme/common';
+import type { Font } from "@pdfme/common";
 ```
 
 The type of font is as follows.
@@ -25,6 +25,7 @@ type Font = {
   };
 };
 ```
+
 - `data`: If you register a `string` starting with `http`, it will be automatically fetched.Or set binary data directly like `Uint8Array | ArrayBuffer`
 - \*`fallback`: Setting it to true makes it the font to use if not set to a `fontName`. **Only one of the font objects must be set to true.**
 - \*`subset`: The default is true, but it can be set to false to set the font embedding to not subset. (This setting is for a bug in fontkit when embedding certain fonts with subsetting.)
@@ -32,11 +33,11 @@ type Font = {
 ```ts
 const font: Font = {
   serif: {
-    data: 'https://example.com/fonts/serif.ttf',
+    data: "https://example.com/fonts/serif.ttf",
     fallback: true,
   },
   sans_serif: {
-    data: 'https://example.com/fonts/sans_serif.ttf',
+    data: "https://example.com/fonts/sans_serif.ttf",
   },
 };
 ```
@@ -50,16 +51,16 @@ Let's check out how to set font in the generator and ui packages.
 Set font as option in [generate](/docs/getting-started#generator) function
 
 ```ts
-import { Template, BLANK_PDF, Font } from '@pdfme/common';
-import { generate } from '@pdfme/generator';
+import { Template, BLANK_PDF, Font } from "@pdfme/common";
+import { generate } from "@pdfme/generator";
 
 const font: Font = {
   serif: {
-    data: 'https://example.com/fonts/serif.ttf',
+    data: "https://example.com/fonts/serif.ttf",
     fallback: true,
   },
   sans_serif: {
-    data: 'https://example.com/fonts/sans_serif.ttf',
+    data: "https://example.com/fonts/sans_serif.ttf",
   },
 };
 const template: Template = {
@@ -67,25 +68,25 @@ const template: Template = {
   schemas: [
     [
       {
-        name: 'a',
-        type: 'text',
-        fontName: 'serif',
+        name: "a",
+        type: "text",
+        fontName: "serif",
         position: { x: 0, y: 0 },
         width: 10,
         height: 10,
       },
       {
-        name: 'b',
-        type: 'text',
-        fontName: 'sans_serif',
+        name: "b",
+        type: "text",
+        fontName: "sans_serif",
         position: { x: 10, y: 10 },
         width: 10,
         height: 10,
       },
       {
         // <- use fallback font. (serif)
-        name: 'c',
-        type: 'text',
+        name: "c",
+        type: "text",
         position: { x: 20, y: 20 },
         width: 10,
         height: 10,
@@ -93,7 +94,7 @@ const template: Template = {
     ],
   ],
 };
-const inputs = [{ a: 'a1', b: 'b1', c: 'c1' }];
+const inputs = [{ a: "a1", b: "b1", c: "c1" }];
 
 generate({ template, inputs, options: { font } }).then((pdf) => {
   console.log(pdf);
@@ -115,19 +116,19 @@ The sample code is for [Designer](/docs/getting-started#designer), but the same 
 #### Setting font at instance initialization
 
 ```ts
-import { Designer } from '@pdfme/ui';
+import { Designer } from "@pdfme/ui";
 
-const domContainer = document.getElementById('container');
+const domContainer = document.getElementById("container");
 const template = {
   // skip...
 };
 const font = {
   serif: {
-    data: 'https://example.com/fonts/serif.ttf',
+    data: "https://example.com/fonts/serif.ttf",
     fallback: true,
   },
   sans_serif: {
-    data: 'https://example.com/fonts/sans_serif.ttf',
+    data: "https://example.com/fonts/sans_serif.ttf",
   },
 };
 
@@ -139,10 +140,10 @@ const designer = new Designer({ domContainer, template, options: { font } });
 ```ts
 const font = {
   serif: {
-    data: 'https://example.com/fonts/serif.ttf',
+    data: "https://example.com/fonts/serif.ttf",
   },
   sans_serif: {
-    data: 'https://example.com/fonts/sans_serif.ttf',
+    data: "https://example.com/fonts/sans_serif.ttf",
     fallback: true,
   },
 };

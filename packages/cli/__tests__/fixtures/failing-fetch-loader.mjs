@@ -1,5 +1,5 @@
 function getUrl(input) {
-  if (typeof input === 'string') {
+  if (typeof input === "string") {
     return input;
   }
 
@@ -11,10 +11,10 @@ function getUrl(input) {
 }
 
 const originalFetch = globalThis.fetch.bind(globalThis);
-const NETWORK_ERROR_URL = 'https://fonts.example.com/network-error.ttf';
-const HTTP_503_URL = 'https://fonts.example.com/http-503.ttf';
-const OVERSIZED_URL = 'https://fonts.example.com/oversized.ttf';
-const OVERSIZED_STREAM_URL = 'https://fonts.example.com/oversized-stream.ttf';
+const NETWORK_ERROR_URL = "https://fonts.example.com/network-error.ttf";
+const HTTP_503_URL = "https://fonts.example.com/http-503.ttf";
+const OVERSIZED_URL = "https://fonts.example.com/oversized.ttf";
+const OVERSIZED_STREAM_URL = "https://fonts.example.com/oversized-stream.ttf";
 
 globalThis.fetch = async (input, init) => {
   const url = getUrl(input);
@@ -24,18 +24,18 @@ globalThis.fetch = async (input, init) => {
   }
 
   if (url === HTTP_503_URL) {
-    return new Response('remote font unavailable', {
+    return new Response("remote font unavailable", {
       status: 503,
-      headers: { 'content-type': 'text/plain' },
+      headers: { "content-type": "text/plain" },
     });
   }
 
   if (url === OVERSIZED_URL) {
-    return new Response('tiny-body', {
+    return new Response("tiny-body", {
       status: 200,
       headers: {
-        'content-type': 'font/ttf',
-        'content-length': String(40 * 1024 * 1024),
+        "content-type": "font/ttf",
+        "content-length": String(40 * 1024 * 1024),
       },
     });
   }
@@ -52,7 +52,7 @@ globalThis.fetch = async (input, init) => {
 
     return new Response(stream, {
       status: 200,
-      headers: { 'content-type': 'font/ttf' },
+      headers: { "content-type": "font/ttf" },
     });
   }
 

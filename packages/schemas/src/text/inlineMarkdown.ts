@@ -1,9 +1,9 @@
-import { normalizeLinkHref } from '@pdfme/common';
-import type { RichTextRun } from './types.js';
+import { normalizeLinkHref } from "@pdfme/common";
+import type { RichTextRun } from "./types.js";
 
-type InlineStyle = Omit<RichTextRun, 'text'>;
+type InlineStyle = Omit<RichTextRun, "text">;
 
-const MARKDOWN_ESCAPABLE_CHARS = new Set(['\\', '*', '~', '`', '[', ']', '(', ')']);
+const MARKDOWN_ESCAPABLE_CHARS = new Set(["\\", "*", "~", "`", "[", "]", "(", ")"]);
 const MARKDOWN_ESCAPE_PATTERN = /[\\*~`[\]()]/g;
 const MARKDOWN_UNESCAPE_PATTERN = /\\([\\*~`[\]()])/g;
 
@@ -35,13 +35,13 @@ const appendRun = (runs: RichTextRun[], text: string, style: InlineStyle) => {
 
 const findClosingDelimiter = (value: string, delimiter: string, from: number): number => {
   for (let i = from; i < value.length; i++) {
-    if (value[i] === '\\') {
+    if (value[i] === "\\") {
       i += 1;
       continue;
     }
 
-    if (delimiter !== '`' && value[i] === '`') {
-      const codeEnd = findClosingDelimiter(value, '`', i + 1);
+    if (delimiter !== "`" && value[i] === "`") {
+      const codeEnd = findClosingDelimiter(value, "`", i + 1);
       if (codeEnd === -1) continue;
       i = codeEnd;
       continue;
@@ -56,22 +56,22 @@ const findClosingDelimiter = (value: string, delimiter: string, from: number): n
 };
 
 const getDelimiter = (value: string, index: number) => {
-  if (value[index] === '`') return '`';
-  if (value.startsWith('***', index)) return '***';
-  if (value.startsWith('**', index)) return '**';
-  if (value.startsWith('~~', index)) return '~~';
-  if (value[index] === '*') return '*';
-  return '';
+  if (value[index] === "`") return "`";
+  if (value.startsWith("***", index)) return "***";
+  if (value.startsWith("**", index)) return "**";
+  if (value.startsWith("~~", index)) return "~~";
+  if (value[index] === "*") return "*";
+  return "";
 };
 
 const findLinkLabelEnd = (value: string, from: number, to: number): number => {
   for (let index = from; index < to; index += 1) {
-    if (value[index] === '\\') {
+    if (value[index] === "\\") {
       index += 1;
       continue;
     }
 
-    if (value[index] === ']') return index;
+    if (value[index] === "]") return index;
   }
 
   return -1;
@@ -81,17 +81,17 @@ const findLinkDestinationEnd = (value: string, from: number, to: number): number
   let depth = 0;
 
   for (let index = from; index < to; index += 1) {
-    if (value[index] === '\\') {
+    if (value[index] === "\\") {
       index += 1;
       continue;
     }
 
-    if (value[index] === '(') {
+    if (value[index] === "(") {
       depth += 1;
       continue;
     }
 
-    if (value[index] === ')') {
+    if (value[index] === ")") {
       if (depth === 0) return index;
       depth -= 1;
     }
@@ -101,10 +101,10 @@ const findLinkDestinationEnd = (value: string, from: number, to: number): number
 };
 
 const parseLinkAt = (value: string, index: number, to: number) => {
-  if (value[index] !== '[') return undefined;
+  if (value[index] !== "[") return undefined;
 
   const labelEnd = findLinkLabelEnd(value, index + 1, to);
-  if (labelEnd === -1 || value[labelEnd + 1] !== '(') return undefined;
+  if (labelEnd === -1 || value[labelEnd + 1] !== "(") return undefined;
 
   const destinationStart = labelEnd + 2;
   const destinationEnd = findLinkDestinationEnd(value, destinationStart, to);
@@ -112,7 +112,7 @@ const parseLinkAt = (value: string, index: number, to: number) => {
 
   const href = value
     .slice(destinationStart, destinationEnd)
-    .replace(MARKDOWN_UNESCAPE_PATTERN, '$1');
+    .replace(MARKDOWN_UNESCAPE_PATTERN, "$1");
   const safeHref = normalizeLinkHref(href);
   if (!safeHref) return undefined;
 
@@ -125,16 +125,16 @@ const parseLinkAt = (value: string, index: number, to: number) => {
 };
 
 const mergeStyle = (style: InlineStyle, delimiter: string): InlineStyle => {
-  if (delimiter === '***') {
+  if (delimiter === "***") {
     return { ...style, bold: true, italic: true };
   }
-  if (delimiter === '**') {
+  if (delimiter === "**") {
     return { ...style, bold: true };
   }
-  if (delimiter === '*') {
+  if (delimiter === "*") {
     return { ...style, italic: true };
   }
-  if (delimiter === '~~') {
+  if (delimiter === "~~") {
     return { ...style, strikethrough: true };
   }
   return style;
@@ -142,17 +142,17 @@ const mergeStyle = (style: InlineStyle, delimiter: string): InlineStyle => {
 
 const parseRange = (value: string, from: number, to: number, style: InlineStyle): RichTextRun[] => {
   const runs: RichTextRun[] = [];
-  let buffer = '';
+  let buffer = "";
 
   const flush = () => {
     appendRun(runs, buffer, style);
-    buffer = '';
+    buffer = "";
   };
 
   for (let index = from; index < to; index++) {
     const char = value[index];
 
-    if (char === '\\' && index + 1 < to && MARKDOWN_ESCAPABLE_CHARS.has(value[index + 1])) {
+    if (char === "\\" && index + 1 < to && MARKDOWN_ESCAPABLE_CHARS.has(value[index + 1])) {
       buffer += value[index + 1];
       index += 1;
       continue;
@@ -184,10 +184,10 @@ const parseRange = (value: string, from: number, to: number, style: InlineStyle)
 
     flush();
 
-    if (delimiter === '`') {
+    if (delimiter === "`") {
       appendRun(
         runs,
-        value.slice(index + 1, closingIndex).replace(MARKDOWN_UNESCAPE_PATTERN, '$1'),
+        value.slice(index + 1, closingIndex).replace(MARKDOWN_UNESCAPE_PATTERN, "$1"),
         { ...style, code: true },
       );
     } else {
@@ -218,4 +218,4 @@ export const escapeInlineMarkdown = (value: string): string =>
 export const stripInlineMarkdown = (value: string): string =>
   parseInlineMarkdown(value)
     .map((run) => run.text)
-    .join('');
+    .join("");

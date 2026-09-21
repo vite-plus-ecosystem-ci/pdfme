@@ -1,13 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Schema, Plugin, BasePdf, getFallbackFontName } from '@pdfme/common';
-import { theme, Button } from 'antd';
-import { useDraggable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
-import Renderer from '../Renderer.js';
-import { LEFT_SIDEBAR_WIDTH, DESIGNER_CLASSNAME } from '../../constants.js';
-import { setFontNameRecursively } from '../../helper';
-import { OptionsContext, PluginsRegistry } from '../../contexts.js';
-import PluginIcon from './PluginIcon.js';
+import React, { useContext, useState, useEffect } from "react";
+import { Schema, Plugin, BasePdf, getFallbackFontName } from "@pdfme/common";
+import { theme, Button } from "antd";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+import Renderer from "../Renderer.js";
+import { LEFT_SIDEBAR_WIDTH, DESIGNER_CLASSNAME } from "../../constants.js";
+import { setFontNameRecursively } from "../../helper";
+import { OptionsContext, PluginsRegistry } from "../../contexts.js";
+import PluginIcon from "./PluginIcon.js";
 
 const Draggable = (props: {
   plugin: Plugin<Schema>;
@@ -33,11 +33,11 @@ const Draggable = (props: {
         <Renderer
           schema={{ ...defaultSchema, id: defaultSchema.type }}
           basePdf={basePdf}
-          value={defaultSchema.content || ''}
+          value={defaultSchema.content || ""}
           onChangeHoveringSchemaId={() => {
             void 0;
           }}
-          mode={'viewer'}
+          mode={"viewer"}
           outline={`1px solid ${token.colorPrimary}`}
           scale={scale}
         />
@@ -49,7 +49,7 @@ const Draggable = (props: {
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
       {isDragging && renderedSchema}
-      <div style={{ visibility: isDragging ? 'hidden' : 'visible' }}>{props.children}</div>
+      <div style={{ visibility: isDragging ? "hidden" : "visible" }}>{props.children}</div>
     </div>
   );
 };
@@ -74,26 +74,26 @@ const LeftSidebar = ({
       }
     };
 
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener("mouseup", handleMouseUp);
 
     return () => {
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDragging]);
 
   return (
     <div
-      className={DESIGNER_CLASSNAME + 'left-sidebar'}
+      className={DESIGNER_CLASSNAME + "left-sidebar"}
       style={{
         left: 0,
         right: 0,
-        position: 'absolute',
+        position: "absolute",
         zIndex: 1,
         height,
         width: LEFT_SIDEBAR_WIDTH,
         background: token.colorBgLayout,
-        textAlign: 'center',
-        overflow: isDragging ? 'visible' : 'auto',
+        textAlign: "center",
+        overflow: isDragging ? "visible" : "auto",
       }}
     >
       {pluginsRegistry.entries().map(([label, plugin]) => {
@@ -104,9 +104,9 @@ const LeftSidebar = ({
         return (
           <Draggable key={label} scale={scale} basePdf={basePdf} plugin={plugin}>
             <Button
-              className={DESIGNER_CLASSNAME + 'plugin-' + pluginType}
+              className={DESIGNER_CLASSNAME + "plugin-" + pluginType}
               onMouseDown={() => setIsDragging(true)}
-              style={{ width: 35, height: 35, marginTop: '0.25rem', padding: '0.25rem' }}
+              style={{ width: 35, height: 35, marginTop: "0.25rem", padding: "0.25rem" }}
             >
               <PluginIcon plugin={plugin} label={label} />
             </Button>

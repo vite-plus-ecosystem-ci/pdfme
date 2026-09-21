@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { SchemaForUI } from '@pdfme/common';
-import { PluginsRegistry, I18nContext } from '../../../../contexts.js';
-import Item from './Item.js';
-import { useMountStatus } from '../../../../hooks.js';
-import { theme } from 'antd';
-import PluginIcon from '../../PluginIcon.js';
+import React, { useContext } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { SchemaForUI } from "@pdfme/common";
+import { PluginsRegistry, I18nContext } from "../../../../contexts.js";
+import Item from "./Item.js";
+import { useMountStatus } from "../../../../hooks.js";
+import { theme } from "antd";
+import PluginIcon from "../../PluginIcon.js";
 
 interface Props {
   isSelected: boolean;
@@ -44,18 +44,18 @@ const SelectableSortableItem = ({
 
   const [pluginLabel, thisPlugin] = pluginsRegistry.findWithLabelByType(schema.type);
 
-  let status: undefined | 'is-warning' | 'is-danger';
+  let status: undefined | "is-warning" | "is-danger";
   if (!schema.name) {
-    status = 'is-warning';
+    status = "is-warning";
   } else if (schemas.find((s) => schema.name && s.name === schema.name && s.id !== schema.id)) {
-    status = 'is-danger';
+    status = "is-danger";
   }
 
-  let title = i18n('edit');
-  if (status === 'is-warning') {
-    title = i18n('plsInputName');
-  } else if (status === 'is-danger') {
-    title = i18n('fieldMustUniq');
+  let title = i18n("edit");
+  if (status === "is-warning") {
+    title = i18n("plsInputName");
+  } else if (status === "is-danger") {
+    title = i18n("fieldMustUniq");
   }
 
   const selectedStyle = isSelected

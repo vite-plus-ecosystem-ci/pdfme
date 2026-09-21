@@ -1,8 +1,8 @@
-import { angleABC, distance, distanceCoords, rotate, vector } from '../maths.js';
+import { angleABC, distance, distanceCoords, rotate, vector } from "../maths.js";
 
-import Circle from './Circle.js';
-import GraphElement from './GraphElement.js';
-import Point from './Point.js';
+import Circle from "./Circle.js";
+import GraphElement from "./GraphElement.js";
+import Point from "./Point.js";
 
 export default class Arc extends GraphElement {
   O: Point;

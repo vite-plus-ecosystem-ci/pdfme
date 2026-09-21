@@ -1,8 +1,8 @@
-import React, { useEffect, useContext } from 'react';
-import { DraggableSyntheticListeners } from '@dnd-kit/core';
-import { I18nContext } from '../../../../contexts.js';
-import { GripVertical, CircleAlert, Lock } from 'lucide-react';
-import { Button, Typography } from 'antd';
+import React, { useEffect, useContext } from "react";
+import { DraggableSyntheticListeners } from "@dnd-kit/core";
+import { I18nContext } from "../../../../contexts.js";
+import { GripVertical, CircleAlert, Lock } from "lucide-react";
+import { Button, Typography } from "antd";
 
 const { Text } = Typography;
 
@@ -15,7 +15,7 @@ interface Props {
   /** Custom styles for the item */
   style?: React.CSSProperties;
   /** Status indicator for the item */
-  status?: 'is-warning' | 'is-danger';
+  status?: "is-warning" | "is-danger";
   /** Title attribute for the item */
   title?: string;
   /** Whether the item is required */
@@ -79,10 +79,10 @@ const Item = React.memo(
         return;
       }
 
-      document.body.style.cursor = 'grabbing';
+      document.body.style.cursor = "grabbing";
 
       return () => {
-        document.body.style.cursor = '';
+        document.body.style.cursor = "";
       };
     }, [dragOverlay]);
 
@@ -101,10 +101,10 @@ const Item = React.memo(
       >
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            cursor: 'pointer',
-            gap: '0.5rem',
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+            gap: "0.5rem",
             ...style,
           }}
           {...props}
@@ -113,37 +113,37 @@ const Item = React.memo(
           <Button
             {...listeners}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              background: 'none',
-              boxShadow: 'none',
-              border: 'none',
-              paddingLeft: '0.25rem',
+              display: "flex",
+              alignItems: "center",
+              background: "none",
+              boxShadow: "none",
+              border: "none",
+              paddingLeft: "0.25rem",
             }}
-            icon={<GripVertical size={15} style={{ cursor: 'grab' }} />}
+            icon={<GripVertical size={15} style={{ cursor: "grab" }} />}
           />
           {icon}
           <Text
             style={{
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-              width: '100%',
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              width: "100%",
             }}
-            title={title || ''}
+            title={title || ""}
           >
             {status === undefined ? (
               value
             ) : (
-              <span style={{ display: 'flex', alignItems: 'center' }}>
-                <CircleAlert size={15} style={{ marginRight: '0.25rem' }} />
-                {status === 'is-warning' ? i18n('noKeyName') : value}
-                {status === 'is-danger' ? i18n('notUniq') : ''}
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <CircleAlert size={15} style={{ marginRight: "0.25rem" }} />
+                {status === "is-warning" ? i18n("noKeyName") : value}
+                {status === "is-danger" ? i18n("notUniq") : ""}
               </span>
             )}
           </Text>
-          {readOnly && <Lock size={15} style={{ marginRight: '0.5rem' }} />}
-          {required && <span style={{ color: 'red', marginRight: '0.5rem' }}>*</span>}
+          {readOnly && <Lock size={15} style={{ marginRight: "0.5rem" }} />}
+          {required && <span style={{ color: "red", marginRight: "0.5rem" }}>*</span>}
         </div>
       </li>
     );
@@ -151,6 +151,6 @@ const Item = React.memo(
 );
 
 // Set display name for debugging
-Item.displayName = 'Item';
+Item.displayName = "Item";
 
 export default Item;

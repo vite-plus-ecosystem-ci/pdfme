@@ -1,4 +1,4 @@
-import { PNG } from '../../src/utils/png';
+import { PNG } from "../../src/utils/png";
 
 // prettier-ignore
 const singlePixelPng = new Uint8Array([
@@ -10,7 +10,7 @@ const singlePixelPng = new Uint8Array([
 
 describe(`PNG`, () => {
   afterEach(() => {
-    vi.doUnmock('@pdf-lib/upng');
+    vi.doUnmock("@pdf-lib/upng");
     vi.resetModules();
   });
 
@@ -31,7 +31,7 @@ describe(`PNG`, () => {
   });
 
   it(`resolves nested default exports from @pdf-lib/upng`, async () => {
-    vi.doMock('@pdf-lib/upng', () => ({
+    vi.doMock("@pdf-lib/upng", () => ({
       default: {
         default: {
           decode: vi.fn(() => ({
@@ -44,7 +44,7 @@ describe(`PNG`, () => {
       },
     }));
 
-    const { PNG: MockedPNG } = await import('../../src/utils/png');
+    const { PNG: MockedPNG } = await import("../../src/utils/png");
     const pngImage = MockedPNG.load(singlePixelPng);
 
     expect(pngImage.rgbChannel).toEqual(new Uint8Array([255, 120, 80]));

@@ -54,7 +54,7 @@ function hslToHex(hue: number, saturation: number, lightness: number): string {
   const toHex = (channel: number) =>
     Math.round((channel + m) * 255)
       .toString(16)
-      .padStart(2, '0');
+      .padStart(2, "0");
 
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
@@ -101,7 +101,7 @@ function drawGridLines(
   gridSizeMm: number,
   withLabels: boolean,
 ): void {
-  ctx.strokeStyle = 'rgba(128, 128, 128, 0.3)';
+  ctx.strokeStyle = "rgba(128, 128, 128, 0.3)";
   ctx.lineWidth = 1;
 
   // Vertical lines
@@ -113,7 +113,7 @@ function drawGridLines(
     ctx.stroke();
 
     if (withLabels && x % (gridSizeMm * 2) === 0 && x > 0) {
-      ctx.fillStyle = 'rgba(100, 100, 100, 0.7)';
+      ctx.fillStyle = "rgba(100, 100, 100, 0.7)";
       ctx.font = `${Math.max(9, pxPerMm * 2.5)}px sans-serif`;
       ctx.fillText(`${x}`, px + 2, 12);
     }
@@ -128,7 +128,7 @@ function drawGridLines(
     ctx.stroke();
 
     if (withLabels && y % (gridSizeMm * 2) === 0 && y > 0) {
-      ctx.fillStyle = 'rgba(100, 100, 100, 0.7)';
+      ctx.fillStyle = "rgba(100, 100, 100, 0.7)";
       ctx.font = `${Math.max(9, pxPerMm * 2.5)}px sans-serif`;
       ctx.fillText(`${y}`, 2, px - 2);
     }
@@ -164,7 +164,7 @@ function drawSchemaOverlays(ctx: CanvasContext, schemas: Schema[], pxPerMm: numb
     ctx.globalAlpha = 1;
 
     // Label text (white on colored background)
-    ctx.fillStyle = '#FFFFFF';
+    ctx.fillStyle = "#FFFFFF";
     ctx.fillText(label, x + 3, y - 3);
   }
 }
@@ -174,10 +174,10 @@ async function loadAndPrepareCanvas(imageBuffer: ArrayBuffer): Promise<{
   ctx: CanvasContext;
   img: { width: number; height: number };
 }> {
-  const { createCanvas, loadImage } = await import('@napi-rs/canvas');
+  const { createCanvas, loadImage } = await import("@napi-rs/canvas");
   const img = await loadImage(Buffer.from(imageBuffer));
   const canvas = createCanvas(img.width, img.height);
-  const ctx = canvas.getContext('2d') as unknown as CanvasContext;
+  const ctx = canvas.getContext("2d") as unknown as CanvasContext;
   ctx.drawImage(img, 0, 0);
   return { canvas, ctx, img };
 }
@@ -205,7 +205,7 @@ export async function drawGridOnImage(
   drawGridLines(ctx, pxPerMm, pageWidthMm, pageHeightMm, img.width, img.height, gridSizeMm, false);
   drawSchemaOverlays(ctx, schemas, pxPerMm);
 
-  return bufferToArrayBuffer(canvas.toBuffer('image/png'));
+  return bufferToArrayBuffer(canvas.toBuffer("image/png"));
 }
 
 /**
@@ -223,5 +223,5 @@ export async function drawGridOnPdfImage(
 
   drawGridLines(ctx, pxPerMm, pageWidthMm, pageHeightMm, img.width, img.height, gridSizeMm, true);
 
-  return bufferToArrayBuffer(canvas.toBuffer('image/png'));
+  return bufferToArrayBuffer(canvas.toBuffer("image/png"));
 }

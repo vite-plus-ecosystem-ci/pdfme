@@ -1,10 +1,10 @@
-import { split } from '../../src/index';
-import { pdfToImages, loadTestPDF } from '../test-helpers';
+import { split } from "../../src/index";
+import { pdfToImages, loadTestPDF } from "../test-helpers";
 
-describe('E2E: split', () => {
-  const fiveP = loadTestPDF('5p.pdf');
+describe("E2E: split", () => {
+  const fiveP = loadTestPDF("5p.pdf");
 
-  test('split: split 5p.pdf into pages 1-2 and 3-5', async () => {
+  test("split: split 5p.pdf into pages 1-2 and 3-5", async () => {
     const [split12, split35] = await split(fiveP, [
       { start: 0, end: 1 }, // pages 1-2
       { start: 2, end: 4 }, // pages 3-5

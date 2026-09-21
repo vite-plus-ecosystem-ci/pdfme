@@ -1,14 +1,14 @@
-import type { Schema, Plugin } from '@pdfme/common';
+import type { Schema, Plugin } from "@pdfme/common";
 import {
   rotatePoint,
   convertForPdfLayoutProps,
   hex2PrintingColor,
   createSvgStr,
-} from '../utils.js';
-import { HEX_COLOR_PATTERN } from '../constants.js';
-import { Minus } from 'lucide';
+} from "../utils.js";
+import { HEX_COLOR_PATTERN } from "../constants.js";
+import { Minus } from "lucide";
 
-const DEFAULT_LINE_COLOR = '#000000';
+const DEFAULT_LINE_COLOR = "#000000";
 const HIT_POINT_HEIGHT = 16;
 
 export interface LineSchema extends Schema {
@@ -39,27 +39,27 @@ const lineSchema: Plugin<LineSchema> = {
   },
   ui: (arg) => {
     const { schema, rootElement } = arg;
-    Object.assign(rootElement.style, { position: 'relative', overflow: 'visible' });
+    Object.assign(rootElement.style, { position: "relative", overflow: "visible" });
 
     const baseStyles = {
-      position: 'absolute',
-      top: '50%',
-      left: '0',
-      transform: 'translateY(-50%)',
-      width: '100%',
+      position: "absolute",
+      top: "50%",
+      left: "0",
+      transform: "translateY(-50%)",
+      width: "100%",
     } as const;
 
-    const hitArea = document.createElement('div');
+    const hitArea = document.createElement("div");
     Object.assign(hitArea.style, baseStyles, {
       height: `${HIT_POINT_HEIGHT}px`,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     });
 
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     Object.assign(div.style, baseStyles, {
-      height: '100%',
-      backgroundColor: schema.color ?? 'transparent',
-      pointerEvents: 'none',
+      height: "100%",
+      backgroundColor: schema.color ?? "transparent",
+      pointerEvents: "none",
     });
 
     rootElement.append(hitArea, div);
@@ -67,19 +67,19 @@ const lineSchema: Plugin<LineSchema> = {
   propPanel: {
     schema: ({ i18n }) => ({
       color: {
-        title: i18n('schemas.color'),
-        type: 'string',
-        widget: 'color',
+        title: i18n("schemas.color"),
+        type: "string",
+        widget: "color",
         props: {
           disabledAlpha: true,
         },
         required: true,
-        rules: [{ pattern: HEX_COLOR_PATTERN, message: i18n('validation.hexColor') }],
+        rules: [{ pattern: HEX_COLOR_PATTERN, message: i18n("validation.hexColor") }],
       },
     }),
     defaultSchema: {
-      name: '',
-      type: 'line',
+      name: "",
+      type: "line",
       position: { x: 0, y: 0 },
       width: 50,
       height: 0.5,

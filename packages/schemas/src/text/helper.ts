@@ -1,5 +1,5 @@
-import * as fontkit from 'fontkit';
-import type { Font as FontKitFont } from 'fontkit';
+import * as fontkit from "fontkit";
+import type { Font as FontKitFont } from "fontkit";
 import {
   b64toUint8Array,
   mm2pt,
@@ -10,11 +10,11 @@ import {
   getDefaultFont,
   DEFAULT_FONT_NAME,
   isUrlSafeToFetch,
-} from '@pdfme/common';
-import { Buffer } from 'buffer';
-import type { DYNAMIC_FONT_SIZE_FIT, TextSchema, FontWidthCalcValues } from './types.js';
-import { getBoxContentArea } from '../box.js';
-import { splitParagraphs, toLegacySplitLines, wrapText, type WrapLine } from './wrap.js';
+} from "@pdfme/common";
+import { Buffer } from "buffer";
+import type { DYNAMIC_FONT_SIZE_FIT, TextSchema, FontWidthCalcValues } from "./types.js";
+import { getBoxContentArea } from "../box.js";
+import { splitParagraphs, toLegacySplitLines, wrapText, type WrapLine } from "./wrap.js";
 import {
   DEFAULT_FONT_SIZE,
   DEFAULT_CHARACTER_SPACING,
@@ -26,7 +26,7 @@ import {
   VERTICAL_ALIGN_TOP,
   LINE_END_FORBIDDEN_CHARS,
   LINE_START_FORBIDDEN_CHARS,
-} from './constants.js';
+} from "./constants.js";
 
 export const getBrowserVerticalFontAdjustments = (
   fontKitFont: FontKitFont,
@@ -222,7 +222,7 @@ type FontKitFontCacheValue = fontkit.Font | Promise<fontkit.Font>;
 export const fetchRemoteFontData = async (url: string): Promise<ArrayBuffer> => {
   if (!isUrlSafeToFetch(url)) {
     throw Error(
-      '[@pdfme/schemas] Invalid or unsafe URL for font data. Only http: and https: URLs pointing to public hosts are allowed.',
+      "[@pdfme/schemas] Invalid or unsafe URL for font data. Only http: and https: URLs pointing to public hosts are allowed.",
     );
   }
 
@@ -255,8 +255,8 @@ export const getFontKitFont = async (
   const currentFont = font[fntNm] || getFallbackFont(font) || getDefaultFont()[DEFAULT_FONT_NAME];
   const fontKitFontPromise = (async () => {
     let fontData = currentFont.data;
-    if (typeof fontData === 'string') {
-      if (fontData.startsWith('http')) {
+    if (typeof fontData === "string") {
+      if (fontData.startsWith("http")) {
         fontData = await fetchRemoteFontData(fontData);
       } else {
         fontData = b64toUint8Array(fontData);
@@ -315,7 +315,7 @@ const getOverPosition = (textLine: string, calcValues: FontWidthCalcValues) => {
  * However, this might need to be revisited for broader language support.
  */
 const isLineBreakableChar = (char: string) => {
-  const lineBreakableChars = [' ', '-', '\u2014', '\u2013'];
+  const lineBreakableChars = [" ", "-", "\u2014", "\u2013"];
   return lineBreakableChars.includes(char);
 };
 
@@ -327,7 +327,7 @@ const getSplitPosition = (textLine: string, calcValues: FontWidthCalcValues) => 
   const overPos = getOverPosition(textLine, calcValues);
   if (overPos === null) return textLine.length; // input line is shorter than the available space
 
-  if (textLine[overPos] === ' ') {
+  if (textLine[overPos] === " ") {
     // if the character immediately beyond the boundary is a space, split
     return overPos;
   }
@@ -472,7 +472,7 @@ export const splitTextToSize = (arg: {
   fontSize: number;
   fontKitFont: fontkit.Font;
 }) => toLegacySplitLines(wrapTextToSize(arg));
-export const isFirefox = () => navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+export const isFirefox = () => navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
 //
 // 日本語禁則処理
 //
@@ -488,7 +488,7 @@ export const filterStartJP = (lines: string[]): string[] => {
     .reverse()
     .forEach((line) => {
       if (line.trim().length === 0) {
-        filtered.push('');
+        filtered.push("");
       } else {
         const charAtStart: string = line.charAt(0);
         if (LINE_START_FORBIDDEN_CHARS.includes(charAtStart)) {
@@ -516,7 +516,7 @@ export const filterStartJP = (lines: string[]): string[] => {
 
   if (charToAppend) {
     // Handle the case where filtered might be empty
-    const firstItem = filtered.length > 0 ? filtered[0] : '';
+    const firstItem = filtered.length > 0 ? filtered[0] : "";
     // Ensure we're concatenating strings
     const combinedItem = String(charToAppend) + String(firstItem);
     return [combinedItem, ...filtered.slice(1)].reverse();
@@ -532,7 +532,7 @@ export const filterEndJP = (lines: string[]): string[] => {
 
   lines.forEach((line) => {
     if (line.trim().length === 0) {
-      filtered.push('');
+      filtered.push("");
     } else {
       const chartAtEnd = line.slice(-1);
 
@@ -561,7 +561,7 @@ export const filterEndJP = (lines: string[]): string[] => {
 
   if (charToPrepend) {
     // Handle the case where filtered might be empty
-    const lastItem = filtered.length > 0 ? filtered[filtered.length - 1] : '';
+    const lastItem = filtered.length > 0 ? filtered[filtered.length - 1] : "";
     // Ensure we're concatenating strings
     const combinedItem = String(lastItem) + String(charToPrepend);
     return [...filtered.slice(0, -1), combinedItem];

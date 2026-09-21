@@ -1,11 +1,11 @@
-import { DEFAULT_FONT_NAME, Plugin, PDFRenderProps, getFallbackFontName } from '@pdfme/common';
-import { uiRender as textUiRender } from '../text/uiRender.js';
-import { pdfRender as textPdfRender } from '../text/pdfRender.js';
-import line from '../shapes/line.js';
-import { rectangle } from '../shapes/rectAndEllipse.js';
-import type { CellSchema } from './types.js';
-import { getCellPropPanelSchema, getDefaultCellStyles } from './helper.js';
-import { createBoxDimension, getBoxContentArea } from '../box.js';
+import { DEFAULT_FONT_NAME, Plugin, PDFRenderProps, getFallbackFontName } from "@pdfme/common";
+import { uiRender as textUiRender } from "../text/uiRender.js";
+import { pdfRender as textPdfRender } from "../text/pdfRender.js";
+import line from "../shapes/line.js";
+import { rectangle } from "../shapes/rectAndEllipse.js";
+import type { CellSchema } from "./types.js";
+import { getCellPropPanelSchema, getDefaultCellStyles } from "./helper.js";
+import { createBoxDimension, getBoxContentArea } from "../box.js";
 const linePdfRender = line.pdf;
 const rectanglePdfRender = rectangle.pdf;
 
@@ -18,14 +18,14 @@ const renderLine = async (
 ) =>
   linePdfRender({
     ...arg,
-    schema: { ...schema, type: 'line', position, width, height, color: schema.borderColor },
+    schema: { ...schema, type: "line", position, width, height, color: schema.borderColor },
   });
 
 const createTextDiv = (schema: CellSchema) => {
   const contentArea = getBoxContentArea(schema);
-  const textDiv = document.createElement('div');
-  textDiv.style.position = 'absolute';
-  textDiv.style.zIndex = '1';
+  const textDiv = document.createElement("div");
+  textDiv.style.position = "absolute";
+  textDiv.style.zIndex = "1";
   textDiv.style.width = `${contentArea.width}mm`;
   textDiv.style.height = `${contentArea.height}mm`;
   textDiv.style.top = `${contentArea.topInset}mm`;
@@ -42,10 +42,10 @@ const createLineDiv = (
   left: string | null,
   borderColor: string,
 ) => {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.style.width = width;
   div.style.height = height;
-  div.style.position = 'absolute';
+  div.style.position = "absolute";
   if (top !== null) div.style.top = top;
   if (right !== null) div.style.right = right;
   if (bottom !== null) div.style.bottom = bottom;
@@ -66,11 +66,11 @@ const cellSchema: Plugin<CellSchema> = {
         ...arg,
         schema: {
           ...schema,
-          type: 'rectangle',
+          type: "rectangle",
           width: schema.width,
           height: schema.height,
           borderWidth: 0,
-          borderColor: '',
+          borderColor: "",
           color: schema.backgroundColor,
         },
       }),
@@ -100,9 +100,9 @@ const cellSchema: Plugin<CellSchema> = {
       ...arg,
       schema: {
         ...schema,
-        type: 'text',
-        backgroundColor: '',
-        borderColor: '',
+        type: "text",
+        backgroundColor: "",
+        borderColor: "",
         borderWidth: createBoxDimension(0),
         padding: createBoxDimension(0),
         position: contentArea.position,
@@ -121,8 +121,8 @@ const cellSchema: Plugin<CellSchema> = {
       ...arg,
       schema: {
         ...schema,
-        backgroundColor: '',
-        borderColor: '',
+        backgroundColor: "",
+        borderColor: "",
         borderWidth: createBoxDimension(0),
         padding: createBoxDimension(0),
       },
@@ -131,25 +131,25 @@ const cellSchema: Plugin<CellSchema> = {
     rootElement.appendChild(textDiv);
 
     const lines = [
-      createLineDiv(`${width}mm`, `${borderWidth.top}mm`, '0mm', null, null, '0mm', borderColor),
-      createLineDiv(`${width}mm`, `${borderWidth.bottom}mm`, null, null, '0mm', '0mm', borderColor),
-      createLineDiv(`${borderWidth.left}mm`, `${height}mm`, '0mm', null, null, '0mm', borderColor),
-      createLineDiv(`${borderWidth.right}mm`, `${height}mm`, '0mm', '0mm', null, null, borderColor),
+      createLineDiv(`${width}mm`, `${borderWidth.top}mm`, "0mm", null, null, "0mm", borderColor),
+      createLineDiv(`${width}mm`, `${borderWidth.bottom}mm`, null, null, "0mm", "0mm", borderColor),
+      createLineDiv(`${borderWidth.left}mm`, `${height}mm`, "0mm", null, null, "0mm", borderColor),
+      createLineDiv(`${borderWidth.right}mm`, `${height}mm`, "0mm", "0mm", null, null, borderColor),
     ];
 
     lines.forEach((line) => rootElement.appendChild(line));
   },
   propPanel: {
     schema: ({ options, i18n }) => {
-      const font = options.font || { [DEFAULT_FONT_NAME]: { data: '', fallback: true } };
+      const font = options.font || { [DEFAULT_FONT_NAME]: { data: "", fallback: true } };
       const fontNames = Object.keys(font);
       const fallbackFontName = getFallbackFontName(font);
       return getCellPropPanelSchema({ i18n, fontNames, fallbackFontName });
     },
     defaultSchema: {
-      name: '',
-      type: 'cell',
-      content: 'Type Something...',
+      name: "",
+      type: "cell",
+      content: "Type Something...",
       position: { x: 0, y: 0 },
       width: 50,
       height: 15,

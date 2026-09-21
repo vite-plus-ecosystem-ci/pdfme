@@ -1,5 +1,5 @@
-import { decodeFromBase64DataUri } from './base64.js';
-import { charFromCode } from './strings.js';
+import { decodeFromBase64DataUri } from "./base64.js";
+import { charFromCode } from "./strings.js";
 
 export const last = <T>(array: T[]): T => array[array.length - 1];
 
@@ -60,7 +60,7 @@ export const mergeUint8Arrays = (arrays: Uint8Array[]): Uint8Array => {
 };
 
 export const arrayAsString = (array: Uint8Array | number[]): string => {
-  let str = '';
+  let str = "";
   for (let idx = 0, len = array.length; idx < len; idx++) {
     str += charFromCode(array[idx]);
   }
@@ -138,16 +138,16 @@ export const pluckIndices = <T>(arr: T[], indices: number[]) => {
 export const canBeConvertedToUint8Array = (
   input: any,
 ): input is string | ArrayBuffer | Uint8Array =>
-  input instanceof Uint8Array || input instanceof ArrayBuffer || typeof input === 'string';
+  input instanceof Uint8Array || input instanceof ArrayBuffer || typeof input === "string";
 
 export const toUint8Array = (input: string | ArrayBuffer | Uint8Array) => {
-  if (typeof input === 'string') {
+  if (typeof input === "string") {
     return decodeFromBase64DataUri(input);
   } else if (input instanceof ArrayBuffer) {
     return new Uint8Array(input);
   } else if (input instanceof Uint8Array) {
     return input;
   } else {
-    throw new TypeError('`input` must be one of `string | ArrayBuffer | Uint8Array`');
+    throw new TypeError("`input` must be one of `string | ArrayBuffer | Uint8Array`");
   }
 };

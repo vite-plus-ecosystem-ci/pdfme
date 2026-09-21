@@ -1,10 +1,10 @@
-import { createEngine, type PdfDocument, type PdfEngine } from 'clawpdf/browser';
-import { pdf2img, type Pdf2ImgOptions } from './pdf2img.js';
-import { pdf2size, type Pdf2SizeOptions } from './pdf2size.js';
+import { createEngine, type PdfDocument, type PdfEngine } from "clawpdf/browser";
+import { pdf2img, type Pdf2ImgOptions } from "./pdf2img.js";
+import { pdf2size, type Pdf2SizeOptions } from "./pdf2size.js";
 
 type WorkerScope = {
   addEventListener: (
-    type: 'message',
+    type: "message",
     listener: (event: MessageEvent<WorkerRequest>) => void,
   ) => void;
   postMessage: (message: unknown, transfer?: Transferable[]) => void;
@@ -13,13 +13,13 @@ type WorkerScope = {
 type WorkerRequest =
   | {
       id: number;
-      type: 'pdf2img';
+      type: "pdf2img";
       pdf: ArrayBuffer;
       options?: Pdf2ImgOptions;
     }
   | {
       id: number;
-      type: 'pdf2size';
+      type: "pdf2size";
       pdf: ArrayBuffer;
       options?: Pdf2SizeOptions;
     };
@@ -39,13 +39,13 @@ const openDocument = async (pdf: ArrayBuffer | Uint8Array): Promise<PdfDocument>
 
 const workerScope = self as unknown as WorkerScope;
 
-workerScope.addEventListener('message', (event) => {
+workerScope.addEventListener("message", (event) => {
   void handleRequest(event.data);
 });
 
 const handleRequest = async (request: WorkerRequest) => {
   try {
-    if (request.type === 'pdf2img') {
+    if (request.type === "pdf2img") {
       const result = await pdf2img(request.pdf, request.options, { openDocument });
       workerScope.postMessage({ id: request.id, ok: true, result }, result);
       return;

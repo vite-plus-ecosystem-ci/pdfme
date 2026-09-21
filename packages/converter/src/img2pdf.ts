@@ -1,5 +1,5 @@
-import { PDFDocument } from '@pdfme/pdf-lib';
-import { mm2pt } from '@pdfme/common';
+import { PDFDocument } from "@pdfme/pdf-lib";
+import { mm2pt } from "@pdfme/common";
 
 interface Img2PdfOptions {
   scale?: number;
@@ -7,11 +7,11 @@ interface Img2PdfOptions {
   margin?: [number, number, number, number]; // in millimeters [top, right, bottom, left]
 }
 
-function detectImageType(buffer: ArrayBuffer): 'jpeg' | 'png' | 'unknown' {
+function detectImageType(buffer: ArrayBuffer): "jpeg" | "png" | "unknown" {
   const bytes = new Uint8Array(buffer);
 
   if (bytes.length >= 2 && bytes[0] === 0xff && bytes[1] === 0xd8) {
-    return 'jpeg';
+    return "jpeg";
   }
 
   if (
@@ -25,10 +25,10 @@ function detectImageType(buffer: ArrayBuffer): 'jpeg' | 'png' | 'unknown' {
     bytes[6] === 0x1a &&
     bytes[7] === 0x0a
   ) {
-    return 'png';
+    return "png";
   }
 
-  return 'unknown';
+  return "unknown";
 }
 
 export async function img2pdf(
@@ -39,7 +39,7 @@ export async function img2pdf(
     const { scale = 1, size, margin = [0, 0, 0, 0] } = options;
 
     if (!Array.isArray(imgs) || imgs.length === 0) {
-      throw new Error('Input must be a non-empty array of image buffers');
+      throw new Error("Input must be a non-empty array of image buffers");
     }
 
     const doc = await PDFDocument.create();
@@ -48,9 +48,9 @@ export async function img2pdf(
         let image;
         const type = detectImageType(img);
 
-        if (type === 'jpeg') {
+        if (type === "jpeg") {
           image = await doc.embedJpg(img);
-        } else if (type === 'png') {
+        } else if (type === "png") {
           image = await doc.embedPng(img);
         } else {
           try {

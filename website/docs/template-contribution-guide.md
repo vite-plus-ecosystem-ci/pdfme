@@ -11,14 +11,17 @@ Even if you're new to OSS contributions, you can easily contribute by following 
 ## Template Addition Steps
 
 ### 1. Create Your Template
+
 Design your template in the [playground Designer](https://playground.pdfme.com/designer), then download `template.json` using the `Template JSON` button
 
 ### 2. Prepare Repository
+
 1. **[Create Fork]**  
    Click the `Fork` button at the top-right of [pdfme repository](https://github.com/pdfme/pdfme) to copy to your GitHub account
-   
+
 2. **[Clone Locally]**  
    Run in terminal (replace `YOUR-GITHUB-USERNAME` with your GitHub username):
+
    ```bash
    git clone git@github.com:YOUR-GITHUB-USERNAME/pdfme.git
    cd pdfme
@@ -31,8 +34,10 @@ Design your template in the [playground Designer](https://playground.pdfme.com/d
    ```
 
 ### 3. Add Template Files
+
 1. **[Create Directory]**  
    Create new directory in kebab-case (e.g. `my-new-template`):
+
    ```bash
    mkdir -p playground/public/template-assets/my-new-template
    ```
@@ -41,6 +46,7 @@ Design your template in the [playground Designer](https://playground.pdfme.com/d
 2. **[Place Files]**  
    Place downloaded `template.json` in the new directory  
    (Optional) Add `author` field for credit:
+
    ```json
    {
      "author": "YOUR-GITHUB-USERNAME",
@@ -50,6 +56,7 @@ Design your template in the [playground Designer](https://playground.pdfme.com/d
 
 3. **[Add Metadata]**
    Add `metadata.json` in the same directory. This metadata is used by the template gallery filters and cards.
+
    ```json
    {
      "description": "A short description of what this template is useful for.",
@@ -66,6 +73,7 @@ Reference: https://github.com/pdfme/pdfme/tree/main/playground/public/template-a
 
 4. **[Regenerate Gallery Metadata]**
    Run:
+
    ```bash
    npm --prefix playground run generate-template-assets
    ```
@@ -73,8 +81,10 @@ Reference: https://github.com/pdfme/pdfme/tree/main/playground/public/template-a
    This updates the generated template index used by the playground.
 
 ### 4. Commit Changes
+
 1. **[Record Changes]**  
    Run in terminal:
+
    ```bash
    git add .
    git commit -m "feat: Add My New Template"
@@ -87,14 +97,15 @@ Reference: https://github.com/pdfme/pdfme/tree/main/playground/public/template-a
    ```
 
 ### 5. Create Pull Request
+
 1. **Create PR on GitHub**  
    Go to your repository page → `Pull requests` → `New pull request`
 
-2. **Select Branches**  
+2. **Select Branches**
    - `base repository`: pdfme/pdfme (main branch)
    - `head repository`: YOUR-GITHUB-USERNAME/pdfme (add-my-new-template branch)
 
-3. **Enter Information**  
+3. **Enter Information**
    - Title: `Add [My New Template] template`
    - Include brief description of template features and use cases
 
@@ -102,6 +113,7 @@ Reference: https://github.com/pdfme/pdfme/tree/main/playground/public/template-a
    Click `Create pull request` to complete!
 
 ### 6. Await Merge
+
 After maintainer review, your template will be merged and listed officially 🎉  
 (If modifications needed, you'll receive comments on GitHub)
 

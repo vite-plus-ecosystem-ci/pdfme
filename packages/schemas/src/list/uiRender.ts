@@ -1,8 +1,8 @@
-import type * as CSS from 'csstype';
-import { UIRenderProps } from '@pdfme/common';
-import { isEditable } from '../utils.js';
-import { getListItemRange } from '../splitRange.js';
-import { uiRender as textUiRender } from '../text/uiRender.js';
+import type * as CSS from "csstype";
+import { UIRenderProps } from "@pdfme/common";
+import { isEditable } from "../utils.js";
+import { getListItemRange } from "../splitRange.js";
+import { uiRender as textUiRender } from "../text/uiRender.js";
 import {
   DEFAULT_ALIGNMENT,
   DEFAULT_CHARACTER_SPACING,
@@ -10,21 +10,21 @@ import {
   DEFAULT_FONT_SIZE,
   DEFAULT_LINE_HEIGHT,
   PLACEHOLDER_FONT_COLOR,
-} from '../text/constants.js';
-import type { TextSchema } from '../text/types.js';
-import type { ListItem, ListSchema } from './types.js';
+} from "../text/constants.js";
+import type { TextSchema } from "../text/types.js";
+import type { ListItem, ListSchema } from "./types.js";
 import {
   calculateListLayout,
   normalizeListItemEntries,
   normalizeListItems,
   serializeListItems,
-} from './helper.js';
-import { MAX_INDENT_LEVEL } from './constants.js';
+} from "./helper.js";
+import { MAX_INDENT_LEVEL } from "./constants.js";
 
-const focusDataKey = 'pdfmeListFocusIndex';
-const actionDataKey = 'pdfmeListAction';
-const internalFocusDataKey = 'pdfmeListInternalFocus';
-const caretMarker = '\u200B';
+const focusDataKey = "pdfmeListFocusIndex";
+const actionDataKey = "pdfmeListAction";
+const internalFocusDataKey = "pdfmeListInternalFocus";
+const caretMarker = "\u200B";
 const pendingFocusIndexes = new Map<string, number>();
 
 const getListFocusKey = (schema: ListSchema & { id?: string }) => schema.id || schema.name;
@@ -35,8 +35,8 @@ const isComposingKeyboardEvent = (event: KeyboardEvent) =>
 const getText = (element: HTMLElement): string => {
   const rawText = element.innerText;
   const hasCaretMarker = rawText.includes(caretMarker);
-  let text = rawText.replace(/\u200B/g, '');
-  if (!hasCaretMarker && text.endsWith('\n')) {
+  let text = rawText.replace(/\u200B/g, "");
+  if (!hasCaretMarker && text.endsWith("\n")) {
     text = text.slice(0, -1);
   }
   return text;
@@ -91,7 +91,7 @@ const focusBodyFromMouseEvent = (body: HTMLElement, event: MouseEvent) => {
 };
 
 const getBodyEditor = (body: HTMLElement): HTMLDivElement | null =>
-  body.querySelector<HTMLDivElement>('[contenteditable], [tabindex]');
+  body.querySelector<HTMLDivElement>("[contenteditable], [tabindex]");
 
 const insertLineBreakAtSelection = (element: HTMLElement) => {
   const fallbackText = getText(element);
@@ -111,7 +111,7 @@ const insertLineBreakAtSelection = (element: HTMLElement) => {
 
   selection.deleteFromDocument();
   const fragment = document.createDocumentFragment();
-  const lineBreak = document.createElement('br');
+  const lineBreak = document.createElement("br");
   const marker = document.createTextNode(caretMarker);
   fragment.append(lineBreak, marker);
   range.insertNode(fragment);
@@ -133,37 +133,37 @@ const createActionButton = (arg: {
   onPressStart?: () => void;
   onClick: () => void;
 }) => {
-  const button = document.createElement('button');
-  button.type = 'button';
+  const button = document.createElement("button");
+  button.type = "button";
   button.innerText = arg.label;
-  button.setAttribute('aria-label', arg.ariaLabel);
+  button.setAttribute("aria-label", arg.ariaLabel);
   button.disabled = Boolean(arg.disabled);
   setStyles(button, {
-    width: '18px',
-    height: '18px',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '0',
-    border: '1px solid #d9d9d9',
-    borderRadius: '3px',
-    background: '#ffffff',
-    color: '#333333',
-    fontSize: '11px',
-    lineHeight: '1',
-    cursor: arg.disabled ? 'not-allowed' : 'pointer',
+    width: "18px",
+    height: "18px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "0",
+    border: "1px solid #d9d9d9",
+    borderRadius: "3px",
+    background: "#ffffff",
+    color: "#333333",
+    fontSize: "11px",
+    lineHeight: "1",
+    cursor: arg.disabled ? "not-allowed" : "pointer",
     opacity: arg.disabled ? 0.45 : 1,
   });
-  button.addEventListener('pointerdown', (event) => {
+  button.addEventListener("pointerdown", (event) => {
     arg.onPressStart?.();
     event.stopPropagation();
   });
-  button.addEventListener('mousedown', (event) => {
+  button.addEventListener("mousedown", (event) => {
     arg.onPressStart?.();
     event.preventDefault();
     event.stopPropagation();
   });
-  button.addEventListener('click', (event) => {
+  button.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
     if (!arg.disabled) arg.onClick();
@@ -175,22 +175,22 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
   const { rootElement, schema, value, mode, onChange, stopEditing, tabIndex, placeholder } = arg;
   const focusKey = getListFocusKey(schema);
   const editable = isEditable(mode, schema);
-  const showControls = editable && (mode === 'form' || mode === 'designer');
+  const showControls = editable && (mode === "form" || mode === "designer");
   const usePlaceholder = editable && !value && Boolean(placeholder);
-  const sourceValue = usePlaceholder ? placeholder || '' : value;
+  const sourceValue = usePlaceholder ? placeholder || "" : value;
   const items = normalizeListItems(sourceValue);
   const originalItems = normalizeListItemEntries(value);
   const range = getListItemRange(schema) ?? { start: 0, end: items.length };
   const visibleItems = items.slice(range.start, range.end);
   const renderItems = visibleItems;
 
-  rootElement.innerHTML = '';
+  rootElement.innerHTML = "";
   setStyles(rootElement, {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    backgroundColor: schema.backgroundColor || 'transparent',
-    overflow: 'visible',
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    backgroundColor: schema.backgroundColor || "transparent",
+    overflow: "visible",
   });
 
   const layout = await calculateListLayout({
@@ -225,7 +225,7 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       rootElement.dataset[focusDataKey] = String(focusIndex);
       pendingFocusIndexes.set(focusKey, focusIndex);
     }
-    onChange({ key: 'content', value: serializeListItems(nextItems) });
+    onChange({ key: "content", value: serializeListItems(nextItems) });
   };
 
   const commitHeight = async (focusIndex?: number) => {
@@ -244,12 +244,12 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       _cache: arg._cache,
     });
     if (schema.height !== nextLayout.totalHeight) {
-      onChange({ key: 'height', value: nextLayout.totalHeight });
+      onChange({ key: "height", value: nextLayout.totalHeight });
     }
   };
 
   const preserveEditingForAction = () => {
-    rootElement.dataset[actionDataKey] = 'true';
+    rootElement.dataset[actionDataKey] = "true";
   };
 
   const updateItems = (
@@ -258,7 +258,7 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
   ) => {
     const nextItems = getNextItems();
     if (nextItems.length === 0) {
-      nextItems.push({ level: 0, text: '' });
+      nextItems.push({ level: 0, text: "" });
     }
     const itemIndex = Math.min(Math.max(range.start + rowIndex, 0), nextItems.length - 1);
     const focusIndex = mutate(nextItems, itemIndex);
@@ -267,13 +267,13 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
   };
 
   const preserveEditingForInternalFocus = () => {
-    rootElement.dataset[internalFocusDataKey] = 'true';
+    rootElement.dataset[internalFocusDataKey] = "true";
   };
 
   const preserveEditingForKeyboardCommit = () => {
     preserveEditingForInternalFocus();
     setTimeout(() => {
-      if (rootElement.dataset[internalFocusDataKey] === 'true') {
+      if (rootElement.dataset[internalFocusDataKey] === "true") {
         delete rootElement.dataset[internalFocusDataKey];
       }
     });
@@ -290,24 +290,24 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
   };
 
   const appendEmptyListControls = () => {
-    const controls = document.createElement('div');
-    controls.addEventListener('pointerdown', preserveEditingForAction);
-    controls.addEventListener('mousedown', preserveEditingForAction);
+    const controls = document.createElement("div");
+    controls.addEventListener("pointerdown", preserveEditingForAction);
+    controls.addEventListener("mousedown", preserveEditingForAction);
     setStyles(controls, {
-      position: 'absolute',
-      top: '0mm',
-      right: '-20px',
-      display: 'flex',
-      gap: '2px',
+      position: "absolute",
+      top: "0mm",
+      right: "-20px",
+      display: "flex",
+      gap: "2px",
     });
     controls.appendChild(
       createActionButton({
-        label: '+',
-        ariaLabel: arg.i18n('schemas.list.addItem'),
+        label: "+",
+        ariaLabel: arg.i18n("schemas.list.addItem"),
         onPressStart: preserveEditingForAction,
         onClick: () => {
           const nextItems = [...originalItems];
-          nextItems.splice(range.start, 0, { level: 0, text: '' });
+          nextItems.splice(range.start, 0, { level: 0, text: "" });
           commitItems(nextItems, range.start);
         },
       }),
@@ -318,35 +318,35 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
   let offsetY = 0;
   for (let index = 0; index < layout.items.length; index += 1) {
     const item = layout.items[index];
-    const row = document.createElement('div');
+    const row = document.createElement("div");
     setStyles(row, {
-      position: 'absolute',
+      position: "absolute",
       top: `${offsetY}mm`,
-      left: '0mm',
+      left: "0mm",
       width: `${schema.width}mm`,
       height: `${item.height}mm`,
     });
 
-    const marker = document.createElement('div');
+    const marker = document.createElement("div");
     setStyles(marker, {
-      position: 'absolute',
-      top: '0mm',
+      position: "absolute",
+      top: "0mm",
       left: `${item.markerX}mm`,
       width: `${layout.markerWidth}mm`,
-      height: '100%',
-      backgroundColor: 'transparent',
-      cursor: 'default',
+      height: "100%",
+      backgroundColor: "transparent",
+      cursor: "default",
     });
 
-    const body = document.createElement('div');
+    const body = document.createElement("div");
     setStyles(body, {
-      position: 'absolute',
-      top: '0mm',
+      position: "absolute",
+      top: "0mm",
       left: `${item.bodyX}mm`,
       width: `${item.bodyWidth}mm`,
       height: `${item.height}mm`,
-      backgroundColor: 'transparent',
-      cursor: editable ? 'text' : 'default',
+      backgroundColor: "transparent",
+      cursor: editable ? "text" : "default",
     });
 
     const schemaForUI = schema as ListSchema & { id?: string };
@@ -354,7 +354,7 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       ...schema,
       id: `${schemaForUI.id || schema.name}-list-item-${item.itemIndex}`,
       name: `${schema.name}-list-item-${item.itemIndex}`,
-      type: 'text',
+      type: "text",
       content: item.item,
       position: { x: 0, y: 0 },
       width: item.bodyWidth,
@@ -364,7 +364,7 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       lineHeight: schema.lineHeight ?? DEFAULT_LINE_HEIGHT,
       characterSpacing: schema.characterSpacing ?? DEFAULT_CHARACTER_SPACING,
       fontColor: usePlaceholder ? PLACEHOLDER_FONT_COLOR : schema.fontColor || DEFAULT_FONT_COLOR,
-      backgroundColor: '',
+      backgroundColor: "",
     };
     const markerTextSchema: TextSchema & { id?: string } = {
       ...textSchema,
@@ -373,7 +373,7 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       content: item.marker,
       width: layout.markerWidth,
       height: item.height,
-      alignment: 'right',
+      alignment: "right",
       fontColor: schema.fontColor || DEFAULT_FONT_COLOR,
     };
 
@@ -382,8 +382,8 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       rootElement: marker,
       schema: markerTextSchema,
       value: item.marker,
-      mode: 'viewer',
-      placeholder: '',
+      mode: "viewer",
+      placeholder: "",
       onChange: undefined,
       stopEditing: undefined,
     });
@@ -393,7 +393,7 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       rootElement: body,
       schema: textSchema,
       value: item.item,
-      placeholder: '',
+      placeholder: "",
       onChange: undefined,
       stopEditing: undefined,
     });
@@ -401,30 +401,30 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
     if (editable) {
       const editor = getBodyEditor(body);
       if (!editor) {
-        throw new Error('Unable to find list item text editor');
+        throw new Error("Unable to find list item text editor");
       }
       editor.tabIndex = tabIndex || 0;
-      body.addEventListener('pointerdown', handleInternalFocusPointer);
-      body.addEventListener('mousedown', (event) => {
+      body.addEventListener("pointerdown", handleInternalFocusPointer);
+      body.addEventListener("mousedown", (event) => {
         handleBodyMouseDown(editor, event);
       });
-      body.addEventListener('click', (event) => {
+      body.addEventListener("click", (event) => {
         event.stopPropagation();
         focusBodyFromMouseEvent(editor, event);
       });
-      editor.addEventListener('focus', () => {
+      editor.addEventListener("focus", () => {
         if (usePlaceholder) {
-          editor.innerText = '';
+          editor.innerText = "";
           editor.style.color = schema.fontColor || DEFAULT_FONT_COLOR;
         }
       });
       body.addEventListener(
-        'blur',
+        "blur",
         (event) => {
-          const isListAction = rootElement.dataset[actionDataKey] === 'true';
+          const isListAction = rootElement.dataset[actionDataKey] === "true";
           const relatedTarget = event.relatedTarget;
           const isInternalFocus =
-            rootElement.dataset[internalFocusDataKey] === 'true' ||
+            rootElement.dataset[internalFocusDataKey] === "true" ||
             (relatedTarget instanceof Node && rootElement.contains(relatedTarget));
           delete rootElement.dataset[internalFocusDataKey];
 
@@ -435,19 +435,19 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
         },
         true,
       );
-      editor.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
+      editor.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
           if (isComposingKeyboardEvent(event)) return;
           event.preventDefault();
           if (insertLineBreakAtSelection(editor)) {
             preserveEditingForKeyboardCommit();
-            if (mode === 'form') {
+            if (mode === "form") {
               void commitHeight(range.start + index);
             } else {
               commitItems(getNextItems(), range.start + index);
             }
           }
-        } else if (event.key === 'Tab') {
+        } else if (event.key === "Tab") {
           event.preventDefault();
           updateItems(index, (nextItems, itemIndex) => {
             const itemToUpdate = nextItems[itemIndex];
@@ -456,7 +456,7 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
               : Math.min(itemToUpdate.level + 1, MAX_INDENT_LEVEL);
             return itemIndex;
           });
-        } else if (event.key === 'Backspace' && getText(editor) === '') {
+        } else if (event.key === "Backspace" && getText(editor) === "") {
           event.preventDefault();
           updateItems(index, (nextItems, itemIndex) => {
             if (nextItems.length <= 1) {
@@ -474,26 +474,26 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
     row.appendChild(marker);
     row.appendChild(body);
     if (showControls) {
-      const controls = document.createElement('div');
-      controls.addEventListener('pointerdown', preserveEditingForAction);
-      controls.addEventListener('mousedown', preserveEditingForAction);
+      const controls = document.createElement("div");
+      controls.addEventListener("pointerdown", preserveEditingForAction);
+      controls.addEventListener("mousedown", preserveEditingForAction);
       setStyles(controls, {
-        position: 'absolute',
-        top: '0mm',
-        right: '-82px',
-        display: 'flex',
-        gap: '2px',
+        position: "absolute",
+        top: "0mm",
+        right: "-82px",
+        display: "flex",
+        gap: "2px",
       });
       controls.appendChild(
         createActionButton({
-          label: '+',
-          ariaLabel: arg.i18n('schemas.list.addItem'),
+          label: "+",
+          ariaLabel: arg.i18n("schemas.list.addItem"),
           onPressStart: preserveEditingForAction,
           onClick: () => {
             updateItems(index, (nextItems, itemIndex) => {
               nextItems.splice(itemIndex + 1, 0, {
                 level: nextItems[itemIndex]?.level ?? 0,
-                text: '',
+                text: "",
               });
               return itemIndex + 1;
             });
@@ -502,8 +502,8 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       );
       controls.appendChild(
         createActionButton({
-          label: '-',
-          ariaLabel: arg.i18n('schemas.list.removeItem'),
+          label: "-",
+          ariaLabel: arg.i18n("schemas.list.removeItem"),
           onPressStart: preserveEditingForAction,
           onClick: () => {
             updateItems(index, (nextItems, itemIndex) => {
@@ -519,8 +519,8 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       );
       controls.appendChild(
         createActionButton({
-          label: '<',
-          ariaLabel: arg.i18n('schemas.list.outdentItem'),
+          label: "<",
+          ariaLabel: arg.i18n("schemas.list.outdentItem"),
           disabled: item.level === 0,
           onPressStart: preserveEditingForAction,
           onClick: () => {
@@ -533,8 +533,8 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
       );
       controls.appendChild(
         createActionButton({
-          label: '>',
-          ariaLabel: arg.i18n('schemas.list.indentItem'),
+          label: ">",
+          ariaLabel: arg.i18n("schemas.list.indentItem"),
           disabled: item.level >= MAX_INDENT_LEVEL,
           onPressStart: preserveEditingForAction,
           onClick: () => {
@@ -570,7 +570,7 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
 
   if (editable && Number.isFinite(requestedFocusIndex) && bodyElements[relativeFocusIndex]) {
     setTimeout(() => focusBody(bodyElements[relativeFocusIndex]));
-  } else if (editable && mode === 'designer' && bodyElements[0]) {
+  } else if (editable && mode === "designer" && bodyElements[0]) {
     setTimeout(() => {
       if (!rootElement.contains(document.activeElement)) {
         focusBody(bodyElements[0]);
@@ -579,6 +579,6 @@ export const uiRender = async (arg: UIRenderProps<ListSchema>) => {
   }
 
   if (schema.height !== layout.totalHeight && onChange) {
-    onChange({ key: 'height', value: layout.totalHeight });
+    onChange({ key: "height", value: layout.totalHeight });
   }
 };

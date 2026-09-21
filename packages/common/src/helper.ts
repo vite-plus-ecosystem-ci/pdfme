@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { Buffer } from 'buffer';
-import { PDFName } from '@pdfme/pdf-lib';
-import type { PDFDocument, PDFPage } from '@pdfme/pdf-lib';
+import { z } from "zod";
+import { Buffer } from "buffer";
+import { PDFName } from "@pdfme/pdf-lib";
+import type { PDFDocument, PDFPage } from "@pdfme/pdf-lib";
 import {
   Schema,
   Template,
@@ -12,7 +12,7 @@ import {
   LegacySchemaPageArray,
   SchemaPageArray,
   PdfBytes,
-} from './types.js';
+} from "./types.js";
 import {
   Inputs as InputsSchema,
   UIOptions as UIOptionsSchema,
@@ -22,21 +22,21 @@ import {
   GenerateProps as GeneratePropsSchema,
   UIProps as UIPropsSchema,
   BlankPdf as BlankPdfSchema,
-} from './schema.js';
+} from "./schema.js";
 import {
   MM_TO_PT_RATIO,
   PT_TO_MM_RATIO,
   PT_TO_PX_RATIO,
   DEFAULT_FONT_NAME,
   DEFAULT_FONT_VALUE,
-} from './constants.js';
+} from "./constants.js";
 
 export const cloneDeep = <T>(value: T): T => structuredClone(value);
 
 const uniq = <T>(array: Array<T>) => Array.from(new Set(array));
 
 export const getFallbackFontName = (font: Font) => {
-  const initial = '';
+  const initial = "";
   const fallbackFontName = Object.entries(font).reduce((acc, cur) => {
     const [fontName, fontValue] = cur as [
       string,
@@ -80,10 +80,10 @@ const blob2Base64Pdf = (blob: Blob) => {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      if ((reader.result as string).startsWith('data:application/pdf;')) {
+      if ((reader.result as string).startsWith("data:application/pdf;")) {
         resolve(reader.result as string);
       } else {
-        reject(Error('[@pdfme/common] template.basePdf must be pdf data.'));
+        reject(Error("[@pdfme/common] template.basePdf must be pdf data."));
       }
     };
     reader.readAsDataURL(blob);
@@ -125,7 +125,7 @@ export const getInputFromTemplate = (template: Template): { [key: string]: strin
   template.schemas.forEach((page) => {
     page.forEach((schema) => {
       if (!schema.readOnly) {
-        input[schema.name] = schema.content || '';
+        input[schema.name] = schema.content || "";
       }
     });
   });
@@ -141,23 +141,23 @@ export const isUrlSafeToFetch = (urlString: string): boolean => {
     return false;
   }
 
-  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
     return false;
   }
 
   const hostname = parsed.hostname.toLowerCase();
 
   if (
-    hostname === 'localhost' ||
-    hostname === '0.0.0.0' ||
-    hostname === '[::1]' ||
-    hostname === '::1'
+    hostname === "localhost" ||
+    hostname === "0.0.0.0" ||
+    hostname === "[::1]" ||
+    hostname === "::1"
   ) {
     return false;
   }
 
   // Block IPv6 private ranges (link-local, unique-local, IPv4-mapped)
-  const bare = hostname.replace(/^\[|\]$/g, '');
+  const bare = hostname.replace(/^\[|\]$/g, "");
   if (/^fe80:/i.test(bare)) return false;
   if (/^f[cd]/i.test(bare)) return false;
   const ipv4MappedMatch = bare.match(/^::ffff:(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/i);
@@ -185,8 +185,8 @@ export const isUrlSafeToFetch = (urlString: string): boolean => {
   return true;
 };
 
-const SAFE_LINK_URI_PROTOCOLS = new Set(['http:', 'https:', 'mailto:']);
-const INTERNAL_LINK_CACHE_KEY = 'pdfme-internal-link-cache';
+const SAFE_LINK_URI_PROTOCOLS = new Set(["http:", "https:", "mailto:"]);
+const INTERNAL_LINK_CACHE_KEY = "pdfme-internal-link-cache";
 
 export type PdfLinkAnnotationRect = {
   x: number;
@@ -230,7 +230,7 @@ export const normalizeSafeLinkUri = (uri: string): string | undefined => {
 
 export const getInternalLinkTarget = (href: string): string | undefined => {
   const trimmed = href.trim();
-  if (!trimmed.startsWith('#') || trimmed.length === 1) return undefined;
+  if (!trimmed.startsWith("#") || trimmed.length === 1) return undefined;
 
   let target = trimmed.slice(1);
   try {
@@ -314,14 +314,14 @@ const addGoToLinkAnnotation = (arg: {
 
   const annotationRef = pdfDoc.context.register(
     pdfDoc.context.obj({
-      Type: PDFName.of('Annot'),
-      Subtype: PDFName.of('Link'),
+      Type: PDFName.of("Annot"),
+      Subtype: PDFName.of("Link"),
       Rect: [rect.x, rect.y, rect.x + rect.width, rect.y + rect.height],
       Border: [0, 0, borderWidth],
       A: {
-        Type: PDFName.of('Action'),
-        S: PDFName.of('GoTo'),
-        D: [target.page.ref, PDFName.of('XYZ'), target.x, target.y, null],
+        Type: PDFName.of("Action"),
+        S: PDFName.of("GoTo"),
+        D: [target.page.ref, PDFName.of("XYZ"), target.x, target.y, null],
       },
     }),
   );
@@ -365,13 +365,13 @@ export const getB64BasePdf = async (
   customPdf: ArrayBuffer | Uint8Array | string,
 ): Promise<string> => {
   if (
-    typeof customPdf === 'string' &&
-    !customPdf.startsWith('data:application/pdf;') &&
-    typeof window !== 'undefined'
+    typeof customPdf === "string" &&
+    !customPdf.startsWith("data:application/pdf;") &&
+    typeof window !== "undefined"
   ) {
     if (!isUrlSafeToFetch(customPdf)) {
       throw Error(
-        '[@pdfme/common] Invalid or unsafe URL for basePdf. Only http: and https: URLs pointing to public hosts are allowed.',
+        "[@pdfme/common] Invalid or unsafe URL for basePdf. Only http: and https: URLs pointing to public hosts are allowed.",
       );
     }
     const response = await fetch(customPdf);
@@ -379,21 +379,21 @@ export const getB64BasePdf = async (
     return blob2Base64Pdf(blob);
   }
 
-  if (typeof customPdf === 'string') {
+  if (typeof customPdf === "string") {
     return customPdf;
   }
 
   const uint8Array = customPdf instanceof Uint8Array ? customPdf : new Uint8Array(customPdf);
-  return 'data:application/pdf;base64,' + Buffer.from(uint8Array).toString('base64');
+  return "data:application/pdf;base64," + Buffer.from(uint8Array).toString("base64");
 };
 
 export const isBlankPdf = (basePdf: BasePdf): basePdf is BlankPdf =>
   BlankPdfSchema.safeParse(basePdf).success;
 
-const getByteString = (base64: string) => Buffer.from(base64, 'base64').toString('binary');
+const getByteString = (base64: string) => Buffer.from(base64, "base64").toString("binary");
 
 export const b64toUint8Array = (base64: string): PdfBytes => {
-  const data = base64.split(';base64,')[1] ? base64.split(';base64,')[1] : base64;
+  const data = base64.split(";base64,")[1] ? base64.split(";base64,")[1] : base64;
 
   const byteString = getByteString(data);
 
@@ -407,7 +407,7 @@ export const b64toUint8Array = (base64: string): PdfBytes => {
 const getFontNamesInSchemas = (schemas: SchemaPageArray) =>
   uniq(
     schemas
-      .map((p) => p.map((v) => (v as Schema & { fontName?: string }).fontName ?? ''))
+      .map((p) => p.map((v) => (v as Schema & { fontName?: string }).fontName ?? ""))
       .reduce((acc, cur) => acc.concat(cur), [] as (string | undefined)[])
       .filter(Boolean) as string[],
   );
@@ -473,13 +473,13 @@ const checkProps = <T>(data: unknown, zodSchema: z.ZodType<T>) => {
   } catch (e) {
     if (e instanceof z.ZodError) {
       const messages = e.issues.map(
-        (issue) => `ERROR POSITION: ${issue.path.join('.')}
+        (issue) => `ERROR POSITION: ${issue.path.join(".")}
 ERROR MESSAGE: ${issue.message}
 --------------------------`,
       );
       throw Error(`[@pdfme/common] Invalid argument:
 --------------------------
-${messages.join('\n')}`);
+${messages.join("\n")}`);
     } else {
       throw Error(
         `[@pdfme/common] Unexpected parsing error: ${e instanceof Error ? e.message : String(e)}`,
@@ -488,7 +488,7 @@ ${messages.join('\n')}`);
   }
 
   // Check fonts if template and options exist
-  if (data && typeof data === 'object' && 'template' in data && 'options' in data) {
+  if (data && typeof data === "object" && "template" in data && "options" in data) {
     const { template, options } = data as { template: Template; options: { font?: Font } };
     if (options && options.font) {
       checkFont({ font: options.font, template });
@@ -496,7 +496,7 @@ ${messages.join('\n')}`);
   }
 
   // Check plugins if template and plugins exist
-  if (data && typeof data === 'object' && 'template' in data && 'plugins' in data) {
+  if (data && typeof data === "object" && "template" in data && "plugins" in data) {
     const { template, plugins } = data as { template: Template; plugins: Plugins };
     if (plugins) {
       checkPlugins({ plugins, template });
@@ -509,7 +509,7 @@ export const checkUIOptions = (data: unknown) => checkProps(data, UIOptionsSchem
 export const checkPreviewProps = (data: unknown) => checkProps(data, PreviewPropsSchema);
 export const checkDesignerProps = (data: unknown) => checkProps(data, DesignerPropsSchema);
 export const checkUIProps = (data: unknown) => {
-  if (typeof data === 'object' && data !== null && 'template' in data) {
+  if (typeof data === "object" && data !== null && "template" in data) {
     migrateTemplate(data.template as Template);
   }
   checkProps(data, UIPropsSchema);
@@ -519,7 +519,7 @@ export const checkTemplate = (template: unknown) => {
   checkProps(template, TemplateSchema);
 };
 export const checkGenerateProps = (data: unknown) => {
-  if (typeof data === 'object' && data !== null && 'template' in data) {
+  if (typeof data === "object" && data !== null && "template" in data) {
     migrateTemplate(data.template as Template);
   }
   checkProps(data, GeneratePropsSchema);

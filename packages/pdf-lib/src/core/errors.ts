@@ -1,6 +1,6 @@
 // tslint:disable: max-classes-per-file
-import PDFObject from './objects/PDFObject.js';
-import { arrayAsString } from '../utils/index.js';
+import PDFObject from "./objects/PDFObject.js";
+import { arrayAsString } from "../utils/index.js";
 
 export class MethodNotImplementedError extends Error {
   constructor(className: string, methodName: string) {
@@ -23,7 +23,7 @@ export class UnexpectedObjectTypeError extends Error {
     const expectedTypes = Array.isArray(expected) ? expected.map(name) : [name(expected)];
 
     const msg =
-      `Expected instance of ${expectedTypes.join(' or ')}, ` +
+      `Expected instance of ${expectedTypes.join(" or ")}, ` +
       `but got instance of ${actual ? name(actual) : actual}`;
 
     super(msg);

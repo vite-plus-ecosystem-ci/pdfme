@@ -1,22 +1,22 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { homedir } from 'node:os';
-import { extname, join, resolve } from 'node:path';
-import { getDefaultFont, isUrlSafeToFetch } from '@pdfme/common';
-import type { Font } from '@pdfme/common';
-import { CliError, fail } from './contract.js';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { homedir } from "node:os";
+import { extname, join, resolve } from "node:path";
+import { getDefaultFont, isUrlSafeToFetch } from "@pdfme/common";
+import type { Font } from "@pdfme/common";
+import { CliError, fail } from "./contract.js";
 
-const CACHE_DIR = join(homedir(), '.pdfme', 'fonts');
+const CACHE_DIR = join(homedir(), ".pdfme", "fonts");
 const NOTO_SANS_JP_URL =
-  'https://github.com/google/fonts/raw/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf';
-export const NOTO_CACHE_FILE = join(CACHE_DIR, 'NotoSansJP-Regular.ttf');
+  "https://github.com/google/fonts/raw/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf";
+export const NOTO_CACHE_FILE = join(CACHE_DIR, "NotoSansJP-Regular.ttf");
 const REMOTE_FONT_TIMEOUT_MS = 15000;
 const MAX_REMOTE_FONT_BYTES = 32 * 1024 * 1024; // 32 MiB
 
-export type ExplicitFontSourceKind = 'localPath' | 'url' | 'dataUri' | 'inlineBytes' | 'invalid';
+export type ExplicitFontSourceKind = "localPath" | "url" | "dataUri" | "inlineBytes" | "invalid";
 export type ExplicitFontRemoteProvider =
-  | 'genericPublic'
-  | 'googleFontsAsset'
-  | 'googleFontsStylesheet';
+  | "genericPublic"
+  | "googleFontsAsset"
+  | "googleFontsStylesheet";
 
 export interface ExplicitFontSourceDiagnosis {
   fontName: string;
@@ -49,12 +49,12 @@ function ensureCacheDir(): void {
 
 export async function downloadNotoSansJP(verbose: boolean): Promise<Uint8Array | null> {
   if (existsSync(NOTO_CACHE_FILE)) {
-    if (verbose) console.error('Using cached NotoSansJP from', NOTO_CACHE_FILE);
+    if (verbose) console.error("Using cached NotoSansJP from", NOTO_CACHE_FILE);
     return new Uint8Array(readFileSync(NOTO_CACHE_FILE)) as Uint8Array<ArrayBuffer>;
   }
 
   ensureCacheDir();
-  console.error('Downloading NotoSansJP for CJK support...');
+  console.error("Downloading NotoSansJP for CJK support...");
 
   try {
     const response = await fetch(NOTO_SANS_JP_URL);
@@ -64,12 +64,12 @@ export async function downloadNotoSansJP(verbose: boolean): Promise<Uint8Array |
     }
     const buffer = new Uint8Array(await response.arrayBuffer()) as Uint8Array<ArrayBuffer>;
     writeFileSync(NOTO_CACHE_FILE, buffer);
-    console.error('Cached NotoSansJP to', NOTO_CACHE_FILE);
+    console.error("Cached NotoSansJP to", NOTO_CACHE_FILE);
     return buffer;
   } catch (error) {
     console.error(
-      'Warning: Could not download NotoSansJP. CJK text may not render correctly.',
-      error instanceof Error ? error.message : '',
+      "Warning: Could not download NotoSansJP. CJK text may not render correctly.",
+      error instanceof Error ? error.message : "",
     );
     return null;
   }
@@ -79,24 +79,24 @@ export function parseCustomFonts(fontArgs: string[]): Font {
   const font: Font = {};
   for (let i = 0; i < fontArgs.length; i++) {
     const arg = fontArgs[i];
-    const eqIndex = arg.indexOf('=');
+    const eqIndex = arg.indexOf("=");
     if (eqIndex === -1) {
       fail(
         `Invalid --font format ${JSON.stringify(arg)}. Expected name=path, for example "NotoSansJP=./fonts/NotoSansJP.ttf".`,
-        { code: 'EARG', exitCode: 1 },
+        { code: "EARG", exitCode: 1 },
       );
     }
     const name = arg.slice(0, eqIndex);
     const filePath = resolve(arg.slice(eqIndex + 1));
     if (!existsSync(filePath)) {
-      fail(`Font file not found: ${filePath}`, { code: 'EIO', exitCode: 3 });
+      fail(`Font file not found: ${filePath}`, { code: "EIO", exitCode: 3 });
     }
 
     const extension = extname(filePath).toLowerCase();
-    if (extension !== '.ttf') {
+    if (extension !== ".ttf") {
       fail(
         `Unsupported font format for ${filePath}. @pdfme/cli currently guarantees only .ttf custom fonts.`,
-        { code: 'EUNSUPPORTED', exitCode: 1 },
+        { code: "EUNSUPPORTED", exitCode: 1 },
       );
     }
 
@@ -139,9 +139,9 @@ export async function normalizeExplicitFontOption(
     return undefined;
   }
 
-  if (typeof jobFont !== 'object' || jobFont === null || Array.isArray(jobFont)) {
-    fail('Unified job options.font must be an object.', {
-      code: 'EARG',
+  if (typeof jobFont !== "object" || jobFont === null || Array.isArray(jobFont)) {
+    fail("Unified job options.font must be an object.", {
+      code: "EARG",
       exitCode: 1,
     });
   }
@@ -172,12 +172,12 @@ function analyzeExplicitFontSource(
   const issues: string[] = [];
   const warnings: string[] = [];
 
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
     issues.push(`Font config for ${fontName} must be an object with a "data" field.`);
     return {
       source: {
         fontName,
-        kind: 'invalid',
+        kind: "invalid",
         needsNetwork: false,
         dataType: getValueType(value),
       },
@@ -193,23 +193,23 @@ function analyzeExplicitFontSource(
     return {
       source: {
         fontName,
-        kind: 'invalid',
+        kind: "invalid",
         needsNetwork: false,
-        dataType: 'missing',
+        dataType: "missing",
       },
       issues,
       warnings,
     };
   }
 
-  if (typeof data === 'string') {
-    if (data.startsWith('data:')) {
+  if (typeof data === "string") {
+    if (data.startsWith("data:")) {
       return analyzeDataUriFontSource(fontName, data);
     }
 
     const parsedUrl = tryParseUrl(data);
     if (parsedUrl) {
-      if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+      if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
         return analyzeUrlFontSource(fontName, parsedUrl);
       }
 
@@ -219,9 +219,9 @@ function analyzeExplicitFontSource(
       return {
         source: {
           fontName,
-          kind: 'invalid',
+          kind: "invalid",
           needsNetwork: false,
-          dataType: 'string',
+          dataType: "string",
         },
         issues,
         warnings,
@@ -235,7 +235,7 @@ function analyzeExplicitFontSource(
     return {
       source: {
         fontName,
-        kind: 'inlineBytes',
+        kind: "inlineBytes",
         needsNetwork: false,
         dataType: getValueType(data),
       },
@@ -248,7 +248,7 @@ function analyzeExplicitFontSource(
   return {
     source: {
       fontName,
-      kind: 'invalid',
+      kind: "invalid",
       needsNetwork: false,
       dataType: getValueType(data),
     },
@@ -286,14 +286,14 @@ function analyzeLocalFontSource(
   return {
     source: {
       fontName,
-      kind: 'localPath',
+      kind: "localPath",
       path: pathValue,
       resolvedPath,
       exists,
       formatHint,
       supportedFormat: formatResult.supportedFormat,
       needsNetwork: false,
-      dataType: 'string',
+      dataType: "string",
     },
     issues,
     warnings,
@@ -314,7 +314,7 @@ function analyzeUrlFontSource(
   const formatHint = detectPathFormatHint(url.pathname);
   const formatResult = evaluateFontFormat(fontName, formatHint, `Font URL for ${fontName}`);
 
-  if (provider === 'googleFontsStylesheet') {
+  if (provider === "googleFontsStylesheet") {
     issues.push(
       `Font URL for ${fontName} uses the unsupported Google Fonts stylesheet API. Use the direct fonts.gstatic.com asset URL or download the font locally.`,
     );
@@ -324,23 +324,23 @@ function analyzeUrlFontSource(
       `Font URL for ${fontName} is invalid or unsafe. Only http: and https: URLs pointing to public hosts are allowed.`,
     );
   }
-  if (provider !== 'googleFontsStylesheet' && formatResult.issue) {
+  if (provider !== "googleFontsStylesheet" && formatResult.issue) {
     issues.push(formatResult.issue);
   }
-  if (provider !== 'googleFontsStylesheet' && formatResult.warning) {
+  if (provider !== "googleFontsStylesheet" && formatResult.warning) {
     warnings.push(formatResult.warning);
   }
 
   return {
     source: {
       fontName,
-      kind: 'url',
+      kind: "url",
       provider,
       url: url.toString(),
       formatHint,
       supportedFormat: formatResult.supportedFormat,
       needsNetwork: true,
-      dataType: 'string',
+      dataType: "string",
     },
     issues,
     warnings,
@@ -371,12 +371,12 @@ function analyzeDataUriFontSource(
   return {
     source: {
       fontName,
-      kind: 'dataUri',
+      kind: "dataUri",
       mediaType,
       formatHint,
       supportedFormat: formatResult.supportedFormat,
       needsNetwork: false,
-      dataType: 'string',
+      dataType: "string",
     },
     issues,
     warnings,
@@ -391,34 +391,34 @@ async function normalizeExplicitFontSource(
   const analysis = analyzeExplicitFontSource(fontName, value, templateDir);
 
   for (const issue of analysis.issues) {
-    const code = issue.includes('not found')
-      ? 'EIO'
-      : issue.includes('unsupported') || issue.includes('unsafe') || issue.includes('uses .')
-        ? 'EUNSUPPORTED'
-        : 'EARG';
-    fail(issue, { code, exitCode: code === 'EIO' ? 3 : 1 });
+    const code = issue.includes("not found")
+      ? "EIO"
+      : issue.includes("unsupported") || issue.includes("unsafe") || issue.includes("uses .")
+        ? "EUNSUPPORTED"
+        : "EARG";
+    fail(issue, { code, exitCode: code === "EIO" ? 3 : 1 });
   }
 
   const record = value as Record<string, unknown>;
   const data = record.data;
 
-  if (analysis.source.kind === 'localPath') {
+  if (analysis.source.kind === "localPath") {
     return {
       ...record,
       data: new Uint8Array(readFileSync(analysis.source.resolvedPath!)) as Uint8Array<ArrayBuffer>,
     };
   }
 
-  if (analysis.source.kind === 'url') {
+  if (analysis.source.kind === "url") {
     return {
       ...record,
       data: await fetchRemoteFontSource(analysis.source),
     };
   }
 
-  if (analysis.source.kind === 'dataUri' || analysis.source.kind === 'inlineBytes') {
+  if (analysis.source.kind === "dataUri" || analysis.source.kind === "inlineBytes") {
     const normalizedData =
-      typeof data === 'string'
+      typeof data === "string"
         ? data
         : data instanceof Uint8Array
           ? (data as Uint8Array<ArrayBuffer>)
@@ -430,7 +430,7 @@ async function normalizeExplicitFontSource(
   }
 
   fail(`Font source for ${fontName} has unsupported data type ${getValueType(data)}.`, {
-    code: 'EARG',
+    code: "EARG",
     exitCode: 1,
   });
 }
@@ -450,7 +450,7 @@ async function fetchRemoteFontSource(
       );
     }
 
-    const contentLengthHeader = response.headers.get('content-length');
+    const contentLengthHeader = response.headers.get("content-length");
     const declaredLength = contentLengthHeader ? Number(contentLengthHeader) : Number.NaN;
     if (Number.isFinite(declaredLength) && declaredLength > MAX_REMOTE_FONT_BYTES) {
       failRemoteFontFetch(
@@ -475,7 +475,7 @@ async function fetchRemoteFontSource(
 
 function failRemoteFontFetch(source: ExplicitFontSourceDiagnosis, message: string): never {
   fail(message, {
-    code: 'EFONT',
+    code: "EFONT",
     exitCode: 2,
     details: {
       fontName: source.fontName,
@@ -546,13 +546,13 @@ function tryParseUrl(value: string): URL | null {
 
 function detectRemoteFontProvider(url: URL): ExplicitFontRemoteProvider {
   const hostname = url.hostname.toLowerCase();
-  if (hostname === 'fonts.gstatic.com' || hostname.endsWith('.fonts.gstatic.com')) {
-    return 'googleFontsAsset';
+  if (hostname === "fonts.gstatic.com" || hostname.endsWith(".fonts.gstatic.com")) {
+    return "googleFontsAsset";
   }
-  if (hostname === 'fonts.googleapis.com' || hostname.endsWith('.fonts.googleapis.com')) {
-    return 'googleFontsStylesheet';
+  if (hostname === "fonts.googleapis.com" || hostname.endsWith(".fonts.googleapis.com")) {
+    return "googleFontsStylesheet";
   }
-  return 'genericPublic';
+  return "genericPublic";
 }
 
 function getDataUriMediaType(value: string): string | undefined {
@@ -571,14 +571,14 @@ function detectDataUriFormatHint(mediaType?: string): string | null {
   }
 
   const lower = mediaType.toLowerCase();
-  if (lower.includes('ttf') || lower.endsWith('/sfnt')) {
-    return 'ttf';
+  if (lower.includes("ttf") || lower.endsWith("/sfnt")) {
+    return "ttf";
   }
-  if (lower.includes('otf')) {
-    return 'otf';
+  if (lower.includes("otf")) {
+    return "otf";
   }
-  if (lower.includes('ttc')) {
-    return 'ttc';
+  if (lower.includes("ttc")) {
+    return "ttc";
   }
   return null;
 }
@@ -592,7 +592,7 @@ function evaluateFontFormat(
   issue?: string;
   warning?: string;
 } {
-  if (formatHint === 'ttf') {
+  if (formatHint === "ttf") {
     return { supportedFormat: true };
   }
 
@@ -609,11 +609,11 @@ function evaluateFontFormat(
 }
 
 function getValueType(value: unknown): string {
-  if (value === undefined) return 'undefined';
-  if (value === null) return 'null';
-  if (value instanceof Uint8Array) return 'Uint8Array';
-  if (value instanceof ArrayBuffer) return 'ArrayBuffer';
-  if (Array.isArray(value)) return 'array';
+  if (value === undefined) return "undefined";
+  if (value === null) return "null";
+  if (value instanceof Uint8Array) return "Uint8Array";
+  if (value instanceof ArrayBuffer) return "ArrayBuffer";
+  if (Array.isArray(value)) return "array";
   return typeof value;
 }
 
@@ -632,12 +632,12 @@ export async function resolveFont(options: ResolveFontOptions): Promise<Font> {
 
   if (noAutoFont) {
     fail(
-      'CJK text detected, but automatic NotoSansJP download is disabled by --noAutoFont and no explicit font source was provided. Provide --font or options.font.',
+      "CJK text detected, but automatic NotoSansJP download is disabled by --noAutoFont and no explicit font source was provided. Provide --font or options.font.",
       {
-        code: 'EFONT',
+        code: "EFONT",
         exitCode: 2,
         details: {
-          fontName: 'NotoSansJP',
+          fontName: "NotoSansJP",
           cacheFile: NOTO_CACHE_FILE,
           autoFont: false,
         },
@@ -648,12 +648,12 @@ export async function resolveFont(options: ResolveFontOptions): Promise<Font> {
   const notoData = await downloadNotoSansJP(verbose);
   if (!notoData) {
     fail(
-      'CJK text detected, but NotoSansJP could not be resolved automatically. Re-run with network access, warm the font cache, or provide --font / options.font.',
+      "CJK text detected, but NotoSansJP could not be resolved automatically. Re-run with network access, warm the font cache, or provide --font / options.font.",
       {
-        code: 'EFONT',
+        code: "EFONT",
         exitCode: 2,
         details: {
-          fontName: 'NotoSansJP',
+          fontName: "NotoSansJP",
           cacheFile: NOTO_CACHE_FILE,
           downloadUrl: NOTO_SANS_JP_URL,
           autoFont: true,

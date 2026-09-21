@@ -1,13 +1,13 @@
-import type { DynamicLayoutArgs, DynamicLayoutResult } from '@pdfme/common';
-import type { ListSchema } from './types.js';
-import { calculateListLayout, normalizeListItems } from './helper.js';
-import { createListItemSplitRange } from '../splitRange.js';
+import type { DynamicLayoutArgs, DynamicLayoutResult } from "@pdfme/common";
+import type { ListSchema } from "./types.js";
+import { calculateListLayout, normalizeListItems } from "./helper.js";
+import { createListItemSplitRange } from "../splitRange.js";
 
 export const getDynamicLayoutForList = async (
   value: string,
   args: DynamicLayoutArgs,
 ): Promise<DynamicLayoutResult> => {
-  if (args.schema.type !== 'list') return { heights: [args.schema.height] };
+  if (args.schema.type !== "list") return { heights: [args.schema.height] };
 
   const schema = args.schema as ListSchema;
   const items = normalizeListItems(value);

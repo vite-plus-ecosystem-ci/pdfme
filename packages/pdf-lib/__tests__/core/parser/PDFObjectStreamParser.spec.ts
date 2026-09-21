@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from "fs";
 import {
   PDFArray,
   PDFBool,
@@ -13,10 +13,9 @@ import {
   PDFRef,
   PDFString,
   ReparseError,
-} from '../../../src/index';
+} from "../../../src/index";
 
-const readData = (file: string) =>
-  new Uint8Array(fs.readFileSync(`${__dirname}/data/${file}`));
+const readData = (file: string) => new Uint8Array(fs.readFileSync(`${__dirname}/data/${file}`));
 
 describe(`PDFObjectStreamParser`, () => {
   it(`parses simple object streams`, () => {
@@ -25,7 +24,7 @@ describe(`PDFObjectStreamParser`, () => {
       N: 3,
       First: 18,
     });
-    const contents = readData('object-stream1');
+    const contents = readData("object-stream1");
     const stream = PDFRawStream.of(dict, contents);
 
     PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -49,7 +48,7 @@ describe(`PDFObjectStreamParser`, () => {
       N: 9,
       First: 44,
     });
-    const contents = readData('object-stream2');
+    const contents = readData("object-stream2");
     const stream = PDFRawStream.of(dict, contents);
 
     PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -57,7 +56,7 @@ describe(`PDFObjectStreamParser`, () => {
     expect(context.enumerateIndirectObjects().length).toBe(9);
     expect(context.lookup(PDFRef.of(1))).toBeInstanceOf(PDFDict);
     expect(context.lookup(PDFRef.of(2))).toBeInstanceOf(PDFArray);
-    expect(context.lookup(PDFRef.of(3))).toBe(PDFName.of('QuxBaz'));
+    expect(context.lookup(PDFRef.of(3))).toBe(PDFName.of("QuxBaz"));
     expect(context.lookup(PDFRef.of(4))).toBeInstanceOf(PDFString);
     expect(context.lookup(PDFRef.of(5))).toBe(PDFRef.of(21));
     expect(context.lookup(PDFRef.of(6))).toBeInstanceOf(PDFNumber);
@@ -72,7 +71,7 @@ describe(`PDFObjectStreamParser`, () => {
       N: 182,
       First: 1786,
     });
-    const contents = readData('object-stream3');
+    const contents = readData("object-stream3");
     const stream = PDFRawStream.of(dict, contents);
 
     PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -83,11 +82,11 @@ describe(`PDFObjectStreamParser`, () => {
   it(`handles encoded object streams with PDFName filters`, () => {
     const context = PDFContext.create();
     const dict = context.obj({
-      Filter: 'FlateDecode',
+      Filter: "FlateDecode",
       N: 115,
       First: 924,
     });
-    const contents = readData('object-stream4');
+    const contents = readData("object-stream4");
     const stream = PDFRawStream.of(dict, contents);
 
     PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -98,11 +97,11 @@ describe(`PDFObjectStreamParser`, () => {
   it(`handles encoded object streams with PDFArray filters`, () => {
     const context = PDFContext.create();
     const dict = context.obj({
-      Filter: ['FlateDecode'],
+      Filter: ["FlateDecode"],
       N: 115,
       First: 924,
     });
-    const contents = readData('object-stream4');
+    const contents = readData("object-stream4");
     const stream = PDFRawStream.of(dict, contents);
 
     PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -117,12 +116,10 @@ describe(`PDFObjectStreamParser`, () => {
       N: 115,
       First: 924,
     });
-    const contents = readData('object-stream4');
+    const contents = readData("object-stream4");
     const stream = PDFRawStream.of(dict, contents);
 
-    expect(() =>
-      PDFObjectStreamParser.forStream(stream).parseIntoContext(),
-    ).toThrow();
+    expect(() => PDFObjectStreamParser.forStream(stream).parseIntoContext()).toThrow();
   });
 
   it(`throws an error for invalid object streams`, async () => {
@@ -131,12 +128,10 @@ describe(`PDFObjectStreamParser`, () => {
       N: 1,
       First: 5,
     });
-    const contents = readData('object-stream-invalid');
+    const contents = readData("object-stream-invalid");
     const stream = PDFRawStream.of(dict, contents);
 
-    await expect(
-      PDFObjectStreamParser.forStream(stream).parseIntoContext(),
-    ).rejects.toThrow();
+    await expect(PDFObjectStreamParser.forStream(stream).parseIntoContext()).rejects.toThrow();
   });
 
   it(`prevents reparsing`, async () => {
@@ -145,14 +140,14 @@ describe(`PDFObjectStreamParser`, () => {
       N: 3,
       First: 18,
     });
-    const contents = readData('object-stream1');
+    const contents = readData("object-stream1");
     const stream = PDFRawStream.of(dict, contents);
 
     const parser = PDFObjectStreamParser.forStream(stream);
 
     await expect(parser.parseIntoContext()).resolves.not.toThrow();
     await expect(parser.parseIntoContext()).rejects.toThrow(
-      new ReparseError('PDFObjectStreamParser', 'parseIntoContext'),
+      new ReparseError("PDFObjectStreamParser", "parseIntoContext"),
     );
   });
 });

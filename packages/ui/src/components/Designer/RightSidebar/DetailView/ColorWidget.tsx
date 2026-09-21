@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ColorPicker, Input, Space } from 'antd';
+import React, { useEffect, useState } from "react";
+import { ColorPicker, Input, Space } from "antd";
 
 // form-render passes these props to a field widget. We override the built-in
 // `color` widget because form-render's bundled `rc-color-picker` relies on
@@ -15,13 +15,13 @@ export interface ColorWidgetProps {
   style?: React.CSSProperties;
 }
 
-const DEFAULT_COLOR = '#000000';
+const DEFAULT_COLOR = "#000000";
 // 6-digit hex, or 8-digit hex when a field opts into alpha (disabledAlpha={false}).
 const HEX_COLOR_REGEXP = /^#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/;
 
 // A value is safe to forward to the schema only when it is a valid hex color or
 // empty (clearing the field). This keeps invalid free-text out of PDF rendering.
-const isCommittableColor = (value: string) => value === '' || HEX_COLOR_REGEXP.test(value);
+const isCommittableColor = (value: string) => value === "" || HEX_COLOR_REGEXP.test(value);
 
 const ColorWidget = (props: ColorWidgetProps) => {
   // Default alpha off so the picker emits 6-digit hex; fields can opt in with
@@ -30,20 +30,20 @@ const ColorWidget = (props: ColorWidgetProps) => {
 
   // Keep a local copy so the text input stays responsive while the user types an
   // intermediate value (e.g. "#ff00") that is not yet a valid color.
-  const [inputValue, setInputValue] = useState(value ?? '');
+  const [inputValue, setInputValue] = useState(value ?? "");
 
   useEffect(() => {
-    setInputValue(value ?? '');
+    setInputValue(value ?? "");
   }, [value]);
 
   if (readOnly) {
-    return <span style={style}>{value || ''}</span>;
+    return <span style={style}>{value || ""}</span>;
   }
 
   const commit = (next: string) => {
     setInputValue(next);
     if (isCommittableColor(next)) {
-      onChange?.(next === '' ? undefined : next);
+      onChange?.(next === "" ? undefined : next);
     }
   };
 

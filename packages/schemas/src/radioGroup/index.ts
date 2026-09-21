@@ -1,10 +1,10 @@
-import { Plugin, Schema } from '@pdfme/common';
-import { Circle, CircleDot } from 'lucide';
-import svg from '../graphics/svg.js';
-import { isEditable, createSvgStr } from '../utils.js';
-import { HEX_COLOR_PATTERN } from '../constants.js';
+import { Plugin, Schema } from "@pdfme/common";
+import { Circle, CircleDot } from "lucide";
+import svg from "../graphics/svg.js";
+import { isEditable, createSvgStr } from "../utils.js";
+import { HEX_COLOR_PATTERN } from "../constants.js";
 
-const defaultStroke = 'currentColor';
+const defaultStroke = "currentColor";
 
 const getCheckedIcon = (stroke = defaultStroke) => createSvgStr(CircleDot, { stroke });
 const getUncheckedIcon = (stroke = defaultStroke) => createSvgStr(Circle, { stroke });
@@ -15,7 +15,7 @@ export interface RadioGroupSchema extends Schema {
 }
 
 const getIcon = ({ value, color }: { value: string; color: string }) =>
-  value === 'true' ? getCheckedIcon(color) : getUncheckedIcon(color);
+  value === "true" ? getCheckedIcon(color) : getUncheckedIcon(color);
 
 const eventEmitter = new EventTarget();
 
@@ -30,9 +30,9 @@ const eventListeners = new Map<string, EventListener>();
 const schema: Plugin<RadioGroupSchema> = {
   ui: (arg) => {
     const { schema, value, onChange, rootElement, mode } = arg;
-    const container = document.createElement('div');
-    container.style.width = '100%';
-    container.style.height = '100%';
+    const container = document.createElement("div");
+    container.style.width = "100%";
+    container.style.height = "100%";
 
     if (onChange) {
       radioButtonStates.set(schema.name, { value, onChange });
@@ -49,8 +49,8 @@ const schema: Plugin<RadioGroupSchema> = {
       if (selectedSchemaName !== schema.name) {
         const radioButtonState = radioButtonStates.get(schema.name);
         if (!radioButtonState) return;
-        if (radioButtonState.value === 'true') {
-          radioButtonState.onChange({ key: 'content', value: 'false' });
+        if (radioButtonState.value === "true") {
+          radioButtonState.onChange({ key: "content", value: "false" });
         }
       }
     };
@@ -59,10 +59,10 @@ const schema: Plugin<RadioGroupSchema> = {
     eventEmitter.addEventListener(`group-${schema.group}`, handleGroupEvent);
 
     if (isEditable(mode, schema)) {
-      container.addEventListener('click', () => {
-        if (value !== 'true' && onChange) {
-          onChange({ key: 'content', value: 'true' });
-          radioButtonStates.set(schema.name, { value: 'true', onChange });
+      container.addEventListener("click", () => {
+        if (value !== "true" && onChange) {
+          onChange({ key: "content", value: "true" });
+          radioButtonStates.set(schema.name, { value: "true", onChange });
           eventEmitter.dispatchEvent(
             new CustomEvent(`group-${schema.group}`, { detail: schema.name }),
           );
@@ -73,7 +73,7 @@ const schema: Plugin<RadioGroupSchema> = {
     void svg.ui({
       ...arg,
       rootElement: container,
-      mode: 'viewer',
+      mode: "viewer",
       value: getIcon({ value, color: schema.color }),
     });
 
@@ -84,29 +84,29 @@ const schema: Plugin<RadioGroupSchema> = {
   propPanel: {
     schema: ({ i18n }) => ({
       color: {
-        title: i18n('schemas.color'),
-        type: 'string',
-        widget: 'color',
+        title: i18n("schemas.color"),
+        type: "string",
+        widget: "color",
         props: {
           disabledAlpha: true,
         },
         required: true,
-        rules: [{ pattern: HEX_COLOR_PATTERN, message: i18n('validation.hexColor') }],
+        rules: [{ pattern: HEX_COLOR_PATTERN, message: i18n("validation.hexColor") }],
       },
       group: {
-        title: i18n('schemas.radioGroup.groupName'),
-        type: 'string',
+        title: i18n("schemas.radioGroup.groupName"),
+        type: "string",
       },
     }),
     defaultSchema: {
-      name: '',
-      type: 'radioGroup',
-      content: 'false',
+      name: "",
+      type: "radioGroup",
+      content: "false",
       position: { x: 0, y: 0 },
       width: 8,
       height: 8,
-      group: 'MyGroup',
-      color: '#000000',
+      group: "MyGroup",
+      color: "#000000",
     },
   },
   icon: getCheckedIcon(),

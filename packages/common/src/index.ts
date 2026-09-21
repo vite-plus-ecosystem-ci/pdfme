@@ -1,4 +1,4 @@
-import { PDFME_VERSION } from './version.js';
+import { PDFME_VERSION } from "./version.js";
 import {
   MM_TO_PT_RATIO,
   PT_TO_MM_RATIO,
@@ -8,7 +8,7 @@ import {
   CUSTOM_A4_PDF,
   ZOOM,
   DEFAULT_FONT_NAME,
-} from './constants.js';
+} from "./constants.js";
 import type {
   ChangeSchemaItem,
   ChangeSchemas,
@@ -48,9 +48,9 @@ import type {
   DynamicLayoutResult,
   GetDynamicLayout,
   PdfBytes,
-} from './types.js';
-import type { PdfLinkAnnotationRect } from './helper.js';
-import type { PageOrientation, PageSize, PageSizePreset } from './pageSize.js';
+} from "./types.js";
+import type { PdfLinkAnnotationRect } from "./helper.js";
+import type { PageOrientation, PageSize, PageSizePreset } from "./pageSize.js";
 import {
   cloneDeep,
   getFallbackFontName,
@@ -81,12 +81,12 @@ import {
   registerInternalLinkAnnotation,
   resetInternalLinkAnnotations,
   applyInternalLinkAnnotations,
-} from './helper.js';
-import { PAGE_SIZE_PRESETS, detectPaperSize, resolvePageSize } from './pageSize.js';
-import { getDynamicTemplate, getReadOnlyTableValue, getSchemaValue } from './dynamicTemplate.js';
-import { createDynamicLayoutSplitRange, getDynamicLayoutSplitRange } from './splitRange.js';
-import { replacePlaceholders, resolveReadOnlyContent } from './expression.js';
-import { pluginRegistry } from './pluginRegistry.js';
+} from "./helper.js";
+import { PAGE_SIZE_PRESETS, detectPaperSize, resolvePageSize } from "./pageSize.js";
+import { getDynamicTemplate, getReadOnlyTableValue, getSchemaValue } from "./dynamicTemplate.js";
+import { createDynamicLayoutSplitRange, getDynamicLayoutSplitRange } from "./splitRange.js";
+import { replacePlaceholders, resolveReadOnlyContent } from "./expression.js";
+import { pluginRegistry } from "./pluginRegistry.js";
 
 export {
   PDFME_VERSION,

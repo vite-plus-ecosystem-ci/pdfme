@@ -1,11 +1,11 @@
-import { pdfRender } from './pdfRender.js';
-import { getPropPanelByBarcodeType } from './propPanel.js';
-import { uiRender } from './uiRender.js';
-import type { BarcodeSchema, BarcodeTypes } from './types.js';
-import { BARCODE_TYPES } from './constants.js';
-import { createSvgStr } from '../utils.js';
-import { Plugin } from '@pdfme/common';
-import { QrCode, Barcode } from 'lucide';
+import { pdfRender } from "./pdfRender.js";
+import { getPropPanelByBarcodeType } from "./propPanel.js";
+import { uiRender } from "./uiRender.js";
+import type { BarcodeSchema, BarcodeTypes } from "./types.js";
+import { BARCODE_TYPES } from "./constants.js";
+import { createSvgStr } from "../utils.js";
+import { Plugin } from "@pdfme/common";
+import { QrCode, Barcode } from "lucide";
 
 const barcodes = BARCODE_TYPES.reduce(
   (acc, type) =>
@@ -14,7 +14,7 @@ const barcodes = BARCODE_TYPES.reduce(
         pdf: pdfRender,
         ui: uiRender,
         propPanel: getPropPanelByBarcodeType(type),
-        icon: createSvgStr(type == 'qrcode' ? QrCode : Barcode),
+        icon: createSvgStr(type == "qrcode" ? QrCode : Barcode),
       },
     }),
   {} as Record<BarcodeTypes, Plugin<BarcodeSchema>>,

@@ -12,14 +12,14 @@ export const visitVariables = (content: string, visitor: (match: VariableMatch) 
   for (let i = 0; i < content.length; i++) {
     const char = content[i];
 
-    if (char === '{') {
+    if (char === "{") {
       // Restart from the latest opener so malformed input behaves like /{([^{}]+)}/g
       // without requiring backtracking.
       startIndex = i;
       continue;
     }
 
-    if (char === '}' && startIndex !== -1) {
+    if (char === "}" && startIndex !== -1) {
       const name = content.slice(startIndex + 1, i);
       if (name.length > 0) {
         visitor({ name, startIndex, endIndex: i });

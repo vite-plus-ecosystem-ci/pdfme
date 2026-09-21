@@ -1,28 +1,28 @@
-import React from 'react';
-import { act, renderHook, waitFor } from '@testing-library/react';
-import { BLANK_PDF, PAGE_SIZE_PRESETS, type SchemaForUI, type Template } from '@pdfme/common';
-import * as converter from '@pdfme/converter';
-import * as helper from '../src/helper';
-import { useInitEvents, useScrollPageCursor, useUIPreProcessor } from '../src/hooks';
+import React from "react";
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { BLANK_PDF, PAGE_SIZE_PRESETS, type SchemaForUI, type Template } from "@pdfme/common";
+import * as converter from "@pdfme/converter";
+import * as helper from "../src/helper";
+import { useInitEvents, useScrollPageCursor, useUIPreProcessor } from "../src/hooks";
 
-vi.mock('@pdfme/converter', () => ({
+vi.mock("@pdfme/converter", () => ({
   pdf2size: vi.fn(),
   pdf2img: vi.fn(),
 }));
 
 const createTemplate = (): Template => ({
-  basePdf: 'data:application/pdf;base64,AA==',
+  basePdf: "data:application/pdf;base64,AA==",
   schemas: [[]],
 });
 
-test('useUIPreProcessor stores converter failures without unhandled rejections', async () => {
-  vi.spyOn(console, 'error').mockImplementation(() => undefined);
+test("useUIPreProcessor stores converter failures without unhandled rejections", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => undefined);
   const pdf2sizeMock = vi.mocked(converter.pdf2size);
   const pdf2imgMock = vi.mocked(converter.pdf2img);
   const template = createTemplate();
   const size = { width: 1200, height: 1200 };
 
-  pdf2sizeMock.mockRejectedValue(new Error('corrupt basePdf'));
+  pdf2sizeMock.mockRejectedValue(new Error("corrupt basePdf"));
 
   const { result } = renderHook(() =>
     useUIPreProcessor({
@@ -35,11 +35,11 @@ test('useUIPreProcessor stores converter failures without unhandled rejections',
 
   await waitFor(() => expect(result.current.error).toBeInstanceOf(Error));
 
-  expect(result.current.error?.message).toContain('corrupt basePdf');
+  expect(result.current.error?.message).toContain("corrupt basePdf");
   expect(pdf2imgMock).toHaveBeenCalledTimes(1);
 });
 
-test('useUIPreProcessor runs pdf sizing and imaging in parallel with isolated buffers', async () => {
+test("useUIPreProcessor runs pdf sizing and imaging in parallel with isolated buffers", async () => {
   const pdf2sizeMock = vi.mocked(converter.pdf2size);
   const pdf2imgMock = vi.mocked(converter.pdf2img);
   const template = createTemplate();
@@ -71,7 +71,7 @@ test('useUIPreProcessor runs pdf sizing and imaging in parallel with isolated bu
   await waitFor(() => expect(result.current.pageSizes).toEqual([PAGE_SIZE_PRESETS.A4]));
 });
 
-test('useUIPreProcessor keeps a positive base scale on narrow viewports', async () => {
+test("useUIPreProcessor keeps a positive base scale on narrow viewports", async () => {
   const pdf2sizeMock = vi.mocked(converter.pdf2size);
   const pdf2imgMock = vi.mocked(converter.pdf2img);
 
@@ -95,19 +95,19 @@ test('useUIPreProcessor keeps a positive base scale on narrow viewports', async 
   expect(result.current.scale).toBeGreaterThan(0);
 });
 
-test('useInitEvents paste ignores missing DOM nodes instead of storing null active elements', () => {
+test("useInitEvents paste ignores missing DOM nodes instead of storing null active elements", () => {
   vi.useFakeTimers();
 
   const schema = {
-    id: 'field-1',
-    name: 'field1',
-    type: 'text',
-    content: 'value',
+    id: "field-1",
+    name: "field1",
+    type: "text",
+    content: "value",
     position: { x: 0, y: 0 },
     width: 100,
     height: 20,
   } as SchemaForUI;
-  const activeElement = document.createElement('div');
+  const activeElement = document.createElement("div");
   activeElement.id = schema.id;
   const template: Template = {
     basePdf: BLANK_PDF,
@@ -127,12 +127,12 @@ test('useInitEvents paste ignores missing DOM nodes instead of storing null acti
 
   let shortcuts: Parameters<typeof helper.initShortCuts>[0] | undefined;
 
-  vi.spyOn(helper, 'initShortCuts').mockImplementation((arg) => {
+  vi.spyOn(helper, "initShortCuts").mockImplementation((arg) => {
     shortcuts = arg;
   });
-  vi.spyOn(helper, 'destroyShortCuts').mockImplementation(() => undefined);
-  vi.spyOn(helper, 'uuid').mockReturnValue('pasted-field');
-  vi.spyOn(document, 'getElementById').mockReturnValue(null);
+  vi.spyOn(helper, "destroyShortCuts").mockImplementation(() => undefined);
+  vi.spyOn(helper, "uuid").mockReturnValue("pasted-field");
+  vi.spyOn(document, "getElementById").mockReturnValue(null);
 
   renderHook(() =>
     useInitEvents({
@@ -190,21 +190,21 @@ const mockRect = ({
     toJSON: () => undefined,
   }) as DOMRect;
 
-test('useScrollPageCursor keeps the current page until it is mostly gone', async () => {
-  const container = document.createElement('div');
-  const firstPaper = document.createElement('div');
-  const secondPaper = document.createElement('div');
+test("useScrollPageCursor keeps the current page until it is mostly gone", async () => {
+  const container = document.createElement("div");
+  const firstPaper = document.createElement("div");
+  const secondPaper = document.createElement("div");
   const containerRef = { current: container };
   const paperRefs = { current: [firstPaper, secondPaper] };
   const onChangePageCursor = vi.fn();
   let firstPaperRect = mockRect({ left: 0, top: -20, width: 100, height: 80 });
   let secondPaperRect = mockRect({ left: 0, top: 60, width: 100, height: 100 });
 
-  vi.spyOn(container, 'getBoundingClientRect').mockReturnValue(
+  vi.spyOn(container, "getBoundingClientRect").mockReturnValue(
     mockRect({ left: 0, top: 0, width: 100, height: 100 }),
   );
-  vi.spyOn(firstPaper, 'getBoundingClientRect').mockImplementation(() => firstPaperRect);
-  vi.spyOn(secondPaper, 'getBoundingClientRect').mockImplementation(() => secondPaperRect);
+  vi.spyOn(firstPaper, "getBoundingClientRect").mockImplementation(() => firstPaperRect);
+  vi.spyOn(secondPaper, "getBoundingClientRect").mockImplementation(() => secondPaperRect);
 
   renderHook(() =>
     useScrollPageCursor({
@@ -227,7 +227,7 @@ test('useScrollPageCursor keeps the current page until it is mostly gone', async
   secondPaperRect = mockRect({ left: 0, top: 40, width: 100, height: 100 });
 
   act(() => {
-    container.dispatchEvent(new Event('scroll'));
+    container.dispatchEvent(new Event("scroll"));
   });
 
   expect(onChangePageCursor).not.toHaveBeenCalled();
@@ -236,7 +236,7 @@ test('useScrollPageCursor keeps the current page until it is mostly gone', async
   secondPaperRect = mockRect({ left: 0, top: 15, width: 100, height: 100 });
 
   act(() => {
-    container.dispatchEvent(new Event('scroll'));
+    container.dispatchEvent(new Event("scroll"));
   });
 
   expect(onChangePageCursor).toHaveBeenCalledWith(1);

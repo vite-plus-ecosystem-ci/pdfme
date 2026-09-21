@@ -1,17 +1,17 @@
-import PDFRef from '../objects/PDFRef.js';
-import PDFDict from '../objects/PDFDict.js';
-import PDFName from '../objects/PDFName.js';
-import PDFAcroButton from './PDFAcroButton.js';
-import PDFContext from '../PDFContext.js';
-import { AcroButtonFlags } from './flags.js';
-import { InvalidAcroFieldValueError } from '../errors.js';
+import PDFRef from "../objects/PDFRef.js";
+import PDFDict from "../objects/PDFDict.js";
+import PDFName from "../objects/PDFName.js";
+import PDFAcroButton from "./PDFAcroButton.js";
+import PDFContext from "../PDFContext.js";
+import { AcroButtonFlags } from "./flags.js";
+import { InvalidAcroFieldValueError } from "../errors.js";
 
 class PDFAcroRadioButton extends PDFAcroButton {
   static fromDict = (dict: PDFDict, ref: PDFRef) => new PDFAcroRadioButton(dict, ref);
 
   static create = (context: PDFContext) => {
     const dict = context.obj({
-      FT: 'Btn',
+      FT: "Btn",
       Ff: AcroButtonFlags.Radio,
       Kids: [],
     });
@@ -21,16 +21,16 @@ class PDFAcroRadioButton extends PDFAcroButton {
 
   setValue(value: PDFName) {
     const onValues = this.getOnValues();
-    if (!onValues.includes(value) && value !== PDFName.of('Off')) {
+    if (!onValues.includes(value) && value !== PDFName.of("Off")) {
       throw new InvalidAcroFieldValueError();
     }
 
-    this.dict.set(PDFName.of('V'), value);
+    this.dict.set(PDFName.of("V"), value);
 
     const widgets = this.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      const state = widget.getOnValue() === value ? value : PDFName.of('Off');
+      const state = widget.getOnValue() === value ? value : PDFName.of("Off");
       widget.setAppearanceState(state);
     }
   }
@@ -38,7 +38,7 @@ class PDFAcroRadioButton extends PDFAcroButton {
   getValue(): PDFName {
     const v = this.V();
     if (v instanceof PDFName) return v;
-    return PDFName.of('Off');
+    return PDFName.of("Off");
   }
 
   getOnValues(): PDFName[] {

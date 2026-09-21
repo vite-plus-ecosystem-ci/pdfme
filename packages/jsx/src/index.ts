@@ -19,8 +19,8 @@ export {
   Svg,
   Table,
   Text,
-} from './components.js';
-export { renderToTemplate } from './render.js';
+} from "./components.js";
+export { renderToTemplate } from "./render.js";
 export type {
   AbsoluteProps,
   BoxProps,
@@ -54,4 +54,4 @@ export type {
   SvgProps,
   TableProps,
   TextProps,
-} from './types.js';
+} from "./types.js";

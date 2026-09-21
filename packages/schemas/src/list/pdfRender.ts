@@ -1,9 +1,9 @@
-import type { PDFRenderProps } from '@pdfme/common';
-import type { ListSchema } from './types.js';
-import { pdfRender as textPdfRender } from '../text/pdfRender.js';
-import { rectangle } from '../shapes/rectAndEllipse.js';
-import { calculateListLayout, normalizeListItems } from './helper.js';
-import { getListItemRange } from '../splitRange.js';
+import type { PDFRenderProps } from "@pdfme/common";
+import type { ListSchema } from "./types.js";
+import { pdfRender as textPdfRender } from "../text/pdfRender.js";
+import { rectangle } from "../shapes/rectAndEllipse.js";
+import { calculateListLayout, normalizeListItems } from "./helper.js";
+import { getListItemRange } from "../splitRange.js";
 
 const rectanglePdfRender = rectangle.pdf;
 
@@ -29,9 +29,9 @@ export const pdfRender = async (arg: PDFRenderProps<ListSchema>) => {
       ...arg,
       schema: {
         ...schema,
-        type: 'rectangle',
+        type: "rectangle",
         borderWidth: 0,
-        borderColor: '',
+        borderColor: "",
         color: schema.backgroundColor,
       },
     });
@@ -44,13 +44,13 @@ export const pdfRender = async (arg: PDFRenderProps<ListSchema>) => {
       value: item.marker,
       schema: {
         ...schema,
-        type: 'text',
+        type: "text",
         position: { x: schema.position.x + item.markerX, y },
         width: layout.markerWidth,
         height: item.height,
-        backgroundColor: '',
-        alignment: 'right',
-        verticalAlignment: 'top',
+        backgroundColor: "",
+        alignment: "right",
+        verticalAlignment: "top",
         dynamicFontSize: undefined,
       },
     });
@@ -60,15 +60,15 @@ export const pdfRender = async (arg: PDFRenderProps<ListSchema>) => {
       value: item.item,
       schema: {
         ...schema,
-        type: 'text',
+        type: "text",
         position: {
           x: schema.position.x + item.bodyX,
           y,
         },
         width: item.bodyWidth,
         height: item.height,
-        backgroundColor: '',
-        verticalAlignment: 'top',
+        backgroundColor: "",
+        verticalAlignment: "top",
         dynamicFontSize: undefined,
       },
     });

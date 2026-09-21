@@ -6,8 +6,8 @@ import {
   getDefaultFont,
   getFallbackFontName,
   cloneDeep,
-} from '@pdfme/common';
-import type { Font as FontKitFont } from 'fontkit';
+} from "@pdfme/common";
+import type { Font as FontKitFont } from "fontkit";
 import type {
   TableSchema,
   CellStyle,
@@ -16,12 +16,12 @@ import type {
   TableInput,
   StylesProps,
   Section,
-} from './types.js';
-import { Cell, Column, Row, Table } from './classes.js';
-import { createBoxDimension } from '../box.js';
-import { getTableBodyRange } from '../splitRange.js';
+} from "./types.js";
+import { Cell, Column, Row, Table } from "./classes.js";
+import { createBoxDimension } from "../box.js";
+import { getTableBodyRange } from "../splitRange.js";
 
-type StyleProp = 'styles' | 'headStyles' | 'bodyStyles' | 'alternateRowStyles' | 'columnStyles';
+type StyleProp = "styles" | "headStyles" | "bodyStyles" | "alternateRowStyles" | "columnStyles";
 
 interface CreateTableArgs {
   schema: Schema;
@@ -105,8 +105,8 @@ function parseContent4Table(input: TableInput, fallbackFontName: string) {
   const styles = input.styles;
   return {
     columns,
-    head: parseSection('head', content.head, columns, styles, fallbackFontName),
-    body: parseSection('body', content.body, columns, styles, fallbackFontName),
+    head: parseSection("head", content.head, columns, styles, fallbackFontName),
+    body: parseSection("body", content.body, columns, styles, fallbackFontName),
   };
 }
 
@@ -118,9 +118,9 @@ function cellStyles(
   fallbackFontName: string,
 ) {
   let sectionStyles;
-  if (sectionName === 'head') {
+  if (sectionName === "head") {
     sectionStyles = styles.headStyles;
-  } else if (sectionName === 'body') {
+  } else if (sectionName === "body") {
     sectionStyles = styles.bodyStyles;
   }
   const otherStyles = Object.assign({}, styles.styles, sectionStyles);
@@ -128,21 +128,21 @@ function cellStyles(
   const colStyles = styles.columnStyles[column.index] || {};
 
   const rowStyles =
-    sectionName === 'body' && rowIndex % 2 === 0
+    sectionName === "body" && rowIndex % 2 === 0
       ? Object.assign({}, styles.alternateRowStyles)
       : {};
 
   const defaultStyle = {
     fontName: fallbackFontName,
-    backgroundColor: '',
-    textColor: '#000000',
+    backgroundColor: "",
+    textColor: "#000000",
     lineHeight: 1,
     characterSpacing: 0,
-    alignment: 'left',
-    verticalAlignment: 'middle',
+    alignment: "left",
+    verticalAlignment: "middle",
     fontSize: 10,
     cellPadding: createBoxDimension(5),
-    lineColor: '#000000',
+    lineColor: "#000000",
     lineWidth: createBoxDimension(0),
     minCellHeight: 0,
     minCellWidth: 0,
@@ -219,7 +219,7 @@ function parseStyles(cInput: UserOptions) {
     columnStyles: {},
   };
   for (const prop of Object.keys(styleOptions) as StyleProp[]) {
-    if (prop === 'columnStyles') {
+    if (prop === "columnStyles") {
       const current = cInput[prop];
       styleOptions.columnStyles = Object.assign({}, current);
     } else {
@@ -247,7 +247,7 @@ function parseInput(schema: TableSchema, body: string[][]): TableInput {
     tableWidth: options.tableWidth,
     showHead: options.showHead,
     tableLineWidth: options.tableLineWidth ?? 0,
-    tableLineColor: options.tableLineColor ?? '',
+    tableLineColor: options.tableLineColor ?? "",
   };
 
   const content = parseContent4Input(options);
@@ -259,11 +259,11 @@ export function createSingleTable(body: string[][], args: CreateTableArgs) {
   const { options, _cache, basePdf } = args;
   if (!isBlankPdf(basePdf)) {
     console.warn(
-      '[@pdfme/schema/table]' +
-        'When specifying a custom PDF for basePdf, ' +
-        'you cannot use features such as page breaks or re-layout of other elements.' +
-        'To utilize these features, please define basePdf as follows:\n' +
-        '{ width: number; height: number; padding: [number, number, number, number]; }',
+      "[@pdfme/schema/table]" +
+        "When specifying a custom PDF for basePdf, " +
+        "you cannot use features such as page breaks or re-layout of other elements." +
+        "To utilize these features, please define basePdf as follows:\n" +
+        "{ width: number; height: number; padding: [number, number, number, number]; }",
     );
   }
 

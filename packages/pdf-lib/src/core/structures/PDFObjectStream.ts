@@ -1,11 +1,11 @@
-import PDFName from '../objects/PDFName.js';
-import PDFNumber from '../objects/PDFNumber.js';
-import PDFObject from '../objects/PDFObject.js';
-import PDFRef from '../objects/PDFRef.js';
-import PDFContext from '../PDFContext.js';
-import PDFFlateStream from './PDFFlateStream.js';
-import CharCodes from '../syntax/CharCodes.js';
-import { copyStringIntoBuffer, last } from '../../utils/index.js';
+import PDFName from "../objects/PDFName.js";
+import PDFNumber from "../objects/PDFNumber.js";
+import PDFObject from "../objects/PDFObject.js";
+import PDFRef from "../objects/PDFRef.js";
+import PDFContext from "../PDFContext.js";
+import PDFFlateStream from "./PDFFlateStream.js";
+import CharCodes from "../syntax/CharCodes.js";
+import { copyStringIntoBuffer, last } from "../../utils/index.js";
 
 export type IndirectObject = [PDFRef, PDFObject];
 
@@ -24,9 +24,9 @@ class PDFObjectStream extends PDFFlateStream {
     this.offsets = this.computeObjectOffsets();
     this.offsetsString = this.computeOffsetsString();
 
-    this.dict.set(PDFName.of('Type'), PDFName.of('ObjStm'));
-    this.dict.set(PDFName.of('N'), PDFNumber.of(this.objects.length));
-    this.dict.set(PDFName.of('First'), PDFNumber.of(this.offsetsString.length));
+    this.dict.set(PDFName.of("Type"), PDFName.of("ObjStm"));
+    this.dict.set(PDFName.of("N"), PDFNumber.of(this.objects.length));
+    this.dict.set(PDFName.of("First"), PDFNumber.of(this.offsetsString.length));
   }
 
   getObjectsCount(): number {
@@ -68,7 +68,7 @@ class PDFObjectStream extends PDFFlateStream {
   }
 
   private computeOffsetsString(): string {
-    let offsetsString = '';
+    let offsetsString = "";
     for (let idx = 0, len = this.offsets.length; idx < len; idx++) {
       const [objectNumber, offset] = this.offsets[idx];
       offsetsString += `${objectNumber} ${offset} `;

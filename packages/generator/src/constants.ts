@@ -1,1 +1,1 @@
-export const TOOL_NAME = 'pdfme (https://pdfme.com/)';
+export const TOOL_NAME = "pdfme (https://pdfme.com/)";

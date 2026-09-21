@@ -1,8 +1,8 @@
-import type { ChangeSchemaItem, SchemaForUI } from '@pdfme/common';
+import type { ChangeSchemaItem, SchemaForUI } from "@pdfme/common";
 
 // Keep identity, content, type, and coordinates scoped to the active schema. Bulk-applying
 // these can duplicate names, rewrite field values, replace schema shapes, or stack fields.
-const singleSchemaOnlyChangeKeys = new Set(['id', 'name', 'type', 'content', 'position']);
+const singleSchemaOnlyChangeKeys = new Set(["id", "name", "type", "content", "position"]);
 
 export const getSameTypeBulkUpdateSchemas = ({
   activeSchema,
@@ -22,7 +22,7 @@ export const getSameTypeBulkUpdateSchemas = ({
 };
 
 export const isSingleSchemaOnlyChange = (key: string) =>
-  singleSchemaOnlyChangeKeys.has(key) || key.startsWith('position.');
+  singleSchemaOnlyChangeKeys.has(key) || key.startsWith("position.");
 
 export const expandSameTypeBulkUpdateChanges = ({
   activeSchema,

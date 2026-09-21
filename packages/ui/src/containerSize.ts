@@ -1,4 +1,4 @@
-import type { Size } from '@pdfme/common';
+import type { Size } from "@pdfme/common";
 
 export type ViewportSize = {
   height: number;
@@ -8,7 +8,7 @@ export type ViewportSize = {
 export type ContainerBox = {
   clientHeight: number;
   clientWidth: number;
-  getBoundingClientRect: () => Pick<DOMRect, 'bottom' | 'left' | 'right' | 'top'>;
+  getBoundingClientRect: () => Pick<DOMRect, "bottom" | "left" | "right" | "top">;
 };
 
 const visibleIntersection = (start: number, end: number, viewportSize: number): number =>

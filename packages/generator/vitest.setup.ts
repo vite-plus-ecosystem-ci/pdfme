@@ -1,3 +1,3 @@
-import { imageMatcher } from 'vitest-image-snapshot';
+import { imageMatcher } from "vitest-image-snapshot";
 
 imageMatcher();

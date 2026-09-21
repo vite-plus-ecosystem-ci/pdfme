@@ -1,27 +1,27 @@
-import PDFDict, { DictMap } from '../objects/PDFDict.js';
-import PDFName from '../objects/PDFName.js';
-import PDFRef from '../objects/PDFRef.js';
-import PDFContext from '../PDFContext.js';
-import PDFPageTree from './PDFPageTree.js';
-import { PDFAcroForm } from '../acroform/index.js';
-import ViewerPreferences from '../interactive/ViewerPreferences.js';
+import PDFDict, { DictMap } from "../objects/PDFDict.js";
+import PDFName from "../objects/PDFName.js";
+import PDFRef from "../objects/PDFRef.js";
+import PDFContext from "../PDFContext.js";
+import PDFPageTree from "./PDFPageTree.js";
+import { PDFAcroForm } from "../acroform/index.js";
+import ViewerPreferences from "../interactive/ViewerPreferences.js";
 
 class PDFCatalog extends PDFDict {
   static withContextAndPages = (context: PDFContext, pages: PDFPageTree | PDFRef) => {
     const dict = new Map();
-    dict.set(PDFName.of('Type'), PDFName.of('Catalog'));
-    dict.set(PDFName.of('Pages'), pages);
+    dict.set(PDFName.of("Type"), PDFName.of("Catalog"));
+    dict.set(PDFName.of("Pages"), pages);
     return new PDFCatalog(dict, context);
   };
 
   static fromMapWithContext = (map: DictMap, context: PDFContext) => new PDFCatalog(map, context);
 
   Pages(): PDFPageTree {
-    return this.lookup(PDFName.of('Pages'), PDFDict) as PDFPageTree;
+    return this.lookup(PDFName.of("Pages"), PDFDict) as PDFPageTree;
   }
 
   AcroForm(): PDFDict | undefined {
-    return this.lookupMaybe(PDFName.of('AcroForm'), PDFDict);
+    return this.lookupMaybe(PDFName.of("AcroForm"), PDFDict);
   }
 
   getAcroForm(): PDFAcroForm | undefined {
@@ -35,13 +35,13 @@ class PDFCatalog extends PDFDict {
     if (!acroForm) {
       acroForm = PDFAcroForm.create(this.context);
       const acroFormRef = this.context.register(acroForm.dict);
-      this.set(PDFName.of('AcroForm'), acroFormRef);
+      this.set(PDFName.of("AcroForm"), acroFormRef);
     }
     return acroForm;
   }
 
   ViewerPreferences(): PDFDict | undefined {
-    return this.lookupMaybe(PDFName.of('ViewerPreferences'), PDFDict);
+    return this.lookupMaybe(PDFName.of("ViewerPreferences"), PDFDict);
   }
 
   getViewerPreferences(): ViewerPreferences | undefined {
@@ -55,7 +55,7 @@ class PDFCatalog extends PDFDict {
     if (!viewerPrefs) {
       viewerPrefs = ViewerPreferences.create(this.context);
       const viewerPrefsRef = this.context.register(viewerPrefs.dict);
-      this.set(PDFName.of('ViewerPreferences'), viewerPrefsRef);
+      this.set(PDFName.of("ViewerPreferences"), viewerPrefsRef);
     }
     return viewerPrefs;
   }
@@ -68,7 +68,7 @@ class PDFCatalog extends PDFDict {
    * Returns the ref of the PDFPageTree node into which `leafRef` was inserted.
    */
   insertLeafNode(leafRef: PDFRef, index: number): PDFRef {
-    const pagesRef = this.get(PDFName.of('Pages')) as PDFRef;
+    const pagesRef = this.get(PDFName.of("Pages")) as PDFRef;
     const maybeParentRef = this.Pages().insertLeafNode(leafRef, index);
     return maybeParentRef || pagesRef;
   }

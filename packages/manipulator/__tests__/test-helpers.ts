@@ -1,8 +1,8 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { PDFDocument } from '@pdfme/pdf-lib';
-import { pdf2img } from '@pdfme/converter';
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { PDFDocument } from "@pdfme/pdf-lib";
+import { pdf2img } from "@pdfme/converter";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -29,7 +29,7 @@ export const getPDFPageCount = async (pdf: ArrayBuffer | Uint8Array): Promise<nu
   return pdfDoc.getPageCount();
 };
 
-export const assetPath = (fileName: string) => path.join(__dirname, 'assets/pdfs', fileName);
+export const assetPath = (fileName: string) => path.join(__dirname, "assets/pdfs", fileName);
 
 export function toArrayBuffer(buf: Buffer): Uint8Array {
   return new Uint8Array(buf);

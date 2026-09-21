@@ -1,8 +1,8 @@
 export default {
   process() {
-    return 'export default {};';
+    return "export default {};";
   },
   getCacheKey() {
-    return 'cssTransform';
+    return "cssTransform";
   },
 };

@@ -1,13 +1,13 @@
-import PDFArray from '../objects/PDFArray.js';
-import PDFHexString from '../objects/PDFHexString.js';
-import PDFName from '../objects/PDFName.js';
-import PDFNumber from '../objects/PDFNumber.js';
-import PDFObject from '../objects/PDFObject.js';
-import PDFString from '../objects/PDFString.js';
-import PDFOperatorNames from './PDFOperatorNames.js';
-import PDFContext from '../PDFContext.js';
-import CharCodes from '../syntax/CharCodes.js';
-import { copyStringIntoBuffer } from '../../utils/index.js';
+import PDFArray from "../objects/PDFArray.js";
+import PDFHexString from "../objects/PDFHexString.js";
+import PDFName from "../objects/PDFName.js";
+import PDFNumber from "../objects/PDFNumber.js";
+import PDFObject from "../objects/PDFObject.js";
+import PDFString from "../objects/PDFString.js";
+import PDFOperatorNames from "./PDFOperatorNames.js";
+import PDFContext from "../PDFContext.js";
+import CharCodes from "../syntax/CharCodes.js";
+import { copyStringIntoBuffer } from "../../utils/index.js";
 
 export type PDFOperatorArg = string | PDFName | PDFArray | PDFNumber | PDFString | PDFHexString;
 
@@ -32,9 +32,9 @@ class PDFOperator {
   }
 
   toString(): string {
-    let value = '';
+    let value = "";
     for (let idx = 0, len = this.args.length; idx < len; idx++) {
-      value += String(this.args[idx]) + ' ';
+      value += String(this.args[idx]) + " ";
     }
     value += this.name;
     return value;

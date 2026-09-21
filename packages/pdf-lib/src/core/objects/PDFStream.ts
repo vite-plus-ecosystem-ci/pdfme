@@ -1,10 +1,10 @@
-import { MethodNotImplementedError } from '../errors.js';
-import PDFDict from './PDFDict.js';
-import PDFName from './PDFName.js';
-import PDFNumber from './PDFNumber.js';
-import PDFObject from './PDFObject.js';
-import PDFContext from '../PDFContext.js';
-import CharCodes from '../syntax/CharCodes.js';
+import { MethodNotImplementedError } from "../errors.js";
+import PDFDict from "./PDFDict.js";
+import PDFName from "./PDFName.js";
+import PDFNumber from "./PDFNumber.js";
+import PDFObject from "./PDFObject.js";
+import PDFContext from "../PDFContext.js";
+import CharCodes from "../syntax/CharCodes.js";
 
 class PDFStream extends PDFObject {
   readonly dict: PDFDict;
@@ -15,19 +15,19 @@ class PDFStream extends PDFObject {
   }
 
   clone(_context?: PDFContext): PDFStream {
-    throw new MethodNotImplementedError(this.constructor.name, 'clone');
+    throw new MethodNotImplementedError(this.constructor.name, "clone");
   }
 
   getContentsString(): string {
-    throw new MethodNotImplementedError(this.constructor.name, 'getContentsString');
+    throw new MethodNotImplementedError(this.constructor.name, "getContentsString");
   }
 
   getContents(): Uint8Array {
-    throw new MethodNotImplementedError(this.constructor.name, 'getContents');
+    throw new MethodNotImplementedError(this.constructor.name, "getContents");
   }
 
   getContentsSize(): number {
-    throw new MethodNotImplementedError(this.constructor.name, 'getContentsSize');
+    throw new MethodNotImplementedError(this.constructor.name, "getContentsSize");
   }
 
   updateDict(): void {
@@ -43,9 +43,9 @@ class PDFStream extends PDFObject {
   toString(): string {
     this.updateDict();
     let streamString = this.dict.toString();
-    streamString += '\nstream\n';
+    streamString += "\nstream\n";
     streamString += this.getContentsString();
-    streamString += '\nendstream';
+    streamString += "\nendstream";
     return streamString;
   }
 

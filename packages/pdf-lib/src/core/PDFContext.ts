@@ -1,24 +1,24 @@
-import { deflate } from 'pako';
+import { deflate } from "pako";
 
-import PDFHeader from './document/PDFHeader.js';
-import { UnexpectedObjectTypeError } from './errors.js';
-import PDFArray from './objects/PDFArray.js';
-import PDFBool from './objects/PDFBool.js';
-import PDFDict from './objects/PDFDict.js';
-import PDFHexString from './objects/PDFHexString.js';
-import PDFName from './objects/PDFName.js';
-import PDFNull from './objects/PDFNull.js';
-import PDFNumber from './objects/PDFNumber.js';
-import PDFObject from './objects/PDFObject.js';
-import PDFRawStream from './objects/PDFRawStream.js';
-import PDFRef from './objects/PDFRef.js';
-import PDFStream from './objects/PDFStream.js';
-import PDFString from './objects/PDFString.js';
-import PDFOperator from './operators/PDFOperator.js';
-import Ops from './operators/PDFOperatorNames.js';
-import PDFContentStream from './structures/PDFContentStream.js';
-import { typedArrayFor } from '../utils/index.js';
-import { SimpleRNG } from '../utils/rng.js';
+import PDFHeader from "./document/PDFHeader.js";
+import { UnexpectedObjectTypeError } from "./errors.js";
+import PDFArray from "./objects/PDFArray.js";
+import PDFBool from "./objects/PDFBool.js";
+import PDFDict from "./objects/PDFDict.js";
+import PDFHexString from "./objects/PDFHexString.js";
+import PDFName from "./objects/PDFName.js";
+import PDFNull from "./objects/PDFNull.js";
+import PDFNumber from "./objects/PDFNumber.js";
+import PDFObject from "./objects/PDFObject.js";
+import PDFRawStream from "./objects/PDFRawStream.js";
+import PDFRef from "./objects/PDFRef.js";
+import PDFStream from "./objects/PDFStream.js";
+import PDFString from "./objects/PDFString.js";
+import PDFOperator from "./operators/PDFOperator.js";
+import Ops from "./operators/PDFOperatorNames.js";
+import PDFContentStream from "./structures/PDFContentStream.js";
+import { typedArrayFor } from "../utils/index.js";
+import { SimpleRNG } from "../utils/rng.js";
 
 type LookupKey = PDFRef | PDFObject | undefined;
 
@@ -183,11 +183,11 @@ class PDFContext {
       return literal;
     } else if (literal === null || literal === undefined) {
       return PDFNull;
-    } else if (typeof literal === 'string') {
+    } else if (typeof literal === "string") {
       return PDFName.of(literal);
-    } else if (typeof literal === 'number') {
+    } else if (typeof literal === "number") {
       return PDFNumber.of(literal);
-    } else if (typeof literal === 'boolean') {
+    } else if (typeof literal === "boolean") {
       return literal ? PDFBool.True : PDFBool.False;
     } else if (Array.isArray(literal)) {
       const array = PDFArray.withContext(this);
@@ -214,7 +214,7 @@ class PDFContext {
   flateStream(contents: string | Uint8Array, dict: LiteralObject = {}): PDFRawStream {
     return this.stream(deflate(typedArrayFor(contents)), {
       ...dict,
-      Filter: 'FlateDecode',
+      Filter: "FlateDecode",
     });
   }
 
@@ -227,8 +227,8 @@ class PDFContext {
       BBox: this.obj([0, 0, 0, 0]),
       Matrix: this.obj([1, 0, 0, 1, 0, 0]),
       ...dict,
-      Type: 'XObject',
-      Subtype: 'Form',
+      Type: "XObject",
+      Subtype: "Form",
     });
   }
 

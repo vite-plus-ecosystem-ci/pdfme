@@ -79,7 +79,7 @@ body:
       value: |
         ## Additional Context
         Any other information that might help us understand and implement your feedback?
-        
+
   - type: textarea
     id: additional-info
     attributes:

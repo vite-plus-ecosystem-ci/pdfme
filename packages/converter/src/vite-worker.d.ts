@@ -1,4 +1,4 @@
-declare module '*?worker&url' {
+declare module "*?worker&url" {
   const workerUrl: string;
   export default workerUrl;
 }

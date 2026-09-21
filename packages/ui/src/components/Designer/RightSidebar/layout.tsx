@@ -1,5 +1,5 @@
-import React from 'react';
-import { Divider } from 'antd';
+import React from "react";
+import { Divider } from "antd";
 
 export const SIDEBAR_H_PADDING_PX = 16;
 export const SIDEBAR_V_PADDING_PX = 8;
@@ -16,10 +16,10 @@ export const SidebarFrame = ({ children, className }: SidebarFrameProps) => (
   <div
     className={className}
     style={{
-      height: '100%',
-      display: 'flex',
+      height: "100%",
+      display: "flex",
       flex: 1,
-      flexDirection: 'column',
+      flexDirection: "column",
     }}
   >
     {children}
@@ -29,16 +29,16 @@ export const SidebarFrame = ({ children, className }: SidebarFrameProps) => (
 export const SidebarHeader = ({ children }: SectionProps) => (
   <div
     style={{
-      position: 'relative',
+      position: "relative",
       minHeight: SIDEBAR_HEADER_HEIGHT,
-      display: 'flex',
+      display: "flex",
       flexShrink: 0,
-      flexDirection: 'column',
-      justifyContent: 'center',
+      flexDirection: "column",
+      justifyContent: "center",
       padding: `${SIDEBAR_V_PADDING_PX}px ${SIDEBAR_H_PADDING_PX}px 0`,
     }}
   >
-    <div style={{ minHeight: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ minHeight: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
       {children}
     </div>
     <Divider style={{ marginTop: `${SIDEBAR_V_PADDING_PX}px`, marginBottom: 0 }} />
@@ -50,8 +50,8 @@ export const SidebarBody = ({ children }: SectionProps) => (
     style={{
       flex: 1,
       minHeight: 0,
-      overflowY: 'auto',
-      overflowX: 'hidden',
+      overflowY: "auto",
+      overflowX: "hidden",
       padding: `${SIDEBAR_V_PADDING_PX}px ${SIDEBAR_H_PADDING_PX}px`,
     }}
   >
@@ -62,10 +62,10 @@ export const SidebarBody = ({ children }: SectionProps) => (
 export const SidebarFooter = ({ children }: SectionProps) => (
   <div
     style={{
-      display: 'flex',
+      display: "flex",
       flexShrink: 0,
-      alignItems: 'center',
-      justifyContent: 'flex-end',
+      alignItems: "center",
+      justifyContent: "flex-end",
       gap: `${SIDEBAR_V_PADDING_PX}px`,
       padding: `${SIDEBAR_H_PADDING_PX}px`,
     }}

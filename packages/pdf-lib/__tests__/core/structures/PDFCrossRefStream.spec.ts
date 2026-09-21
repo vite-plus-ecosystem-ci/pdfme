@@ -1,4 +1,4 @@
-import { deflate } from 'pako';
+import { deflate } from "pako";
 
 import {
   mergeIntoTypedArray,
@@ -6,16 +6,14 @@ import {
   PDFCrossRefStream,
   PDFRef,
   toCharCode,
-} from '../../../src/index';
+} from "../../../src/index";
 
 describe(`PDFCrossRefStream`, () => {
   const context = PDFContext.create();
   const dict = context.obj({});
 
   it(`can be constructed from PDFCrossRefStream.create(...)`, () => {
-    expect(PDFCrossRefStream.create(dict, false)).toBeInstanceOf(
-      PDFCrossRefStream,
-    );
+    expect(PDFCrossRefStream.create(dict, false)).toBeInstanceOf(PDFCrossRefStream);
   });
 
   const stream1 = PDFCrossRefStream.create(dict, false);
@@ -38,19 +36,19 @@ describe(`PDFCrossRefStream`, () => {
 
   it(`can be converted to a string`, () => {
     expect(String(stream1)).toEqual(
-      '<<\n/Type /XRef\n/Length 16\n/W [ 1 1 2 ]\n/Index [ 0 3 21 1 ]\n>>\n' +
-        'stream\n' +
-        '001111111111111111010110101111100101000101011010110011' +
-        '\nendstream',
+      "<<\n/Type /XRef\n/Length 16\n/W [ 1 1 2 ]\n/Index [ 0 3 21 1 ]\n>>\n" +
+        "stream\n" +
+        "001111111111111111010110101111100101000101011010110011" +
+        "\nendstream",
     );
   });
 
   it(`can be converted to a string without object number 1`, () => {
     expect(String(stream2)).toEqual(
-      '<<\n/Type /XRef\n/Length 25\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n>>\n' +
-        'stream\n' +
-        '00011111111111111111110110000100101000110101100000100101001' +
-        '\nendstream',
+      "<<\n/Type /XRef\n/Length 25\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n>>\n" +
+        "stream\n" +
+        "00011111111111111111110110000100101000110101100000100101001" +
+        "\nendstream",
     );
   });
 
@@ -63,9 +61,7 @@ describe(`PDFCrossRefStream`, () => {
   });
 
   it(`can be serialized`, () => {
-    const buffer = new Uint8Array(stream1.sizeInBytes() + 3).fill(
-      toCharCode(' '),
-    );
+    const buffer = new Uint8Array(stream1.sizeInBytes() + 3).fill(toCharCode(" "));
 
     // prettier-ignore
     const expectedEntries = new Uint8Array([
@@ -78,18 +74,16 @@ describe(`PDFCrossRefStream`, () => {
     expect(stream1.copyBytesInto(buffer, 2)).toBe(95);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
-        '  <<\n/Type /XRef\n/Length 16\n/W [ 1 1 2 ]\n/Index [ 0 3 21 1 ]\n>>\n',
-        'stream\n',
+        "  <<\n/Type /XRef\n/Length 16\n/W [ 1 1 2 ]\n/Index [ 0 3 21 1 ]\n>>\n",
+        "stream\n",
         expectedEntries,
-        '\nendstream ',
+        "\nendstream ",
       ),
     );
   });
 
   it(`can be serialized without object number 1`, () => {
-    const buffer = new Uint8Array(stream2.sizeInBytes() + 3).fill(
-      toCharCode(' '),
-    );
+    const buffer = new Uint8Array(stream2.sizeInBytes() + 3).fill(toCharCode(" "));
 
     // prettier-ignore
     const expectedEntries = new Uint8Array([
@@ -103,10 +97,10 @@ describe(`PDFCrossRefStream`, () => {
     expect(stream2.copyBytesInto(buffer, 2)).toBe(110);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
-        '  <<\n/Type /XRef\n/Length 25\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n>>\n',
-        'stream\n',
+        "  <<\n/Type /XRef\n/Length 25\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n>>\n",
+        "stream\n",
         expectedEntries,
-        '\nendstream ',
+        "\nendstream ",
       ),
     );
   });
@@ -118,9 +112,7 @@ describe(`PDFCrossRefStream`, () => {
     stream.addUncompressedEntry(PDFRef.of(9000), 600);
     stream.addCompressedEntry(PDFRef.of(9001), PDFRef.of(10), 1);
 
-    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(
-      toCharCode(' '),
-    );
+    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(toCharCode(" "));
 
     // prettier-ignore
     const expectedEntries = new Uint8Array([
@@ -135,10 +127,10 @@ describe(`PDFCrossRefStream`, () => {
     expect(stream.copyBytesInto(buffer, 2)).toBe(135);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
-        '  <<\n/Type /XRef\n/Length 29\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n/Filter /FlateDecode\n>>\n',
-        'stream\n',
+        "  <<\n/Type /XRef\n/Length 29\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n/Filter /FlateDecode\n>>\n",
+        "stream\n",
         encodedEntries,
-        '\nendstream ',
+        "\nendstream ",
       ),
     );
   });

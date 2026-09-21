@@ -1,4 +1,4 @@
-import { collectUax14Breaks, isSaCodePoint, type LineBreakOpportunity } from './lineBreak.js';
+import { collectUax14Breaks, isSaCodePoint, type LineBreakOpportunity } from "./lineBreak.js";
 
 /**
  * One visual line produced by the shared wrap engine.
@@ -77,18 +77,18 @@ let wordSegmenter: Intl.Segmenter | undefined;
 let graphemeSegmenter: Intl.Segmenter | undefined;
 
 const getWordSegmenter = (): Intl.Segmenter | undefined => {
-  if (typeof Intl === 'undefined' || typeof Intl.Segmenter === 'undefined') {
+  if (typeof Intl === "undefined" || typeof Intl.Segmenter === "undefined") {
     return undefined;
   }
-  wordSegmenter ??= new Intl.Segmenter(undefined, { granularity: 'word' });
+  wordSegmenter ??= new Intl.Segmenter(undefined, { granularity: "word" });
   return wordSegmenter;
 };
 
 const getGraphemeSegmenter = (): Intl.Segmenter | undefined => {
-  if (typeof Intl === 'undefined' || typeof Intl.Segmenter === 'undefined') {
+  if (typeof Intl === "undefined" || typeof Intl.Segmenter === "undefined") {
     return undefined;
   }
-  graphemeSegmenter ??= new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+  graphemeSegmenter ??= new Intl.Segmenter(undefined, { granularity: "grapheme" });
   return graphemeSegmenter;
 };
 
@@ -174,7 +174,7 @@ const getAtoms = (text: string): WrapAtom[] => {
 
 const trimEndIndex = (source: string, start: number, end: number): number => {
   let index = end;
-  while (index > start && /\s/.test(source[index - 1] ?? '')) {
+  while (index > start && /\s/.test(source[index - 1] ?? "")) {
     index -= 1;
   }
   return index;
@@ -182,14 +182,14 @@ const trimEndIndex = (source: string, start: number, end: number): number => {
 
 const skipLeadingSpace = (source: string, start: number, end: number): number => {
   let index = start;
-  while (index < end && /\s/.test(source[index] ?? '')) {
+  while (index < end && /\s/.test(source[index] ?? "")) {
     index += 1;
   }
   return index;
 };
 
 const isSpaceOnly = (source: string, start: number, end: number): boolean =>
-  source.slice(start, end).trim() === '';
+  source.slice(start, end).trim() === "";
 
 const splitOverflowByGraphemeRange = (
   source: string,
@@ -233,7 +233,7 @@ const wrapParagraphRanges = (
   measureRaw: (start: number, end: number) => number,
   maxWidth: number,
 ): LineRange[] => {
-  if (source === '') {
+  if (source === "") {
     return [{ start: 0, end: 0, hardBreak: true }];
   }
 
@@ -434,7 +434,7 @@ export const layoutStyledRuns = <T>(
     runRanges.push({ start: offset, end: offset + run.text.length, run });
     offset += run.text.length;
   }
-  const fullText = runs.map((run) => run.text).join('');
+  const fullText = runs.map((run) => run.text).join("");
   const lines: StyledLayoutLine<T>[] = [];
 
   for (const paragraph of splitParagraphsWithOffsets(fullText)) {
@@ -458,7 +458,7 @@ export const layoutStyledRuns = <T>(
     }
   }
 
-  return lines.length > 0 ? lines : [{ spans: [], text: '', width: 0, hardBreak: true }];
+  return lines.length > 0 ? lines : [{ spans: [], text: "", width: 0, hardBreak: true }];
 };
 
 export const getLineAlignment = (
@@ -468,7 +468,7 @@ export const getLineAlignment = (
 ): { x: number; extraLetterSpacing: number; usedWidth: number } => {
   let extraLetterSpacing = 0;
   let usedWidth = line.width;
-  if (alignment === 'justify' && !line.hardBreak) {
+  if (alignment === "justify" && !line.hardBreak) {
     const graphemeCount = countGraphemes(line.text);
     if (graphemeCount > 0) {
       extraLetterSpacing = (boxWidth - line.width) / graphemeCount;
@@ -476,9 +476,9 @@ export const getLineAlignment = (
     }
   }
   let x = 0;
-  if (alignment === 'center') {
+  if (alignment === "center") {
     x = (boxWidth - usedWidth) / 2;
-  } else if (alignment === 'right') {
+  } else if (alignment === "right") {
     x = boxWidth - usedWidth;
   }
   return { x, extraLetterSpacing, usedWidth };
@@ -510,6 +510,6 @@ export const wrapText = (value: string, measure: MeasureTextWidth, maxWidth: num
  */
 export const toLegacySplitLines = (lines: WrapLine[]): string[] =>
   lines.map((line) => {
-    if (line.text === '') return '';
+    if (line.text === "") return "";
     return line.hardBreak ? `${line.text}\n` : line.text;
   });

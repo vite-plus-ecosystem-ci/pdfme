@@ -11,6 +11,7 @@ npm install @pdfme/manipulator
 ## Features
 
 ### merge
+
 Combines multiple PDF files into a single PDF.
 
 ```ts
@@ -22,6 +23,7 @@ const merged = await merge([pdf1, pdf2]);
 ```
 
 ### split
+
 Splits a PDF into multiple PDFs based on page ranges.
 
 ```ts
@@ -35,6 +37,7 @@ const splits = await split(pdf, [
 ```
 
 ### rotate
+
 Rotates specified pages in a PDF.
 
 ```ts
@@ -47,6 +50,7 @@ const result2 = await rotate(pdf, 90, [0, 2]); // Rotate pages 1 and 3
 ```
 
 ### insert
+
 Inserts PDF pages at specified positions.
 
 ```ts
@@ -60,6 +64,7 @@ const result = await insert(basePdf, [
 ```
 
 ### remove
+
 Removes specified pages from a PDF.
 
 ```ts
@@ -70,6 +75,7 @@ const result = await remove(pdf, [1, 3]); // Remove pages 2 and 4
 ```
 
 ### move
+
 Moves a page from one position to another within the PDF.
 
 ```ts
@@ -80,6 +86,7 @@ const result = await move(pdf, { from: 0, to: 2 }); // Move first page to third 
 ```
 
 ### organize
+
 Performs multiple PDF operations in sequence.
 
 ```ts
@@ -119,11 +126,11 @@ interface InsertOperation {
 }
 
 type OrganizeAction =
-  | { type: 'remove'; data: { position: number } }
-  | { type: 'insert'; data: { pdf: PDFInput; position: number } }
-  | { type: 'replace'; data: { pdf: PDFInput; position: number } }
-  | { type: 'rotate'; data: { position: number; degrees: 0 | 90 | 180 | 270 | 360 } }
-  | { type: 'move'; data: { from: number; to: number } };
+  | { type: "remove"; data: { position: number } }
+  | { type: "insert"; data: { pdf: PDFInput; position: number } }
+  | { type: "replace"; data: { pdf: PDFInput; position: number } }
+  | { type: "rotate"; data: { position: number; degrees: 0 | 90 | 180 | 270 | 360 } }
+  | { type: "move"; data: { from: number; to: number } };
 ```
 
 ## Contact

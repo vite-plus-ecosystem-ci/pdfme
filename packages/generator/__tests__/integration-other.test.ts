@@ -1,13 +1,13 @@
-import generate from '../src/generate.js';
-import { other } from './assets/templates/index.js';
-import { getInputFromTemplate } from '@pdfme/common';
-import { text, image, signature, svg, line, rectangle, ellipse, barcodes } from '@pdfme/schemas';
-import { getFont, getImageSnapshotOptions, pdfToImages } from './utils.js';
+import generate from "../src/generate.js";
+import { other } from "./assets/templates/index.js";
+import { getInputFromTemplate } from "@pdfme/common";
+import { text, image, signature, svg, line, rectangle, ellipse, barcodes } from "@pdfme/schemas";
+import { getFont, getImageSnapshotOptions, pdfToImages } from "./utils.js";
 
-const PERFORMANCE_THRESHOLD = parseFloat(process.env.PERFORMANCE_THRESHOLD || '2.5');
+const PERFORMANCE_THRESHOLD = parseFloat(process.env.PERFORMANCE_THRESHOLD || "2.5");
 
-describe('generate integration test(other)', () => {
-  describe.each([other])('%s', (templateData) => {
+describe("generate integration test(other)", () => {
+  describe.each([other])("%s", (templateData) => {
     const entries = Object.entries(templateData);
     for (let l = 0; l < entries.length; l += 1) {
       const [key, template] = entries[l];
@@ -17,7 +17,7 @@ describe('generate integration test(other)', () => {
         const inputs = getInputFromTemplate(template);
 
         const font = getFont();
-        font['NotoSerifJP-Regular'].fallback = false;
+        font["NotoSerifJP-Regular"].fallback = false;
         font.NotoSerifJP.fallback = false;
         font.NotoSansJP.fallback = false;
 

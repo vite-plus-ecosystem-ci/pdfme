@@ -1,15 +1,9 @@
-import {
-  PDFArray,
-  PDFDict,
-  PDFDocument,
-  PDFName,
-  PDFNumber,
-} from '@pdfme/pdf-lib';
-import type { Schema, Template } from '@pdfme/common';
-import { mm2pt } from '@pdfme/common';
-import { text } from '@pdfme/schemas';
-import generate from '../src/generate.js';
-import { getFont } from './utils.js';
+import { PDFArray, PDFDict, PDFDocument, PDFName, PDFNumber } from "@pdfme/pdf-lib";
+import type { Schema, Template } from "@pdfme/common";
+import { mm2pt } from "@pdfme/common";
+import { text } from "@pdfme/schemas";
+import generate from "../src/generate.js";
+import { getFont } from "./utils.js";
 
 const createTextSchema = (arg: {
   name: string;
@@ -19,7 +13,7 @@ const createTextSchema = (arg: {
 }): Schema =>
   ({
     name: arg.name,
-    type: 'text',
+    type: "text",
     readOnly: true,
     content: arg.content,
     position: { x: 10, y: arg.y },
@@ -28,11 +22,11 @@ const createTextSchema = (arg: {
     fontSize: 12,
     lineHeight: 1,
     characterSpacing: 0,
-    alignment: 'left',
-    verticalAlignment: 'top',
-    fontColor: '#000000',
-    backgroundColor: '',
-    textFormat: 'inline-markdown',
+    alignment: "left",
+    verticalAlignment: "top",
+    fontColor: "#000000",
+    backgroundColor: "",
+    textFormat: "inline-markdown",
   }) as Schema;
 
 const getLinkAnnotations = async (pdf: Uint8Array<ArrayBuffer>, pageIndex: number) => {
@@ -44,7 +38,7 @@ const getLinkAnnotations = async (pdf: Uint8Array<ArrayBuffer>, pageIndex: numbe
   const links: PDFDict[] = [];
   for (let index = 0; index < annots.size(); index += 1) {
     const annot = annots.lookup(index, PDFDict);
-    if (annot.get(PDFName.of('Subtype')) === PDFName.of('Link')) {
+    if (annot.get(PDFName.of("Subtype")) === PDFName.of("Link")) {
       links.push(annot);
     }
   }
@@ -52,9 +46,9 @@ const getLinkAnnotations = async (pdf: Uint8Array<ArrayBuffer>, pageIndex: numbe
 };
 
 const getGoToDestination = (annotation: PDFDict) => {
-  const action = annotation.lookup(PDFName.of('A'), PDFDict);
-  expect(action.get(PDFName.of('S'))).toBe(PDFName.of('GoTo'));
-  return action.lookup(PDFName.of('D'), PDFArray);
+  const action = annotation.lookup(PDFName.of("A"), PDFDict);
+  expect(action.get(PDFName.of("S"))).toBe(PDFName.of("GoTo"));
+  return action.lookup(PDFName.of("D"), PDFArray);
 };
 
 const generatePdf = (template: Template) =>
@@ -65,13 +59,13 @@ const generatePdf = (template: Template) =>
     options: { font: getFont() },
   });
 
-describe('generate internal markdown links', () => {
-  test('creates GoTo link annotations for #schemaName links', async () => {
-    const targetSchema = createTextSchema({ name: 'intro', content: 'Intro', y: 20 });
+describe("generate internal markdown links", () => {
+  test("creates GoTo link annotations for #schemaName links", async () => {
+    const targetSchema = createTextSchema({ name: "intro", content: "Intro", y: 20 });
     const template: Template = {
       basePdf: { width: 100, height: 100, padding: [0, 0, 0, 0] },
       schemas: [
-        [createTextSchema({ name: 'toc', content: '[Intro](#intro)', y: 10 })],
+        [createTextSchema({ name: "toc", content: "[Intro](#intro)", y: 10 })],
         [targetSchema],
       ],
     };
@@ -82,19 +76,19 @@ describe('generate internal markdown links', () => {
 
     expect(links).toHaveLength(1);
     expect(destination.get(0).toString()).toBe(pdfDoc.getPage(1).ref.toString());
-    expect(destination.lookup(1, PDFName)).toBe(PDFName.of('XYZ'));
+    expect(destination.lookup(1, PDFName)).toBe(PDFName.of("XYZ"));
     expect(destination.lookup(2, PDFNumber).asNumber()).toBeCloseTo(mm2pt(10));
     expect(destination.lookup(3, PDFNumber).asNumber()).toBeCloseTo(
       mm2pt(100) - mm2pt(targetSchema.position.y),
     );
   });
 
-  test('resolves internal links within each generated input scope', async () => {
+  test("resolves internal links within each generated input scope", async () => {
     const template: Template = {
       basePdf: { width: 100, height: 100, padding: [0, 0, 0, 0] },
       schemas: [
-        [createTextSchema({ name: 'toc', content: '[Intro](#intro)', y: 10 })],
-        [createTextSchema({ name: 'intro', content: 'Intro', y: 20 })],
+        [createTextSchema({ name: "toc", content: "[Intro](#intro)", y: 10 })],
+        [createTextSchema({ name: "intro", content: "Intro", y: 20 })],
       ],
     };
 
@@ -115,10 +109,10 @@ describe('generate internal markdown links', () => {
     );
   });
 
-  test('throws for missing internal link targets', async () => {
+  test("throws for missing internal link targets", async () => {
     const template: Template = {
       basePdf: { width: 100, height: 100, padding: [0, 0, 0, 0] },
-      schemas: [[createTextSchema({ name: 'toc', content: '[Missing](#missing)', y: 10 })]],
+      schemas: [[createTextSchema({ name: "toc", content: "[Missing](#missing)", y: 10 })]],
     };
 
     await expect(generatePdf(template)).rejects.toThrow(
@@ -126,13 +120,13 @@ describe('generate internal markdown links', () => {
     );
   });
 
-  test('throws for ambiguous internal link targets', async () => {
+  test("throws for ambiguous internal link targets", async () => {
     const template: Template = {
       basePdf: { width: 100, height: 100, padding: [0, 0, 0, 0] },
       schemas: [
-        [createTextSchema({ name: 'toc', content: '[Intro](#intro)', y: 10 })],
-        [createTextSchema({ name: 'intro', content: 'Intro', y: 20 })],
-        [createTextSchema({ name: 'intro', content: 'Intro again', y: 30 })],
+        [createTextSchema({ name: "toc", content: "[Intro](#intro)", y: 10 })],
+        [createTextSchema({ name: "intro", content: "Intro", y: 20 })],
+        [createTextSchema({ name: "intro", content: "Intro again", y: 30 })],
       ],
     };
 

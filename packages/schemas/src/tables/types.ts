@@ -1,6 +1,6 @@
-import type { ALIGNMENT, VERTICAL_ALIGNMENT } from '../text/types.js';
-import type { BoxDimension } from '../box.js';
-import type { Schema } from '@pdfme/common';
+import type { ALIGNMENT, VERTICAL_ALIGNMENT } from "../text/types.js";
+import type { BoxDimension } from "../box.js";
+import type { Schema } from "@pdfme/common";
 
 export type Spacing = BoxDimension;
 type BorderInsets = Spacing;
@@ -45,8 +45,8 @@ export interface Styles {
   textColor: string;
   lineHeight: number;
   characterSpacing: number;
-  alignment: 'left' | 'center' | 'right' | 'justify';
-  verticalAlignment: 'top' | 'middle' | 'bottom';
+  alignment: "left" | "center" | "right" | "justify";
+  verticalAlignment: "top" | "middle" | "bottom";
   fontSize: number;
   cellPadding: Spacing;
   lineColor: string;
@@ -85,4 +85,4 @@ export interface StylesProps {
   columnStyles: { [key: string]: Partial<Styles> };
 }
 
-export type Section = 'head' | 'body';
+export type Section = "head" | "body";

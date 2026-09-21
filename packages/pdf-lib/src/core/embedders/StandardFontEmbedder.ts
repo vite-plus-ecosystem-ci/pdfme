@@ -1,9 +1,9 @@
-import { Encodings, Font, FontNames, EncodingType } from '@pdf-lib/standard-fonts';
+import { Encodings, Font, FontNames, EncodingType } from "@pdf-lib/standard-fonts";
 
-import PDFHexString from '../objects/PDFHexString.js';
-import PDFRef from '../objects/PDFRef.js';
-import PDFContext from '../PDFContext.js';
-import { toCodePoint, toHexString } from '../../utils/index.js';
+import PDFHexString from "../objects/PDFHexString.js";
+import PDFRef from "../objects/PDFRef.js";
+import PDFContext from "../PDFContext.js";
+import { toCodePoint, toHexString } from "../../utils/index.js";
 
 export interface Glyph {
   code: number;
@@ -47,7 +47,7 @@ class StandardFontEmbedder {
     for (let idx = 0, len = glyphs.length; idx < len; idx++) {
       hexCodes[idx] = toHexString(glyphs[idx].code);
     }
-    return PDFHexString.of(hexCodes.join(''));
+    return PDFHexString.of(hexCodes.join(""));
   }
 
   widthOfTextAtSize(text: string, size: number): number {
@@ -87,11 +87,11 @@ class StandardFontEmbedder {
 
   embedIntoContext(context: PDFContext, ref?: PDFRef): PDFRef {
     const fontDict = context.obj({
-      Type: 'Font',
-      Subtype: 'Type1',
+      Type: "Font",
+      Subtype: "Type1",
       BaseFont: this.customName || this.fontName,
 
-      Encoding: this.encoding === Encodings.WinAnsi ? 'WinAnsiEncoding' : undefined,
+      Encoding: this.encoding === Encodings.WinAnsi ? "WinAnsiEncoding" : undefined,
     });
 
     if (ref) {

@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import SelectoComponent, {
   OnSelect as SelectoOnSelect,
   OnDragStart as SelectoOnDragStart,
-} from 'react-selecto';
-import { SELECTABLE_CLASSNAME } from '../../../constants.js';
-import { theme } from 'antd';
+} from "react-selecto";
+import { SELECTABLE_CLASSNAME } from "../../../constants.js";
+import { theme } from "antd";
 
 const SelectoView = SelectoComponent as unknown as React.ElementType;
 
@@ -15,15 +15,15 @@ type Props = {
   onSelect: (e: SelectoOnSelect) => void;
 };
 
-const className = 'pdfme-selecto';
+const className = "pdfme-selecto";
 
 const Selecto = (props: Props) => {
   const { token } = theme.useToken();
   useEffect(() => {
-    const containerElement = document.querySelector('.' + className);
+    const containerElement = document.querySelector("." + className);
     if (containerElement instanceof HTMLElement) {
       containerElement.style.backgroundColor = token.colorPrimary;
-      containerElement.style.opacity = '0.75';
+      containerElement.style.opacity = "0.75";
       containerElement.style.borderColor = token.colorPrimaryBorder;
     }
   }, [props.container, token.colorPrimary, token.colorPrimaryBorder]);

@@ -1,4 +1,4 @@
-import { Color, setFillingColor, setStrokingColor } from './colors.js';
+import { Color, setFillingColor, setStrokingColor } from "./colors.js";
 import {
   beginText,
   closePath,
@@ -34,12 +34,12 @@ import {
   FillRule,
   fillEvenOdd,
   concatTransformationMatrix,
-} from './operators.js';
-import { Rotation, degrees, toRadians } from './rotations.js';
-import { svgPathToOperators } from './svgPath.js';
-import { PDFHexString, PDFName, PDFNumber, PDFOperator } from '../core/index.js';
-import { asNumber } from './objects.js';
-import type { Space, TransformationMatrix } from '../types/index.js';
+} from "./operators.js";
+import { Rotation, degrees, toRadians } from "./rotations.js";
+import { svgPathToOperators } from "./svgPath.js";
+import { PDFHexString, PDFName, PDFNumber, PDFOperator } from "../core/index.js";
+import { asNumber } from "./objects.js";
+import type { Space, TransformationMatrix } from "../types/index.js";
 
 export interface DrawTextOptions {
   color: Color;
@@ -757,7 +757,7 @@ export const drawTextField = (options: {
   });
 
   const markedContent = [
-    beginMarkedContent('Tx'),
+    beginMarkedContent("Tx"),
     pushGraphicsState(),
     ...lines,
     popGraphicsState(),
@@ -855,7 +855,7 @@ export const drawOptionList = (options: {
   });
 
   const markedContent = [
-    beginMarkedContent('Tx'),
+    beginMarkedContent("Tx"),
     pushGraphicsState(),
     ...lines,
     popGraphicsState(),

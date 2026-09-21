@@ -1,8 +1,8 @@
-import type { Color, RGB } from './colors.js';
-import PDFFont from './PDFFont.js';
-import { Rotation } from './rotations.js';
-import { FillRule, LineCapStyle } from './operators.js';
-import type { Space, TransformationMatrix } from '../types/index.js';
+import type { Color, RGB } from "./colors.js";
+import PDFFont from "./PDFFont.js";
+import { Rotation } from "./rotations.js";
+import { FillRule, LineCapStyle } from "./operators.js";
+import type { Space, TransformationMatrix } from "../types/index.js";
 
 interface SvgOptions {
   matrix?: TransformationMatrix;
@@ -10,18 +10,18 @@ interface SvgOptions {
 }
 
 export enum BlendMode {
-  Normal = 'Normal',
-  Multiply = 'Multiply',
-  Screen = 'Screen',
-  Overlay = 'Overlay',
-  Darken = 'Darken',
-  Lighten = 'Lighten',
-  ColorDodge = 'ColorDodge',
-  ColorBurn = 'ColorBurn',
-  HardLight = 'HardLight',
-  SoftLight = 'SoftLight',
-  Difference = 'Difference',
-  Exclusion = 'Exclusion',
+  Normal = "Normal",
+  Multiply = "Multiply",
+  Screen = "Screen",
+  Overlay = "Overlay",
+  Darken = "Darken",
+  Lighten = "Lighten",
+  ColorDodge = "ColorDodge",
+  ColorBurn = "ColorBurn",
+  HardLight = "HardLight",
+  SoftLight = "SoftLight",
+  Difference = "Difference",
+  Exclusion = "Exclusion",
 }
 
 export interface PDFPageDrawTextOptions extends SvgOptions {
@@ -168,7 +168,7 @@ export interface PDFPageDrawCircleOptions extends SvgOptions {
 export type SvgColorMapper = (input: {
   color: string;
   parsed: { rgb: RGB; alpha?: number };
-  kind: 'fill' | 'stroke';
+  kind: "fill" | "stroke";
   inherited?: { color?: Color; opacity?: number };
 }) => { color: Color; alpha?: number } | undefined;
 

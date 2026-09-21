@@ -1,7 +1,7 @@
-import React, { Ref } from 'react';
-import GuidesComponent from '@scena/react-guides';
-import { ZOOM, Size } from '@pdfme/common';
-import { RULER_HEIGHT } from '../../../constants.js';
+import React, { Ref } from "react";
+import GuidesComponent from "@scena/react-guides";
+import { ZOOM, Size } from "@pdfme/common";
+import { RULER_HEIGHT } from "../../../constants.js";
 
 const GuidesView = GuidesComponent as unknown as React.ElementType;
 
@@ -11,12 +11,12 @@ const guideStyle = (
   height: number,
   width: number,
 ): React.CSSProperties => ({
-  position: 'absolute',
+  position: "absolute",
   top,
   left,
   height,
   width,
-  background: '#333333',
+  background: "#333333",
 });
 
 const _Guides = ({

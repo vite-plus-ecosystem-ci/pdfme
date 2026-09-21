@@ -1,6 +1,6 @@
-import * as acorn from 'acorn';
-import type { Node as AcornNode, Identifier, Property } from 'estree';
-import type { Schema, SchemaPageArray } from './types.js';
+import * as acorn from "acorn";
+import type { Node as AcornNode, Identifier, Property } from "estree";
+import type { Schema, SchemaPageArray } from "./types.js";
 
 const expressionCache = new Map<string, (context: Record<string, unknown>) => unknown>();
 
@@ -17,7 +17,7 @@ const expressionCache = new Map<string, (context: Record<string, unknown>) => un
 const parseData = (data: Record<string, unknown>): Record<string, unknown> => {
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => {
-      if (typeof value === 'string') {
+      if (typeof value === "string") {
         try {
           const parsedValue = JSON.parse(value) as unknown;
           return [key, parsedValue];
@@ -30,7 +30,7 @@ const parseData = (data: Record<string, unknown>): Record<string, unknown> => {
   );
 };
 
-const padZero = (num: number): string => String(num).padStart(2, '0');
+const padZero = (num: number): string => String(num).padStart(2, "0");
 
 const formatDate = (date: Date): string =>
   `${date.getFullYear()}/${padZero(date.getMonth() + 1)}/${padZero(date.getDate())}`;
@@ -44,7 +44,7 @@ const safeAssign = (
   ...sources: Array<Record<string, unknown> | null | undefined>
 ): Record<string, unknown> => {
   if (target == null) {
-    throw new TypeError('Cannot convert undefined or null to object');
+    throw new TypeError("Cannot convert undefined or null to object");
   }
 
   const to = { ...target };
@@ -53,7 +53,7 @@ const safeAssign = (
     if (source != null) {
       for (const key in source) {
         // Skip prototype pollution keys
-        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+        if (key === "__proto__" || key === "constructor" || key === "prototype") {
           continue;
         }
         // Only copy own properties
@@ -102,67 +102,67 @@ const allowedGlobals: Record<string, unknown> = {
 
 const validateAST = (node: AcornNode): void => {
   switch (node.type) {
-    case 'Literal':
-    case 'Identifier':
+    case "Literal":
+    case "Identifier":
       break;
-    case 'BinaryExpression':
-    case 'LogicalExpression': {
+    case "BinaryExpression":
+    case "LogicalExpression": {
       const binaryNode = node;
       validateAST(binaryNode.left);
       validateAST(binaryNode.right);
       break;
     }
-    case 'UnaryExpression': {
+    case "UnaryExpression": {
       const unaryNode = node;
       validateAST(unaryNode.argument);
       break;
     }
-    case 'ConditionalExpression': {
+    case "ConditionalExpression": {
       const condNode = node;
       validateAST(condNode.test);
       validateAST(condNode.consequent);
       validateAST(condNode.alternate);
       break;
     }
-    case 'MemberExpression': {
+    case "MemberExpression": {
       const memberNode = node;
       validateAST(memberNode.object);
       if (memberNode.computed) {
         validateAST(memberNode.property);
       } else {
         const propName = (memberNode.property as Identifier).name;
-        if (['constructor', '__proto__', 'prototype'].includes(propName)) {
-          throw new Error('Access to prohibited property');
+        if (["constructor", "__proto__", "prototype"].includes(propName)) {
+          throw new Error("Access to prohibited property");
         }
         // Block prototype pollution methods
         if (
-          ['__defineGetter__', '__defineSetter__', '__lookupGetter__', '__lookupSetter__'].includes(
+          ["__defineGetter__", "__defineSetter__", "__lookupGetter__", "__lookupSetter__"].includes(
             propName,
           )
         ) {
           throw new Error(`Access to prohibited method: ${propName}`);
         }
-        const prohibitedMethods = ['toLocaleString', 'valueOf'];
-        if (typeof propName === 'string' && prohibitedMethods.includes(propName)) {
+        const prohibitedMethods = ["toLocaleString", "valueOf"];
+        if (typeof propName === "string" && prohibitedMethods.includes(propName)) {
           throw new Error(`Access to prohibited method: ${propName}`);
         }
       }
       break;
     }
-    case 'CallExpression': {
+    case "CallExpression": {
       const callNode = node;
       validateAST(callNode.callee);
       callNode.arguments.forEach(validateAST);
       break;
     }
-    case 'ArrayExpression': {
+    case "ArrayExpression": {
       const arrayNode = node;
       arrayNode.elements.forEach((elem) => {
         if (elem) validateAST(elem);
       });
       break;
     }
-    case 'ObjectExpression': {
+    case "ObjectExpression": {
       const objectNode = node;
       objectNode.properties.forEach((prop) => {
         const propNode = prop as Property;
@@ -171,11 +171,11 @@ const validateAST = (node: AcornNode): void => {
       });
       break;
     }
-    case 'ArrowFunctionExpression': {
+    case "ArrowFunctionExpression": {
       const arrowFuncNode = node;
       arrowFuncNode.params.forEach((param) => {
-        if (param.type !== 'Identifier') {
-          throw new Error('Only identifier parameters are supported in arrow functions');
+        if (param.type !== "Identifier") {
+          throw new Error("Only identifier parameters are supported in arrow functions");
         }
         validateAST(param);
       });
@@ -189,11 +189,11 @@ const validateAST = (node: AcornNode): void => {
 
 const evaluateAST = (node: AcornNode, context: Record<string, unknown>): unknown => {
   switch (node.type) {
-    case 'Literal': {
+    case "Literal": {
       const literalNode = node;
       return literalNode.value;
     }
-    case 'Identifier': {
+    case "Identifier": {
       const idNode = node;
       if (Object.prototype.hasOwnProperty.call(context, idNode.name)) {
         return context[idNode.name];
@@ -203,78 +203,78 @@ const evaluateAST = (node: AcornNode, context: Record<string, unknown>): unknown
         throw new Error(`Undefined variable: ${idNode.name}`);
       }
     }
-    case 'BinaryExpression': {
+    case "BinaryExpression": {
       const binaryNode = node;
       const left = evaluateAST(binaryNode.left, context) as number;
       const right = evaluateAST(binaryNode.right, context) as number;
       switch (binaryNode.operator) {
-        case '+':
+        case "+":
           return left + right;
-        case '-':
+        case "-":
           return left - right;
-        case '*':
+        case "*":
           return left * right;
-        case '/':
+        case "/":
           return left / right;
-        case '%':
+        case "%":
           return left % right;
-        case '**':
+        case "**":
           return left ** right;
-        case '==':
+        case "==":
           return left == right;
-        case '!=':
+        case "!=":
           return left != right;
-        case '===':
+        case "===":
           return left === right;
-        case '!==':
+        case "!==":
           return left !== right;
-        case '<':
+        case "<":
           return left < right;
-        case '>':
+        case ">":
           return left > right;
-        case '<=':
+        case "<=":
           return left <= right;
-        case '>=':
+        case ">=":
           return left >= right;
         default:
           throw new Error(`Unsupported operator: ${binaryNode.operator}`);
       }
     }
-    case 'LogicalExpression': {
+    case "LogicalExpression": {
       const logicalNode = node;
       const leftLogical = evaluateAST(logicalNode.left, context);
       const rightLogical = evaluateAST(logicalNode.right, context);
       switch (logicalNode.operator) {
-        case '&&':
+        case "&&":
           return leftLogical && rightLogical;
-        case '||':
+        case "||":
           return leftLogical || rightLogical;
         default:
           throw new Error(`Unsupported operator: ${logicalNode.operator}`);
       }
     }
-    case 'UnaryExpression': {
+    case "UnaryExpression": {
       const unaryNode = node;
       const arg = evaluateAST(unaryNode.argument, context) as number;
       switch (unaryNode.operator) {
-        case '+':
+        case "+":
           return +arg;
-        case '-':
+        case "-":
           return -arg;
-        case '!':
+        case "!":
           return !arg;
         default:
           throw new Error(`Unsupported operator: ${unaryNode.operator}`);
       }
     }
-    case 'ConditionalExpression': {
+    case "ConditionalExpression": {
       const condNode = node;
       const test = evaluateAST(condNode.test, context);
       return test
         ? evaluateAST(condNode.consequent, context)
         : evaluateAST(condNode.alternate, context);
     }
-    case 'MemberExpression': {
+    case "MemberExpression": {
       const memberNode = node;
       const obj = evaluateAST(memberNode.object, context) as Record<string, unknown>;
       let prop: string | number;
@@ -283,14 +283,14 @@ const evaluateAST = (node: AcornNode, context: Record<string, unknown>): unknown
       } else {
         prop = (memberNode.property as Identifier).name;
       }
-      if (typeof prop === 'string' || typeof prop === 'number') {
-        if (typeof prop === 'string' && ['constructor', '__proto__', 'prototype'].includes(prop)) {
-          throw new Error('Access to prohibited property');
+      if (typeof prop === "string" || typeof prop === "number") {
+        if (typeof prop === "string" && ["constructor", "__proto__", "prototype"].includes(prop)) {
+          throw new Error("Access to prohibited property");
         }
         // Block prototype pollution methods
         if (
-          typeof prop === 'string' &&
-          ['__defineGetter__', '__defineSetter__', '__lookupGetter__', '__lookupSetter__'].includes(
+          typeof prop === "string" &&
+          ["__defineGetter__", "__defineSetter__", "__lookupGetter__", "__lookupSetter__"].includes(
             prop,
           )
         ) {
@@ -298,37 +298,37 @@ const evaluateAST = (node: AcornNode, context: Record<string, unknown>): unknown
         }
         return obj[prop];
       } else {
-        throw new Error('Invalid property access');
+        throw new Error("Invalid property access");
       }
     }
-    case 'CallExpression': {
+    case "CallExpression": {
       const callNode = node;
       const callee = evaluateAST(callNode.callee, context);
       const args = callNode.arguments.map((argNode) => evaluateAST(argNode, context));
-      if (typeof callee === 'function') {
-        if (callNode.callee.type === 'MemberExpression') {
+      if (typeof callee === "function") {
+        if (callNode.callee.type === "MemberExpression") {
           const memberExpr = callNode.callee;
           const obj = evaluateAST(memberExpr.object, context);
           if (
             obj !== null &&
-            (typeof obj === 'object' ||
-              typeof obj === 'number' ||
-              typeof obj === 'string' ||
-              typeof obj === 'boolean')
+            (typeof obj === "object" ||
+              typeof obj === "number" ||
+              typeof obj === "string" ||
+              typeof obj === "boolean")
           ) {
             return callee.call(obj, ...args);
           } else {
-            throw new Error('Invalid object in member function call');
+            throw new Error("Invalid object in member function call");
           }
         } else {
           // Use a type assertion to tell TypeScript this is a safe function call
           return (callee as (...args: unknown[]) => unknown)(...args);
         }
       } else {
-        throw new Error('Attempted to call a non-function');
+        throw new Error("Attempted to call a non-function");
       }
     }
-    case 'ArrowFunctionExpression': {
+    case "ArrowFunctionExpression": {
       const arrowFuncNode = node;
       const params = arrowFuncNode.params.map((param) => (param as Identifier).name);
       const body = arrowFuncNode.body;
@@ -341,22 +341,22 @@ const evaluateAST = (node: AcornNode, context: Record<string, unknown>): unknown
         return evaluateAST(body, newContext);
       };
     }
-    case 'ArrayExpression': {
+    case "ArrayExpression": {
       const arrayNode = node;
       return arrayNode.elements.map((elem) => (elem ? evaluateAST(elem, context) : null));
     }
-    case 'ObjectExpression': {
+    case "ObjectExpression": {
       const objectNode = node;
       const objResult: Record<string, unknown> = {};
       objectNode.properties.forEach((prop) => {
         const propNode = prop as Property;
         let key: string;
-        if (propNode.key.type === 'Identifier') {
+        if (propNode.key.type === "Identifier") {
           key = propNode.key.name;
         } else {
           const evaluatedKey = evaluateAST(propNode.key, context);
-          if (typeof evaluatedKey !== 'string' && typeof evaluatedKey !== 'number') {
-            throw new Error('Object property keys must be strings or numbers');
+          if (typeof evaluatedKey !== "string" && typeof evaluatedKey !== "number") {
+            throw new Error("Object property keys must be strings or numbers");
           }
           key = String(evaluatedKey);
         }
@@ -376,11 +376,11 @@ const evaluatePlaceholders = (arg: {
 }): string => {
   const { content, context } = arg;
 
-  let resultContent = '';
+  let resultContent = "";
   let index = 0;
 
   while (index < content.length) {
-    const startIndex = content.indexOf('{', index);
+    const startIndex = content.indexOf("{", index);
     if (startIndex === -1) {
       resultContent += content.slice(index);
       break;
@@ -391,9 +391,9 @@ const evaluatePlaceholders = (arg: {
     let endIndex = startIndex + 1;
 
     while (endIndex < content.length && braceCount > 0) {
-      if (content[endIndex] === '{') {
+      if (content[endIndex] === "{") {
         braceCount++;
-      } else if (content[endIndex] === '}') {
+      } else if (content[endIndex] === "}") {
         braceCount--;
       }
       endIndex++;
@@ -412,7 +412,7 @@ const evaluatePlaceholders = (arg: {
         }
       } else {
         try {
-          const ast = acorn.parseExpressionAt(code, 0, { ecmaVersion: 'latest' }) as AcornNode;
+          const ast = acorn.parseExpressionAt(code, 0, { ecmaVersion: "latest" }) as AcornNode;
           validateAST(ast);
           const evalFunc = (ctx: Record<string, unknown>) => evaluateAST(ast, ctx);
           expressionCache.set(code, evalFunc);
@@ -444,8 +444,8 @@ export const resolveReadOnlyContent = (arg: {
   variables: Record<string, unknown>;
   schemas: SchemaPageArray;
 }): string => {
-  const content = arg.schema.content || '';
-  if (arg.schema.type === 'multiVariableText') {
+  const content = arg.schema.content || "";
+  if (arg.schema.type === "multiVariableText") {
     return content;
   }
   return replacePlaceholders({
@@ -461,7 +461,7 @@ export const replacePlaceholders = (arg: {
   schemas: SchemaPageArray;
 }): string => {
   const { content, variables, schemas } = arg;
-  if (!content || typeof content !== 'string' || !content.includes('{') || !content.includes('}')) {
+  if (!content || typeof content !== "string" || !content.includes("{") || !content.includes("}")) {
     return content;
   }
 
@@ -471,7 +471,7 @@ export const replacePlaceholders = (arg: {
 
   const data = {
     ...Object.fromEntries(
-      schemas.flat().map((schema) => [schema.name, schema.readOnly ? schema.content || '' : '']),
+      schemas.flat().map((schema) => [schema.name, schema.readOnly ? schema.content || "" : ""]),
     ),
     ...variables,
   };
@@ -484,7 +484,7 @@ export const replacePlaceholders = (arg: {
   };
 
   Object.entries(context).forEach(([key, value]) => {
-    if (typeof value === 'string' && value.includes('{') && value.includes('}')) {
+    if (typeof value === "string" && value.includes("{") && value.includes("}")) {
       context[key] = evaluatePlaceholders({ content: value, context });
     }
   });

@@ -1,12 +1,12 @@
-import type { PdfDocument, PdfEngine } from 'clawpdf/browser';
-import { pdf2img as _pdf2img, Pdf2ImgOptions } from './pdf2img.js';
-import { pdf2size as _pdf2size, Pdf2SizeOptions } from './pdf2size.js';
-import workerSrc from './clawpdf-worker.js?worker&url';
+import type { PdfDocument, PdfEngine } from "clawpdf/browser";
+import { pdf2img as _pdf2img, Pdf2ImgOptions } from "./pdf2img.js";
+import { pdf2size as _pdf2size, Pdf2SizeOptions } from "./pdf2size.js";
+import workerSrc from "./clawpdf-worker.js?worker&url";
 
 const clonePdfData = (pdf: ArrayBuffer | Uint8Array) =>
   new Uint8Array(pdf instanceof Uint8Array ? pdf : new Uint8Array(pdf));
 
-type WorkerRequestType = 'pdf2img' | 'pdf2size';
+type WorkerRequestType = "pdf2img" | "pdf2size";
 
 type WorkerSuccessResponse<T> = {
   id: number;
@@ -30,14 +30,14 @@ type PendingWorkerRequest = {
 };
 
 let enginePromise: Promise<PdfEngine> | undefined;
-let clawpdfPromise: Promise<typeof import('clawpdf/browser')> | undefined;
+let clawpdfPromise: Promise<typeof import("clawpdf/browser")> | undefined;
 let worker: Worker | undefined;
 let workerRequestId = 0;
 const pendingWorkerRequests = new Map<number, PendingWorkerRequest>();
 
 const getEngine = () => {
   enginePromise ??= (async () => {
-    clawpdfPromise ??= import('clawpdf/browser');
+    clawpdfPromise ??= import("clawpdf/browser");
     const { createEngine } = await clawpdfPromise;
     return createEngine();
   })();
@@ -68,10 +68,10 @@ const runInWorker = <T>(
 };
 
 const createRenderWorker = () => {
-  const nextWorker = new Worker(workerSrc, { type: 'module' });
+  const nextWorker = new Worker(workerSrc, { type: "module" });
 
   nextWorker.addEventListener(
-    'message',
+    "message",
     (
       event: MessageEvent<
         | WorkerSuccessResponse<ArrayBuffer[] | Awaited<ReturnType<typeof pdf2size>>>
@@ -95,8 +95,8 @@ const createRenderWorker = () => {
     },
   );
 
-  nextWorker.addEventListener('error', (event) => {
-    const error = new Error(event.message || 'PDF render worker failed');
+  nextWorker.addEventListener("error", (event) => {
+    const error = new Error(event.message || "PDF render worker failed");
     for (const pending of pendingWorkerRequests.values()) {
       pending.reject(error);
     }
@@ -125,16 +125,16 @@ export const pdf2img = async (
   pdf: ArrayBuffer | Uint8Array,
   options: Pdf2ImgOptions = {},
 ): Promise<ArrayBuffer[]> => {
-  if (typeof Worker === 'undefined') {
+  if (typeof Worker === "undefined") {
     return runPdf2imgDirect(pdf, options);
   }
 
-  return runInWorker<ArrayBuffer[]>('pdf2img', pdf, options);
+  return runInWorker<ArrayBuffer[]>("pdf2img", pdf, options);
 };
 
 export const pdf2size = async (pdf: ArrayBuffer | Uint8Array, options: Pdf2SizeOptions = {}) =>
-  typeof Worker === 'undefined'
+  typeof Worker === "undefined"
     ? runPdf2sizeDirect(pdf, options)
-    : runInWorker<Awaited<ReturnType<typeof runPdf2sizeDirect>>>('pdf2size', pdf, options);
+    : runInWorker<Awaited<ReturnType<typeof runPdf2sizeDirect>>>("pdf2size", pdf, options);
 
-export { img2pdf } from './img2pdf.js';
+export { img2pdf } from "./img2pdf.js";

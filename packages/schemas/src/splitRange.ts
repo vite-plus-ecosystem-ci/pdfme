@@ -4,14 +4,14 @@ import {
   type DynamicLayoutRange,
   type DynamicLayoutSplitRange,
   type Schema,
-} from '@pdfme/common';
+} from "@pdfme/common";
 
 // Keep the common schema open for external plugin units while exposing the built-in units as
 // typed constants for pdfme's bundled dynamic layout schemas.
 export const BUILT_IN_DYNAMIC_LAYOUT_SPLIT_UNITS = {
-  tableBody: 'tableBody',
-  listItem: 'listItem',
-  textLine: 'textLine',
+  tableBody: "tableBody",
+  listItem: "listItem",
+  textLine: "textLine",
 } as const;
 
 export type BuiltInDynamicLayoutSplitUnit =

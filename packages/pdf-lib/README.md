@@ -9,7 +9,7 @@ Draw rounded corners with the specified radius using the Bezier curve function. 
 </details>
  <details>
   <summary><a href="https://github.com/cantoo-scribe/pdf-lib/pull/42">2023/12/22 - Incorporate @cantoo/pdf-lib Refactor drawSvg PR</a></summary>
-  
+
 PR: [Refactor drawSvg to handle transfomations as matrix and to crop elements #42](https://github.com/cantoo-scribe/pdf-lib/pull/42)
 </details>
  <details>
@@ -1062,11 +1062,7 @@ const pdfBytes = await pdfDoc.save()
 Below is the [**create document**](#create-document) example modified for Deno:
 
 ```js
-import {
-  PDFDocument,
-  StandardFonts,
-  rgb,
-} from 'https://cdn.skypack.dev/pdf-lib@^1.11.1?dts';
+import { PDFDocument, StandardFonts, rgb } from "https://cdn.skypack.dev/pdf-lib@^1.11.1?dts";
 
 const pdfDoc = await PDFDocument.create();
 const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
@@ -1074,7 +1070,7 @@ const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
 const page = pdfDoc.addPage();
 const { width, height } = page.getSize();
 const fontSize = 30;
-page.drawText('Creating PDFs in JavaScript is awesome!', {
+page.drawText("Creating PDFs in JavaScript is awesome!", {
   x: 50,
   y: height - 4 * fontSize,
   size: fontSize,
@@ -1084,7 +1080,7 @@ page.drawText('Creating PDFs in JavaScript is awesome!', {
 
 const pdfBytes = await pdfDoc.save();
 
-await Deno.writeFile('out.pdf', pdfBytes);
+await Deno.writeFile("out.pdf", pdfBytes);
 ```
 
 If you save this script as `create-document.ts`, you can execute it using Deno with the following command:
@@ -1105,10 +1101,10 @@ import {
   PDFDocument,
   rgb,
   StandardFonts,
-} from 'https://cdn.skypack.dev/pdf-lib@^1.11.1?dts';
-import fontkit from 'https://cdn.skypack.dev/@pdf-lib/fontkit@^1.0.0?dts';
+} from "https://cdn.skypack.dev/pdf-lib@^1.11.1?dts";
+import fontkit from "https://cdn.skypack.dev/@pdf-lib/fontkit@^1.0.0?dts";
 
-const url = 'https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf';
+const url = "https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf";
 const fontBytes = await fetch(url).then((res) => res.arrayBuffer());
 
 const pdfDoc = await PDFDocument.create();
@@ -1118,7 +1114,7 @@ const customFont = await pdfDoc.embedFont(fontBytes);
 
 const page = pdfDoc.addPage();
 
-const text = 'This is text in an embedded font!';
+const text = "This is text in an embedded font!";
 const textSize = 35;
 const textWidth = customFont.widthOfTextAtSize(text, textSize);
 const textHeight = customFont.heightAtSize(textSize);
@@ -1141,7 +1137,7 @@ page.drawRectangle({
 
 const pdfBytes = await pdfDoc.save();
 
-await Deno.writeFile('out.pdf', pdfBytes);
+await Deno.writeFile("out.pdf", pdfBytes);
 ```
 
 If you save this script as `custom-font.ts`, you can execute it with the following command:
@@ -1199,7 +1195,7 @@ When using a UMD build, you will have access to a global `window.PDFLib` variabl
 
 ```javascript
 // NPM module
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument, rgb } from "pdf-lib";
 
 // UMD module
 var PDFDocument = PDFLib.PDFDocument;
@@ -1335,15 +1331,15 @@ See the [form creation](#create-form) and [form filling](#fill-form) usage examp
 You can use an embedded font when filling form fields as follows:
 
 ```js
-import { PDFDocument } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
+import { PDFDocument } from "pdf-lib";
+import fontkit from "@pdf-lib/fontkit";
 
 // Fetch the PDF with form fields
-const formUrl = 'https://pdf-lib.js.org/assets/dod_character.pdf';
+const formUrl = "https://pdf-lib.js.org/assets/dod_character.pdf";
 const formBytes = await fetch(formUrl).then((res) => res.arrayBuffer());
 
 // Fetch the Ubuntu font
-const fontUrl = 'https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf';
+const fontUrl = "https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf";
 const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
 
 // Load the PDF with form fields
@@ -1355,13 +1351,13 @@ const ubuntuFont = await pdfDoc.embedFont(fontBytes);
 
 // Get two text fields from the form
 const form = pdfDoc.getForm();
-const nameField = form.getTextField('CharacterName 2');
-const ageField = form.getTextField('Age');
+const nameField = form.getTextField("CharacterName 2");
+const ageField = form.getTextField("Age");
 
 // Fill the text fields with some fancy Unicode characters (outside
 // the WinAnsi latin character set)
-nameField.setText('Ӎӑȑїõ');
-ageField.setText('24 ŷȇȁŗš');
+nameField.setText("Ӎӑȑїõ");
+ageField.setText("24 ŷȇȁŗš");
 
 // **Key Step:** Update the field appearances with the Ubuntu font
 form.updateFieldAppearances(ubuntuFont);
@@ -1468,7 +1464,7 @@ If you know the password of the document, or if it was provided by the user, you
 
 ```js
 // Load an encrypted document with its password:
-const password = 'The password';
+const password = "The password";
 const doc = PDFDocument.load(content, { ignoreEncryption: true, password });
 ```
 

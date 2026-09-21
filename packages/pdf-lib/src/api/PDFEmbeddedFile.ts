@@ -1,7 +1,7 @@
-import Embeddable from './Embeddable.js';
-import PDFDocument from './PDFDocument.js';
-import FileEmbedder from '../core/embedders/FileEmbedder.js';
-import { PDFName, PDFArray, PDFDict, PDFHexString, PDFRef } from '../core/index.js';
+import Embeddable from "./Embeddable.js";
+import PDFDocument from "./PDFDocument.js";
+import FileEmbedder from "../core/embedders/FileEmbedder.js";
+import { PDFName, PDFArray, PDFDict, PDFHexString, PDFRef } from "../core/index.js";
 
 /**
  * Represents a file that has been embedded in a [[PDFDocument]].
@@ -49,20 +49,20 @@ export default class PDFEmbeddedFile implements Embeddable {
     if (!this.alreadyEmbedded) {
       const ref = await this.embedder.embedIntoContext(this.doc.context, this.ref);
 
-      if (!this.doc.catalog.has(PDFName.of('Names'))) {
-        this.doc.catalog.set(PDFName.of('Names'), this.doc.context.obj({}));
+      if (!this.doc.catalog.has(PDFName.of("Names"))) {
+        this.doc.catalog.set(PDFName.of("Names"), this.doc.context.obj({}));
       }
-      const Names = this.doc.catalog.lookup(PDFName.of('Names'), PDFDict);
+      const Names = this.doc.catalog.lookup(PDFName.of("Names"), PDFDict);
 
-      if (!Names.has(PDFName.of('EmbeddedFiles'))) {
-        Names.set(PDFName.of('EmbeddedFiles'), this.doc.context.obj({}));
+      if (!Names.has(PDFName.of("EmbeddedFiles"))) {
+        Names.set(PDFName.of("EmbeddedFiles"), this.doc.context.obj({}));
       }
-      const EmbeddedFiles = Names.lookup(PDFName.of('EmbeddedFiles'), PDFDict);
+      const EmbeddedFiles = Names.lookup(PDFName.of("EmbeddedFiles"), PDFDict);
 
-      if (!EmbeddedFiles.has(PDFName.of('Names'))) {
-        EmbeddedFiles.set(PDFName.of('Names'), this.doc.context.obj([]));
+      if (!EmbeddedFiles.has(PDFName.of("Names"))) {
+        EmbeddedFiles.set(PDFName.of("Names"), this.doc.context.obj([]));
       }
-      const EFNames = EmbeddedFiles.lookup(PDFName.of('Names'), PDFArray);
+      const EFNames = EmbeddedFiles.lookup(PDFName.of("Names"), PDFArray);
 
       EFNames.push(PDFHexString.fromText(this.embedder.fileName));
       EFNames.push(ref);
@@ -75,10 +75,10 @@ export default class PDFEmbeddedFile implements Embeddable {
        * https://www.pdfa.org/wp-content/uploads/2018/10/PDF20_AN002-AF.pdf
        */
 
-      if (!this.doc.catalog.has(PDFName.of('AF'))) {
-        this.doc.catalog.set(PDFName.of('AF'), this.doc.context.obj([]));
+      if (!this.doc.catalog.has(PDFName.of("AF"))) {
+        this.doc.catalog.set(PDFName.of("AF"), this.doc.context.obj([]));
       }
-      const AF = this.doc.catalog.lookup(PDFName.of('AF'), PDFArray);
+      const AF = this.doc.catalog.lookup(PDFName.of("AF"), PDFArray);
       AF.push(ref);
 
       this.alreadyEmbedded = true;

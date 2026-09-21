@@ -1,17 +1,17 @@
-import { propPanel as parentPropPanel } from '../text/propPanel.js';
-import { PropPanel, PropPanelWidgetProps } from '@pdfme/common';
-import { MultiVariableTextSchema } from './types.js';
-import { getVariableNames } from './variables.js';
+import { propPanel as parentPropPanel } from "../text/propPanel.js";
+import { PropPanel, PropPanelWidgetProps } from "@pdfme/common";
+import { MultiVariableTextSchema } from "./types.js";
+import { getVariableNames } from "./variables.js";
 
 const mapDynamicVariables = (props: PropPanelWidgetProps) => {
   const { rootElement, changeSchemas, activeSchema, i18n, options } = props;
 
   const mvtSchema = activeSchema as unknown as MultiVariableTextSchema;
-  const text = mvtSchema.text || '';
+  const text = mvtSchema.text || "";
   let variables: Record<string, string> = {};
   try {
-    const parsed = JSON.parse(mvtSchema.content || '{}');
-    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+    const parsed = JSON.parse(mvtSchema.content || "{}");
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
       variables = parsed as Record<string, string>;
     }
   } catch {
@@ -22,60 +22,60 @@ const mapDynamicVariables = (props: PropPanelWidgetProps) => {
 
   if (variablesChanged) {
     changeSchemas([
-      { key: 'content', value: JSON.stringify(variables), schemaId: activeSchema.id },
-      { key: 'variables', value: varNames, schemaId: activeSchema.id },
-      { key: 'readOnly', value: varNames.length === 0, schemaId: activeSchema.id },
+      { key: "content", value: JSON.stringify(variables), schemaId: activeSchema.id },
+      { key: "variables", value: varNames, schemaId: activeSchema.id },
+      { key: "readOnly", value: varNames.length === 0, schemaId: activeSchema.id },
     ]);
   }
 
   const placeholderRowEl = document
-    .getElementById('placeholder-dynamic-var')
-    ?.closest('.ant-form-item') as HTMLElement;
+    .getElementById("placeholder-dynamic-var")
+    ?.closest(".ant-form-item") as HTMLElement;
   if (!placeholderRowEl) {
-    throw new Error('Failed to find Ant form placeholder row to create dynamic variables inputs.');
+    throw new Error("Failed to find Ant form placeholder row to create dynamic variables inputs.");
   }
-  placeholderRowEl.style.display = 'none';
+  placeholderRowEl.style.display = "none";
 
   // The wrapping form element has a display:flex which limits the width of the form fields, removing.
-  (rootElement.parentElement as HTMLElement).style.display = 'block';
+  (rootElement.parentElement as HTMLElement).style.display = "block";
 
   if (varNames.length > 0) {
     for (let variableName of varNames) {
       const varRow = placeholderRowEl.cloneNode(true) as HTMLElement;
 
-      const textarea = varRow.querySelector('textarea') as HTMLTextAreaElement;
-      textarea.id = 'dynamic-var-' + variableName;
+      const textarea = varRow.querySelector("textarea") as HTMLTextAreaElement;
+      textarea.id = "dynamic-var-" + variableName;
       textarea.value = variables[variableName];
-      textarea.addEventListener('change', (e: Event) => {
+      textarea.addEventListener("change", (e: Event) => {
         if (variableName in variables) {
           variables[variableName] = (e.target as HTMLTextAreaElement).value;
           changeSchemas([
-            { key: 'content', value: JSON.stringify(variables), schemaId: activeSchema.id },
+            { key: "content", value: JSON.stringify(variables), schemaId: activeSchema.id },
           ]);
         }
       });
 
-      const label = varRow.querySelector('label') as HTMLLabelElement;
+      const label = varRow.querySelector("label") as HTMLLabelElement;
       label.innerText = variableName;
 
-      varRow.style.display = 'block';
+      varRow.style.display = "block";
       rootElement.appendChild(varRow);
     }
   } else {
-    const para = document.createElement('p');
+    const para = document.createElement("p");
     // Extract color value to avoid unsafe property access
-    const colorValue = options?.theme?.token?.colorPrimary || '#168fe3';
+    const colorValue = options?.theme?.token?.colorPrimary || "#168fe3";
     const isValidColor =
       /^#[0-9A-F]{6}$/i.test(colorValue) ||
       /^(rgb|hsl)a?\(\s*([+-]?\d+%?\s*,\s*){2,3}[+-]?\d+%?\s*\)$/i.test(colorValue);
-    const safeColorValue = isValidColor ? colorValue : '#168fe3';
+    const safeColorValue = isValidColor ? colorValue : "#168fe3";
 
-    const typingInstructions = i18n('schemas.mvt.typingInstructions');
-    const sampleField = i18n('schemas.mvt.sampleField');
-    para.appendChild(document.createTextNode(typingInstructions + ' '));
-    const codeEl = document.createElement('code');
+    const typingInstructions = i18n("schemas.mvt.typingInstructions");
+    const sampleField = i18n("schemas.mvt.sampleField");
+    para.appendChild(document.createTextNode(typingInstructions + " "));
+    const codeEl = document.createElement("code");
     codeEl.style.color = safeColorValue;
-    codeEl.style.fontWeight = 'bold';
+    codeEl.style.fontWeight = "bold";
     codeEl.textContent = `{${sampleField}}`;
     para.appendChild(codeEl);
     rootElement.appendChild(para);
@@ -83,35 +83,35 @@ const mapDynamicVariables = (props: PropPanelWidgetProps) => {
 };
 
 export const propPanel: PropPanel<MultiVariableTextSchema> = {
-  schema: (propPanelProps: Omit<PropPanelWidgetProps, 'rootElement'>) => {
-    if (typeof parentPropPanel.schema !== 'function') {
-      throw new Error('Oops, is text schema no longer a function?');
+  schema: (propPanelProps: Omit<PropPanelWidgetProps, "rootElement">) => {
+    if (typeof parentPropPanel.schema !== "function") {
+      throw new Error("Oops, is text schema no longer a function?");
     }
     // Safely call schema function with proper type handling
     const parentSchema =
-      typeof parentPropPanel.schema === 'function' ? parentPropPanel.schema(propPanelProps) : {};
+      typeof parentPropPanel.schema === "function" ? parentPropPanel.schema(propPanelProps) : {};
     const i18n = (propPanelProps as PropPanelWidgetProps).i18n;
     return {
       ...parentSchema,
-      '-------': { type: 'void', widget: 'Divider' },
+      "-------": { type: "void", widget: "Divider" },
       dynamicVarContainer: {
-        title: i18n('schemas.mvt.variablesSampleData'),
-        type: 'string',
-        widget: 'Card',
+        title: i18n("schemas.mvt.variablesSampleData"),
+        type: "string",
+        widget: "Card",
         span: 24,
         properties: {
           dynamicVariables: {
-            type: 'object',
-            widget: 'mapDynamicVariables',
+            type: "object",
+            widget: "mapDynamicVariables",
             bind: false,
             span: 24,
           },
           placeholderDynamicVar: {
-            title: i18n('schemas.mvt.placeholderDynamicVariable'),
-            type: 'string',
-            format: 'textarea',
+            title: i18n("schemas.mvt.placeholderDynamicVariable"),
+            type: "string",
+            format: "textarea",
             props: {
-              id: 'placeholder-dynamic-var',
+              id: "placeholder-dynamic-var",
               autoSize: {
                 minRows: 2,
                 maxRows: 5,
@@ -127,11 +127,11 @@ export const propPanel: PropPanel<MultiVariableTextSchema> = {
   defaultSchema: {
     ...parentPropPanel.defaultSchema,
     readOnly: false,
-    type: 'multiVariableText',
-    text: 'Add text here using {} for variables ',
+    type: "multiVariableText",
+    text: "Add text here using {} for variables ",
     width: 50,
     height: 15,
-    content: '{}',
+    content: "{}",
     variables: [],
   },
 };

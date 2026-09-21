@@ -1,10 +1,10 @@
-import { accessSync, constants, existsSync } from 'node:fs';
-import { dirname } from 'node:path';
-import { homedir, tmpdir } from 'node:os';
-import { defineCommand } from 'citty';
-import { checkGenerateProps, DEFAULT_FONT_NAME } from '@pdfme/common';
-import { assertNoUnknownFlags, fail, printJson, runWithContract } from '../contract.js';
-import { detectCJKInInputs, detectCJKInTemplate } from '../cjk-detect.js';
+import { accessSync, constants, existsSync } from "node:fs";
+import { dirname } from "node:path";
+import { homedir, tmpdir } from "node:os";
+import { defineCommand } from "citty";
+import { checkGenerateProps, DEFAULT_FONT_NAME } from "@pdfme/common";
+import { assertNoUnknownFlags, fail, printJson, runWithContract } from "../contract.js";
+import { detectCJKInInputs, detectCJKInTemplate } from "../cjk-detect.js";
 import {
   collectInputHints,
   getInputContractIssues,
@@ -13,67 +13,67 @@ import {
   loadValidationSource,
   summarizeBasePdf,
   validateTemplate,
-} from '../diagnostics.js';
+} from "../diagnostics.js";
 import {
   analyzeExplicitFontRecord,
   NOTO_CACHE_FILE,
   type ExplicitFontRemoteProvider,
   type ExplicitFontSourceDiagnosis,
-} from '../fonts.js';
+} from "../fonts.js";
 import {
   getImageOutputPaths,
   getSafeDefaultOutputPathIssue,
   inspectWriteTarget,
   type WriteTargetInspection,
-} from '../utils.js';
-import { CLI_VERSION } from '../version.js';
+} from "../utils.js";
+import { CLI_VERSION } from "../version.js";
 
 const doctorArgs = {
   target: {
-    type: 'positional' as const,
+    type: "positional" as const,
     description: 'Optional job/template JSON file, or "fonts" for font-focused diagnosis',
     required: false,
   },
   file: {
-    type: 'positional' as const,
+    type: "positional" as const,
     description: 'Job/template JSON file for "doctor fonts", or "-" for stdin',
     required: false,
   },
-  verbose: { type: 'boolean' as const, alias: 'v', description: 'Verbose output', default: false },
-  json: { type: 'boolean' as const, description: 'Machine-readable JSON output', default: false },
+  verbose: { type: "boolean" as const, alias: "v", description: "Verbose output", default: false },
+  json: { type: "boolean" as const, description: "Machine-readable JSON output", default: false },
   noAutoFont: {
-    type: 'boolean' as const,
-    description: 'Simulate generate with automatic CJK font download disabled',
+    type: "boolean" as const,
+    description: "Simulate generate with automatic CJK font download disabled",
     default: false,
   },
   output: {
-    type: 'string' as const,
-    alias: 'o',
-    description: 'Simulate generate output PDF path for runtime/path diagnosis',
-    default: 'output.pdf',
+    type: "string" as const,
+    alias: "o",
+    description: "Simulate generate output PDF path for runtime/path diagnosis",
+    default: "output.pdf",
   },
   force: {
-    type: 'boolean' as const,
-    description: 'Simulate generate --force for implicit default output path checks',
+    type: "boolean" as const,
+    description: "Simulate generate --force for implicit default output path checks",
     default: false,
   },
   image: {
-    type: 'boolean' as const,
-    description: 'Simulate generate --image when previewing runtime output paths',
+    type: "boolean" as const,
+    description: "Simulate generate --image when previewing runtime output paths",
     default: false,
   },
 };
 
-type DoctorTarget = 'environment' | 'input' | 'fonts';
+type DoctorTarget = "environment" | "input" | "fonts";
 type FontSourceKind =
-  | 'default'
-  | 'autoCache'
-  | 'autoDownload'
-  | 'localPath'
-  | 'url'
-  | 'dataUri'
-  | 'inlineBytes'
-  | 'invalid';
+  | "default"
+  | "autoCache"
+  | "autoDownload"
+  | "localPath"
+  | "url"
+  | "dataUri"
+  | "inlineBytes"
+  | "invalid";
 
 interface DoctorInvocation {
   target: DoctorTarget;
@@ -118,7 +118,7 @@ interface BasePdfDiagnosis {
 
 interface FontSourceDiagnosis {
   fontName: string;
-  source: 'explicit' | 'implicit';
+  source: "explicit" | "implicit";
   kind: FontSourceKind;
   provider?: ExplicitFontRemoteProvider;
   path?: string;
@@ -164,7 +164,7 @@ interface RuntimeDiagnosis {
   output: OutputPathDiagnosis;
   imageOutputs: {
     enabled: boolean;
-    format: 'png';
+    format: "png";
     paths: string[];
     directory: string;
   };
@@ -189,8 +189,8 @@ interface InputDiagnosis {
 
 export default defineCommand({
   meta: {
-    name: 'doctor',
-    description: 'Diagnose the local pdfme CLI environment and input readiness',
+    name: "doctor",
+    description: "Diagnose the local pdfme CLI environment and input readiness",
   },
   args: doctorArgs,
   async run({ args, rawArgs }) {
@@ -200,7 +200,7 @@ export default defineCommand({
       const invocation = resolveDoctorInvocation(args);
       const environment = getEnvironmentReport();
 
-      if (invocation.target === 'environment') {
+      if (invocation.target === "environment") {
         const issues = collectEnvironmentIssues(environment);
         const warnings = collectEnvironmentWarnings(environment);
         const healthy = issues.length === 0;
@@ -212,8 +212,8 @@ export default defineCommand({
         if (args.json) {
           printJson({
             ok: true,
-            command: 'doctor',
-            target: 'environment',
+            command: "doctor",
+            target: "environment",
             healthy,
             environment,
             issues,
@@ -231,14 +231,14 @@ export default defineCommand({
 
       const source = await loadValidationSource(invocation.file, {
         noInputMessage:
-          invocation.target === 'fonts'
-            ? 'No font diagnostic input provided. Pass a file path or pipe JSON via stdin.'
-            : 'No diagnostic input provided. Pass a file path or pipe JSON via stdin.',
+          invocation.target === "fonts"
+            ? "No font diagnostic input provided. Pass a file path or pipe JSON via stdin."
+            : "No diagnostic input provided. Pass a file path or pipe JSON via stdin.",
       });
 
       const diagnosis = buildInputDiagnosis(source, environment, Boolean(args.noAutoFont), {
-        includeBasePdfIssue: invocation.target === 'input',
-        includeRuntimeIssue: invocation.target === 'input',
+        includeBasePdfIssue: invocation.target === "input",
+        includeRuntimeIssue: invocation.target === "input",
         runtime: {
           output: args.output,
           force: Boolean(args.force),
@@ -252,16 +252,16 @@ export default defineCommand({
       }
 
       const payload =
-        invocation.target === 'fonts'
+        invocation.target === "fonts"
           ? {
               ok: true,
-              command: 'doctor',
-              target: 'fonts',
+              command: "doctor",
+              target: "fonts",
               healthy: diagnosis.healthy,
               mode: source.mode,
               templatePageCount: diagnosis.validation.pages,
               fieldCount: diagnosis.validation.fields,
-              ...(source.mode === 'job' ? { inputCount: source.inputs?.length ?? 0 } : {}),
+              ...(source.mode === "job" ? { inputCount: source.inputs?.length ?? 0 } : {}),
               environment,
               validation: createValidationPayload(diagnosis.validation),
               inspection: {
@@ -278,13 +278,13 @@ export default defineCommand({
             }
           : {
               ok: true,
-              command: 'doctor',
-              target: 'input',
+              command: "doctor",
+              target: "input",
               healthy: diagnosis.healthy,
               mode: source.mode,
               templatePageCount: diagnosis.validation.pages,
               fieldCount: diagnosis.validation.fields,
-              ...(source.mode === 'job' ? { inputCount: source.inputs?.length ?? 0 } : {}),
+              ...(source.mode === "job" ? { inputCount: source.inputs?.length ?? 0 } : {}),
               estimatedPageCount: diagnosis.runtimeDiagnosis.estimatedPages,
               environment,
               validation: createValidationPayload(diagnosis.validation),
@@ -307,7 +307,7 @@ export default defineCommand({
 
       if (args.json) {
         printJson(payload);
-      } else if (invocation.target === 'fonts') {
+      } else if (invocation.target === "fonts") {
         printFontReport(payload);
       } else {
         printInputReport(payload);
@@ -327,29 +327,29 @@ function resolveDoctorInvocation(args: {
 }): DoctorInvocation {
   const positionals = Array.isArray(args._) ? args._ : [];
 
-  if (args.target === 'fonts') {
+  if (args.target === "fonts") {
     if (positionals.length > 2) {
       fail(
         `Unexpected extra positional argument: ${JSON.stringify(positionals[2])}. Usage: pdfme doctor fonts <job-or-template>.`,
-        { code: 'EARG', exitCode: 1 },
+        { code: "EARG", exitCode: 1 },
       );
     }
 
-    return { target: 'fonts', file: args.file };
+    return { target: "fonts", file: args.file };
   }
 
   if (positionals.length > 1) {
     fail(
       `Unexpected extra positional argument: ${JSON.stringify(positionals[1])}. Usage: pdfme doctor [job-or-template].`,
-      { code: 'EARG', exitCode: 1 },
+      { code: "EARG", exitCode: 1 },
     );
   }
 
   if (args.target) {
-    return { target: 'input', file: args.target };
+    return { target: "input", file: args.target };
   }
 
-  return { target: 'environment' };
+  return { target: "environment" };
 }
 
 function buildInputDiagnosis(
@@ -371,7 +371,7 @@ function buildInputDiagnosis(
     .sort();
   if (templateUnknownKeys.length > 0) {
     validation.warnings.push(
-      `Unknown template top-level field(s): ${templateUnknownKeys.join(', ')}`,
+      `Unknown template top-level field(s): ${templateUnknownKeys.join(", ")}`,
     );
   }
 
@@ -390,7 +390,7 @@ function buildInputDiagnosis(
     issues.push(runtimeDiagnosis.output.issue);
   }
 
-  if (source.mode === 'job' && fontDiagnosis.effectiveOptions) {
+  if (source.mode === "job" && fontDiagnosis.effectiveOptions) {
     try {
       checkGenerateProps({
         template: source.template as any,
@@ -423,7 +423,7 @@ function buildInputDiagnosis(
 }
 
 function createValidationPayload(
-  validation: InputDiagnosis['validation'],
+  validation: InputDiagnosis["validation"],
 ): Record<string, unknown> {
   return {
     valid: validation.valid,
@@ -537,7 +537,7 @@ function collectEnvironmentWarnings(environment: EnvironmentReport): string[] {
 function diagnoseBasePdf(basePdf: unknown, templateDir?: string): BasePdfDiagnosis {
   const summary = summarizeBasePdf(basePdf, templateDir);
 
-  if (summary.kind !== 'pdfPath' || !summary.resolvedPath) {
+  if (summary.kind !== "pdfPath" || !summary.resolvedPath) {
     return summary;
   }
 
@@ -554,7 +554,7 @@ function diagnoseRuntime(
   options: RuntimeOptions,
 ): RuntimeDiagnosis {
   const estimatedPages =
-    source.mode === 'job'
+    source.mode === "job"
       ? (source.inputs?.length ?? 0) * getTemplatePageCount(source.template)
       : getTemplatePageCount(source.template);
   const output = diagnoseOutputPath(options);
@@ -564,7 +564,7 @@ function diagnoseRuntime(
     output,
     imageOutputs: {
       enabled: options.image,
-      format: 'png',
+      format: "png",
       paths: options.image ? getImageOutputPaths(options.output, estimatedPages) : [],
       directory: dirname(output.resolvedPath),
     },
@@ -576,28 +576,28 @@ function diagnoseOutputPath(options: RuntimeOptions): OutputPathDiagnosis {
   const implicitDefaultIssue = getSafeDefaultOutputPathIssue({
     filePath: options.output,
     rawArgs: options.rawArgs,
-    optionName: 'output',
-    optionAlias: 'o',
-    defaultValue: 'output.pdf',
+    optionName: "output",
+    optionAlias: "o",
+    defaultValue: "output.pdf",
     force: options.force,
   });
 
   let issue = implicitDefaultIssue;
 
-  if (!issue && inspection.exists && inspection.existingType === 'directory') {
+  if (!issue && inspection.exists && inspection.existingType === "directory") {
     issue = `Output path points to a directory: ${inspection.resolvedPath}. Choose a file path like out.pdf.`;
-  } else if (!issue && inspection.exists && inspection.existingType === 'other') {
+  } else if (!issue && inspection.exists && inspection.existingType === "other") {
     issue = `Output path is not a regular file: ${inspection.resolvedPath}.`;
   } else if (
     !issue &&
     inspection.checkedType &&
-    inspection.checkedType !== 'directory' &&
-    inspection.existingType !== 'file'
+    inspection.checkedType !== "directory" &&
+    inspection.existingType !== "file"
   ) {
     issue = `Output directory cannot be created because an existing path segment is not a directory: ${inspection.checkedPath ?? inspection.parentDir}.`;
   } else if (!issue && !inspection.writable) {
     issue =
-      inspection.exists && inspection.existingType === 'file'
+      inspection.exists && inspection.existingType === "file"
         ? `Output file is not writable: ${inspection.resolvedPath}.`
         : `Output directory is not writable for ${inspection.resolvedPath}: ${inspection.checkedPath ?? inspection.parentDir}.`;
   }
@@ -631,7 +631,7 @@ function diagnoseFonts(
   const autoFontNeeded = hasCJK && explicit.fontNames.length === 0;
   if (autoFontNeeded && noAutoFont) {
     issues.push(
-      'CJK text detected, but automatic NotoSansJP download is disabled by --noAutoFont and no explicit font source was provided.',
+      "CJK text detected, but automatic NotoSansJP download is disabled by --noAutoFont and no explicit font source was provided.",
     );
   } else if (autoFontNeeded && !autoFontCached && !environment.fontCache.writable) {
     issues.push(
@@ -658,9 +658,9 @@ function diagnoseFonts(
   const effectiveFonts = Object.keys(effectiveFont).sort();
   const missingFonts = requiredFonts.filter((fontName) => !effectiveFonts.includes(fontName));
 
-  if (source.mode === 'template' && missingFonts.length > 0) {
+  if (source.mode === "template" && missingFonts.length > 0) {
     issues.push(
-      `Template references font(s) that are not available by default: ${missingFonts.join(', ')}. Provide them via generate --font or unified job options.font.`,
+      `Template references font(s) that are not available by default: ${missingFonts.join(", ")}. Provide them via generate --font or unified job options.font.`,
     );
   }
 
@@ -697,9 +697,9 @@ function normalizeExplicitFontConfig(
     return { issues: [], warnings: [], fontNames: [], sources: [] };
   }
 
-  if (typeof options !== 'object' || options === null || Array.isArray(options)) {
+  if (typeof options !== "object" || options === null || Array.isArray(options)) {
     return {
-      issues: ['Unified job options must be a JSON object.'],
+      issues: ["Unified job options must be a JSON object."],
       warnings: [],
       fontNames: [],
       sources: [],
@@ -712,9 +712,9 @@ function normalizeExplicitFontConfig(
     return { issues: [], warnings: [], fontNames: [], optionsRecord, sources: [] };
   }
 
-  if (typeof font !== 'object' || font === null || Array.isArray(font)) {
+  if (typeof font !== "object" || font === null || Array.isArray(font)) {
     return {
-      issues: ['Unified job options.font must be an object.'],
+      issues: ["Unified job options.font must be an object."],
       warnings: [],
       fontNames: [],
       optionsRecord,
@@ -738,7 +738,7 @@ function normalizeExplicitFontConfig(
 function toDoctorExplicitSource(source: ExplicitFontSourceDiagnosis): FontSourceDiagnosis {
   return {
     ...source,
-    source: 'explicit',
+    source: "explicit",
   };
 }
 
@@ -749,9 +749,9 @@ function buildImplicitFontSources(
   const sources: FontSourceDiagnosis[] = [
     {
       fontName: DEFAULT_FONT_NAME,
-      source: 'implicit',
-      kind: 'default',
-      formatHint: 'ttf',
+      source: "implicit",
+      kind: "default",
+      formatHint: "ttf",
       supportedFormat: true,
       needsNetwork: false,
     },
@@ -759,13 +759,13 @@ function buildImplicitFontSources(
 
   if (autoFontNeeded) {
     sources.push({
-      fontName: 'NotoSansJP',
-      source: 'implicit',
-      kind: autoFontCached ? 'autoCache' : 'autoDownload',
+      fontName: "NotoSansJP",
+      source: "implicit",
+      kind: autoFontCached ? "autoCache" : "autoDownload",
       path: NOTO_CACHE_FILE,
       resolvedPath: NOTO_CACHE_FILE,
       exists: autoFontCached,
-      formatHint: 'ttf',
+      formatHint: "ttf",
       supportedFormat: true,
       needsNetwork: !autoFontCached,
     });
@@ -787,20 +787,20 @@ function printEnvironmentReport(
 ): void {
   const header =
     issues.length === 0
-      ? '\u2713 Environment looks ready'
-      : '\u2717 Environment has blocking issues';
+      ? "\u2713 Environment looks ready"
+      : "\u2717 Environment has blocking issues";
   console.log(header);
   console.log(`Node: ${environment.nodeVersion}`);
   console.log(`CLI: ${environment.cliVersion}`);
   console.log(`Platform: ${environment.platform} ${environment.arch}`);
   console.log(
-    `cwd: ${environment.cwd.path} (${environment.cwd.writable ? 'writable' : 'not writable'})`,
+    `cwd: ${environment.cwd.path} (${environment.cwd.writable ? "writable" : "not writable"})`,
   );
   console.log(
-    `temp: ${environment.tempDir.path} (${environment.tempDir.writable ? 'writable' : 'not writable'})`,
+    `temp: ${environment.tempDir.path} (${environment.tempDir.writable ? "writable" : "not writable"})`,
   );
   console.log(
-    `font cache: ${environment.fontCache.file} (${environment.fontCache.cached ? 'cached' : 'not cached'})`,
+    `font cache: ${environment.fontCache.file} (${environment.fontCache.cached ? "cached" : "not cached"})`,
   );
 
   for (const issue of issues) {
@@ -817,15 +817,15 @@ function printDoctorEnvironmentVerbose(
   issues: string[],
   warnings: string[],
 ): void {
-  console.error('Target: environment');
-  console.error(`Healthy: ${healthy ? 'yes' : 'no'}`);
+  console.error("Target: environment");
+  console.error(`Healthy: ${healthy ? "yes" : "no"}`);
   console.error(`Node: ${environment.nodeVersion}`);
   console.error(`CLI: ${environment.cliVersion}`);
   console.error(`Platform: ${environment.platform} ${environment.arch}`);
   console.error(`cwd: ${environment.cwd.path}`);
   console.error(`temp: ${environment.tempDir.path}`);
   console.error(
-    `Font cache: ${environment.fontCache.cached ? 'cached' : 'not cached'} (${environment.fontCache.file})`,
+    `Font cache: ${environment.fontCache.cached ? "cached" : "not cached"} (${environment.fontCache.file})`,
   );
   console.error(`Issues: ${issues.length}`);
   console.error(`Warnings: ${warnings.length}`);
@@ -842,14 +842,14 @@ function printInputReport(payload: Record<string, unknown>): void {
   const issues = payload.issues as string[];
   const warnings = payload.warnings as string[];
 
-  console.log(healthy ? '\u2713 Doctor checks passed' : '\u2717 Doctor found blocking issues');
+  console.log(healthy ? "\u2713 Doctor checks passed" : "\u2717 Doctor found blocking issues");
   console.log(`Mode: ${payload.mode}`);
   console.log(`Template pages: ${payload.templatePageCount}`);
   console.log(`Fields: ${payload.fieldCount}`);
-  console.log(`Schema types: ${inspection.schemaTypes.join(', ') || '(none)'}`);
+  console.log(`Schema types: ${inspection.schemaTypes.join(", ") || "(none)"}`);
   if (diagnosis.runtime) {
     console.log(
-      `Output: ${diagnosis.runtime.output.path} (${diagnosis.runtime.output.writable ? 'writable' : 'not writable'})`,
+      `Output: ${diagnosis.runtime.output.path} (${diagnosis.runtime.output.writable ? "writable" : "not writable"})`,
     );
     if (diagnosis.runtime.imageOutputs.enabled) {
       console.log(
@@ -876,21 +876,21 @@ function printDoctorInputVerbose(
   console.error(`Mode: ${source.mode}`);
   console.error(`Template pages: ${diagnosis.validation.pages}`);
   console.error(`Fields: ${diagnosis.validation.fields}`);
-  if (source.mode === 'job') {
+  if (source.mode === "job") {
     console.error(`Inputs: ${source.inputs?.length ?? 0} set(s)`);
   }
-  if (invocation.target === 'input') {
+  if (invocation.target === "input") {
     console.error(`Estimated pages: ${diagnosis.runtimeDiagnosis.estimatedPages}`);
     console.error(`Output: ${diagnosis.runtimeDiagnosis.output.path}`);
     console.error(
       `Images: ${
         diagnosis.runtimeDiagnosis.imageOutputs.enabled
           ? `enabled (${diagnosis.runtimeDiagnosis.imageOutputs.format}, ${diagnosis.runtimeDiagnosis.imageOutputs.paths.length} file(s))`
-          : 'disabled'
+          : "disabled"
       }`,
     );
   }
-  console.error(`Healthy: ${diagnosis.healthy ? 'yes' : 'no'}`);
+  console.error(`Healthy: ${diagnosis.healthy ? "yes" : "no"}`);
   console.error(`Issues: ${diagnosis.issues.length}`);
   console.error(`Warnings: ${diagnosis.warnings.length}`);
 }
@@ -909,20 +909,20 @@ function printFontReport(payload: Record<string, unknown>): void {
   const issues = payload.issues as string[];
   const warnings = payload.warnings as string[];
 
-  console.log(healthy ? '\u2713 Font checks passed' : '\u2717 Font checks found blocking issues');
+  console.log(healthy ? "\u2713 Font checks passed" : "\u2717 Font checks found blocking issues");
   console.log(`Mode: ${payload.mode}`);
-  console.log(`Required fonts: ${diagnosis.fonts.requiredFonts.join(', ') || '(none)'}`);
-  console.log(`Explicit fonts: ${diagnosis.fonts.explicitFonts.join(', ') || '(none)'}`);
-  console.log(`Effective fonts: ${diagnosis.fonts.effectiveFonts.join(', ') || '(none)'}`);
+  console.log(`Required fonts: ${diagnosis.fonts.requiredFonts.join(", ") || "(none)"}`);
+  console.log(`Explicit fonts: ${diagnosis.fonts.explicitFonts.join(", ") || "(none)"}`);
+  console.log(`Effective fonts: ${diagnosis.fonts.effectiveFonts.join(", ") || "(none)"}`);
 
   for (const source of diagnosis.fonts.explicitSources) {
     console.log(
-      `- explicit ${source.fontName}: ${source.kind}${source.path ? ` (${source.path})` : source.url ? ` (${source.url})` : ''}`,
+      `- explicit ${source.fontName}: ${source.kind}${source.path ? ` (${source.path})` : source.url ? ` (${source.url})` : ""}`,
     );
   }
   for (const source of diagnosis.fonts.implicitSources) {
     console.log(
-      `- implicit ${source.fontName}: ${source.kind}${source.path ? ` (${source.path})` : ''}`,
+      `- implicit ${source.fontName}: ${source.kind}${source.path ? ` (${source.path})` : ""}`,
     );
   }
 
@@ -935,8 +935,8 @@ function printFontReport(payload: Record<string, unknown>): void {
 }
 
 function describeDoctorInput(file: string | undefined): string {
-  if (!file || file === '-') {
-    return 'stdin';
+  if (!file || file === "-") {
+    return "stdin";
   }
 
   return file;

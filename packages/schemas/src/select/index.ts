@@ -1,10 +1,10 @@
-import type * as CSS from 'csstype';
-import { propPanel as parentPropPanel } from '../text/propPanel.js';
-import { Plugin, PropPanelWidgetProps, SchemaForUI } from '@pdfme/common';
-import text from '../text/index.js';
-import { TextSchema } from '../text/types.js';
-import { ChevronDown } from 'lucide';
-import { createSvgStr } from '../utils.js';
+import type * as CSS from "csstype";
+import { propPanel as parentPropPanel } from "../text/propPanel.js";
+import { Plugin, PropPanelWidgetProps, SchemaForUI } from "@pdfme/common";
+import text from "../text/index.js";
+import { TextSchema } from "../text/types.js";
+import { ChevronDown } from "lucide";
+import { createSvgStr } from "../utils.js";
 
 const selectIcon = createSvgStr(ChevronDown);
 
@@ -15,85 +15,85 @@ export interface SelectSchema extends TextSchema {
 const addOptions = (props: PropPanelWidgetProps) => {
   const { rootElement, changeSchemas, activeSchema, i18n } = props;
 
-  rootElement.style.width = '100%';
+  rootElement.style.width = "100%";
 
   const selectSchema = activeSchema as SchemaForUI & SelectSchema;
   const currentOptions = selectSchema.options ? [...selectSchema.options] : [];
 
   const inputStyle = {
-    width: '100%',
-    padding: '6.25px 11px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
+    width: "100%",
+    padding: "6.25px 11px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
   };
 
-  const buttonStyle = { border: 'none', borderRadius: '4px', cursor: 'pointer' };
+  const buttonStyle = { border: "none", borderRadius: "4px", cursor: "pointer" };
 
   const updateSchemas = () => {
     changeSchemas([
-      { key: 'options', value: currentOptions, schemaId: activeSchema.id },
-      { key: 'content', value: currentOptions[0] || '', schemaId: activeSchema.id },
+      { key: "options", value: currentOptions, schemaId: activeSchema.id },
+      { key: "content", value: currentOptions[0] || "", schemaId: activeSchema.id },
     ]);
   };
 
-  const formContainer = document.createElement('div');
+  const formContainer = document.createElement("div");
   Object.assign(formContainer.style, {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '10px',
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    marginBottom: "10px",
   });
 
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.placeholder = i18n('schemas.select.optionPlaceholder');
-  Object.assign(input.style, inputStyle, { marginRight: '10px' });
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = i18n("schemas.select.optionPlaceholder");
+  Object.assign(input.style, inputStyle, { marginRight: "10px" });
 
-  const addButton = document.createElement('button');
-  addButton.textContent = '+';
+  const addButton = document.createElement("button");
+  addButton.textContent = "+";
   Object.assign(addButton.style, buttonStyle, {
-    width: '25px',
-    height: '25px',
-    padding: '4px 8px',
+    width: "25px",
+    height: "25px",
+    padding: "4px 8px",
   });
 
-  addButton.addEventListener('click', () => {
+  addButton.addEventListener("click", () => {
     const newValue = input.value.trim();
     if (newValue) {
       currentOptions.push(newValue);
       updateSchemas();
       renderOptions();
-      input.value = '';
+      input.value = "";
     }
   });
 
   formContainer.appendChild(input);
   formContainer.appendChild(addButton);
 
-  const optionsList = document.createElement('ul');
-  Object.assign(optionsList.style, { listStyle: 'none', padding: '0' });
+  const optionsList = document.createElement("ul");
+  Object.assign(optionsList.style, { listStyle: "none", padding: "0" });
 
   const renderOptions = () => {
-    optionsList.innerHTML = '';
+    optionsList.innerHTML = "";
     currentOptions.forEach((option, index) => {
-      const li = document.createElement('li');
-      Object.assign(li.style, { display: 'flex', alignItems: 'center', marginBottom: '5px' });
+      const li = document.createElement("li");
+      Object.assign(li.style, { display: "flex", alignItems: "center", marginBottom: "5px" });
 
-      const optionInput = document.createElement('input');
-      optionInput.type = 'text';
+      const optionInput = document.createElement("input");
+      optionInput.type = "text";
       optionInput.value = option;
-      Object.assign(optionInput.style, inputStyle, { marginRight: '10px' });
+      Object.assign(optionInput.style, inputStyle, { marginRight: "10px" });
 
-      optionInput.addEventListener('change', () => {
+      optionInput.addEventListener("change", () => {
         currentOptions[index] = optionInput.value;
         updateSchemas();
       });
 
-      const removeButton = document.createElement('button');
-      removeButton.textContent = 'x';
-      Object.assign(removeButton.style, buttonStyle, { padding: '4px 8px' });
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "x";
+      Object.assign(removeButton.style, buttonStyle, { padding: "4px 8px" });
 
-      removeButton.addEventListener('click', () => {
+      removeButton.addEventListener("click", () => {
         currentOptions.splice(index, 1);
         updateSchemas();
         renderOptions();
@@ -114,20 +114,20 @@ const addOptions = (props: PropPanelWidgetProps) => {
 const schema: Plugin<SelectSchema> = {
   ui: async (arg) => {
     const { schema, value, onChange, rootElement, mode } = arg;
-    await text.ui(Object.assign(arg, { mode: 'viewer' }));
+    await text.ui(Object.assign(arg, { mode: "viewer" }));
 
-    if (mode !== 'viewer' && !(mode === 'form' && schema.readOnly)) {
+    if (mode !== "viewer" && !(mode === "form" && schema.readOnly)) {
       const buttonWidth = 30;
-      const selectButton = document.createElement('button');
+      const selectButton = document.createElement("button");
       selectButton.innerHTML = selectIcon;
       const selectButtonStyle: CSS.Properties = {
-        position: 'absolute',
+        position: "absolute",
         zIndex: -1,
         right: `-${buttonWidth}px`,
-        top: '0',
-        padding: '0',
-        margin: '0',
-        cursor: 'pointer',
+        top: "0",
+        padding: "0",
+        margin: "0",
+        cursor: "pointer",
         height: `${buttonWidth}px`,
         width: `${buttonWidth}px`,
       };
@@ -135,29 +135,29 @@ const schema: Plugin<SelectSchema> = {
 
       rootElement.appendChild(selectButton);
 
-      const selectElement = document.createElement('select');
+      const selectElement = document.createElement("select");
       const selectElementStyle: CSS.Properties = {
-        opacity: '0',
-        position: 'absolute',
+        opacity: "0",
+        position: "absolute",
         width: `calc(100% + ${buttonWidth}px)`,
-        height: '100%',
-        top: '0',
-        left: '0',
-        appearance: 'initial',
+        height: "100%",
+        top: "0",
+        left: "0",
+        appearance: "initial",
       };
       Object.assign(selectElement.style, selectElementStyle);
       selectElement.value = value;
 
-      selectElement.addEventListener('change', (e) => {
+      selectElement.addEventListener("change", (e) => {
         if (onChange && e.target instanceof HTMLSelectElement) {
-          if (onChange) onChange({ key: 'content', value: e.target.value });
+          if (onChange) onChange({ key: "content", value: e.target.value });
         }
       });
 
       // Ensure schema.options is an array before mapping
       const options = Array.isArray(schema.options) ? schema.options : [];
       options.forEach((option) => {
-        const optionElement = document.createElement('option');
+        const optionElement = document.createElement("option");
         optionElement.value = option;
         optionElement.textContent = option;
         if (option === value) optionElement.selected = true;
@@ -170,9 +170,9 @@ const schema: Plugin<SelectSchema> = {
   propPanel: {
     ...text.propPanel,
     widgets: { ...parentPropPanel.widgets, addOptions },
-    schema: (propPanelProps: Omit<PropPanelWidgetProps, 'rootElement'>) => {
-      if (typeof parentPropPanel.schema !== 'function') {
-        throw Error('Oops, is text schema no longer a function?');
+    schema: (propPanelProps: Omit<PropPanelWidgetProps, "rootElement">) => {
+      if (typeof parentPropPanel.schema !== "function") {
+        throw Error("Oops, is text schema no longer a function?");
       }
 
       // Safely call the parent schema function with proper type checking
@@ -181,22 +181,22 @@ const schema: Plugin<SelectSchema> = {
       // Create a type-safe return object
       return {
         ...parentSchema,
-        '-------': { type: 'void', widget: 'Divider' },
+        "-------": { type: "void", widget: "Divider" },
 
         optionsContainer: {
-          title: (propPanelProps as PropPanelWidgetProps).i18n('schemas.select.options'),
-          type: 'string',
-          widget: 'Card',
+          title: (propPanelProps as PropPanelWidgetProps).i18n("schemas.select.options"),
+          type: "string",
+          widget: "Card",
           span: 24,
-          properties: { options: { widget: 'addOptions', span: 24 } },
+          properties: { options: { widget: "addOptions", span: 24 } },
         },
       };
     },
     defaultSchema: {
       ...(text.propPanel.defaultSchema as TextSchema),
-      type: 'select',
-      content: 'option1',
-      options: ['option1', 'option2'],
+      type: "select",
+      content: "option1",
+      options: ["option1", "option2"],
     },
   },
   icon: selectIcon,

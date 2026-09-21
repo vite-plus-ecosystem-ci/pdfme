@@ -6,10 +6,10 @@ import {
   readFileSync,
   statSync,
   writeFileSync,
-} from 'node:fs';
-import { dirname, extname, basename, join, resolve } from 'node:path';
-import { detectPaperSize } from '@pdfme/common';
-import { fail, isOptionProvided } from './contract.js';
+} from "node:fs";
+import { dirname, extname, basename, join, resolve } from "node:path";
+import { detectPaperSize } from "@pdfme/common";
+import { fail, isOptionProvided } from "./contract.js";
 
 export { detectPaperSize };
 
@@ -31,27 +31,27 @@ export interface WriteTargetInspection {
   resolvedPath: string;
   parentDir: string;
   exists: boolean;
-  existingType?: 'file' | 'directory' | 'other';
+  existingType?: "file" | "directory" | "other";
   writable: boolean;
   checkedPath?: string;
-  checkedType?: 'file' | 'directory' | 'other';
+  checkedType?: "file" | "directory" | "other";
   error?: string;
 }
 
 export function readJsonFile(filePath: string): unknown {
   const resolvedPath = resolve(filePath);
   if (!existsSync(resolvedPath)) {
-    fail(`File not found: ${resolvedPath}`, { code: 'EIO', exitCode: 3 });
+    fail(`File not found: ${resolvedPath}`, { code: "EIO", exitCode: 3 });
   }
 
   try {
-    const content = readFileSync(resolvedPath, 'utf8');
+    const content = readFileSync(resolvedPath, "utf8");
     return JSON.parse(content);
   } catch (error) {
     fail(
       `Failed to parse JSON file: ${resolvedPath}. ${error instanceof Error ? error.message : String(error)}`,
       {
-        code: 'EIO',
+        code: "EIO",
         exitCode: 3,
         cause: error,
       },
@@ -65,7 +65,7 @@ export function loadInput(args: { _: string[]; template?: string; inputs?: strin
   if (positionalFile && !args.template && !args.inputs) {
     const jobFilePath = resolve(positionalFile);
     const data = readJsonFile(jobFilePath) as Record<string, unknown>;
-    if ('template' in data && 'inputs' in data) {
+    if ("template" in data && "inputs" in data) {
       return {
         template: data.template as Record<string, unknown>,
         inputs: data.inputs as Record<string, unknown>[],
@@ -75,14 +75,14 @@ export function loadInput(args: { _: string[]; template?: string; inputs?: strin
     }
     fail(
       'Positional file must be a unified format with "template" and "inputs" keys. Use -t and -i for separate files.',
-      { code: 'EARG', exitCode: 1 },
+      { code: "EARG", exitCode: 1 },
     );
   }
 
   if (args.template) {
     if (!args.inputs) {
-      fail('--inputs (-i) is required when using --template (-t).', {
-        code: 'EARG',
+      fail("--inputs (-i) is required when using --template (-t).", {
+        code: "EARG",
         exitCode: 1,
       });
     }
@@ -92,8 +92,8 @@ export function loadInput(args: { _: string[]; template?: string; inputs?: strin
     return { template, inputs, templateDir: dirname(templatePath) };
   }
 
-  fail('No input provided. Use a unified job file or pass --template/-t with --inputs/-i.', {
-    code: 'EARG',
+  fail("No input provided. Use a unified job file or pass --template/-t with --inputs/-i.", {
+    code: "EARG",
     exitCode: 1,
   });
 }
@@ -107,7 +107,7 @@ export function resolveBasePdf(
     const resolvedBasePdf = resolve(basePdfArg);
     if (!existsSync(resolvedBasePdf)) {
       fail(`Base PDF file not found: ${resolvedBasePdf}`, {
-        code: 'EIO',
+        code: "EIO",
         exitCode: 3,
       });
     }
@@ -116,11 +116,11 @@ export function resolveBasePdf(
   }
 
   const basePdf = template.basePdf;
-  if (typeof basePdf === 'string' && basePdf.endsWith('.pdf') && !basePdf.startsWith('data:')) {
+  if (typeof basePdf === "string" && basePdf.endsWith(".pdf") && !basePdf.startsWith("data:")) {
     const resolvedBasePdf = templateDir ? resolve(templateDir, basePdf) : resolve(basePdf);
     if (!existsSync(resolvedBasePdf)) {
       fail(`Base PDF file not found: ${resolvedBasePdf}`, {
-        code: 'EIO',
+        code: "EIO",
         exitCode: 3,
       });
     }
@@ -140,7 +140,7 @@ export function getImageOutputPaths(pdfOutputPath: string, pageCount: number): s
 export function writeOutput(filePath: string, data: Uint8Array | ArrayBuffer): void {
   try {
     const dir = dirname(filePath);
-    if (dir && dir !== '.' && !existsSync(dir)) {
+    if (dir && dir !== "." && !existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
     }
     writeFileSync(filePath, data instanceof ArrayBuffer ? new Uint8Array(data) : data);
@@ -148,7 +148,7 @@ export function writeOutput(filePath: string, data: Uint8Array | ArrayBuffer): v
     fail(
       `Failed to write file: ${filePath}. ${error instanceof Error ? error.message : String(error)}`,
       {
-        code: 'EIO',
+        code: "EIO",
         exitCode: 3,
         cause: error,
       },
@@ -159,7 +159,7 @@ export function writeOutput(filePath: string, data: Uint8Array | ArrayBuffer): v
 export function readPdfFile(filePath: string): Uint8Array {
   const resolvedPath = resolve(filePath);
   if (!existsSync(resolvedPath)) {
-    fail(`PDF file not found: ${resolvedPath}`, { code: 'EIO', exitCode: 3 });
+    fail(`PDF file not found: ${resolvedPath}`, { code: "EIO", exitCode: 3 });
   }
 
   try {
@@ -168,7 +168,7 @@ export function readPdfFile(filePath: string): Uint8Array {
     fail(
       `Failed to read PDF file: ${resolvedPath}. ${error instanceof Error ? error.message : String(error)}`,
       {
-        code: 'EIO',
+        code: "EIO",
         exitCode: 3,
         cause: error,
       },
@@ -178,21 +178,21 @@ export function readPdfFile(filePath: string): Uint8Array {
 
 export function parsePageRange(rangeStr: string, totalPages: number): number[] {
   const pages: Set<number> = new Set();
-  for (const part of rangeStr.split(',')) {
+  for (const part of rangeStr.split(",")) {
     const trimmed = part.trim();
     if (!trimmed) {
       fail(`Invalid page range: ${JSON.stringify(rangeStr)}. Empty segments are not allowed.`, {
-        code: 'EARG',
+        code: "EARG",
         exitCode: 1,
       });
     }
-    if (trimmed.includes('-')) {
-      const [startStr, endStr] = trimmed.split('-');
+    if (trimmed.includes("-")) {
+      const [startStr, endStr] = trimmed.split("-");
       if (!startStr || !endStr || !/^\d+$/.test(startStr) || !/^\d+$/.test(endStr)) {
         fail(
           `Invalid page range segment: ${JSON.stringify(trimmed)}. Use formats like "1-3" or "2".`,
           {
-            code: 'EARG',
+            code: "EARG",
             exitCode: 1,
           },
         );
@@ -204,7 +204,7 @@ export function parsePageRange(rangeStr: string, totalPages: number): number[] {
         fail(
           `Invalid page range segment: ${JSON.stringify(trimmed)}. Pages must be between 1 and ${totalPages}.`,
           {
-            code: 'EARG',
+            code: "EARG",
             exitCode: 1,
           },
         );
@@ -216,7 +216,7 @@ export function parsePageRange(rangeStr: string, totalPages: number): number[] {
         fail(
           `Invalid page range segment: ${JSON.stringify(trimmed)}. Use formats like "1-3" or "2".`,
           {
-            code: 'EARG',
+            code: "EARG",
             exitCode: 1,
           },
         );
@@ -224,7 +224,7 @@ export function parsePageRange(rangeStr: string, totalPages: number): number[] {
       const p = Number.parseInt(trimmed, 10);
       if (p < 1 || p > totalPages) {
         fail(`Invalid page number: ${p}. Pages must be between 1 and ${totalPages}.`, {
-          code: 'EARG',
+          code: "EARG",
           exitCode: 1,
         });
       }
@@ -240,9 +240,9 @@ export async function readJsonFromStdin(): Promise<unknown> {
     chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
   }
 
-  const content = Buffer.concat(chunks).toString('utf8').trim();
+  const content = Buffer.concat(chunks).toString("utf8").trim();
   if (!content) {
-    fail('No JSON input received on stdin.', { code: 'EARG', exitCode: 1 });
+    fail("No JSON input received on stdin.", { code: "EARG", exitCode: 1 });
   }
 
   try {
@@ -251,7 +251,7 @@ export async function readJsonFromStdin(): Promise<unknown> {
     fail(
       `Failed to parse JSON from stdin. ${error instanceof Error ? error.message : String(error)}`,
       {
-        code: 'EIO',
+        code: "EIO",
         exitCode: 3,
         cause: error,
       },
@@ -269,7 +269,7 @@ export function ensureSafeDefaultOutputPath(options: {
 }): void {
   const issue = getSafeDefaultOutputPathIssue(options);
   if (issue) {
-    fail(issue, { code: 'EARG', exitCode: 1 });
+    fail(issue, { code: "EARG", exitCode: 1 });
   }
 }
 
@@ -298,21 +298,21 @@ export function inspectWriteTarget(filePath: string): WriteTargetInspection {
   const resolvedPath = resolve(filePath);
   const parentDir = dirname(resolvedPath);
   const exists = existsSync(resolvedPath);
-  let existingType: WriteTargetInspection['existingType'];
+  let existingType: WriteTargetInspection["existingType"];
 
   if (exists) {
     const stat = statSync(resolvedPath);
     if (stat.isFile()) {
-      existingType = 'file';
+      existingType = "file";
     } else if (stat.isDirectory()) {
-      existingType = 'directory';
+      existingType = "directory";
     } else {
-      existingType = 'other';
+      existingType = "other";
     }
   }
 
   const checkedPath =
-    exists && existingType === 'file' ? resolvedPath : findExistingParent(parentDir);
+    exists && existingType === "file" ? resolvedPath : findExistingParent(parentDir);
   const checkedType = getFsEntryType(checkedPath);
 
   try {
@@ -356,13 +356,13 @@ function findExistingParent(path: string): string {
   return current;
 }
 
-function getFsEntryType(path: string): WriteTargetInspection['checkedType'] {
+function getFsEntryType(path: string): WriteTargetInspection["checkedType"] {
   const stat = statSync(path);
   if (stat.isFile()) {
-    return 'file';
+    return "file";
   }
   if (stat.isDirectory()) {
-    return 'directory';
+    return "directory";
   }
-  return 'other';
+  return "other";
 }

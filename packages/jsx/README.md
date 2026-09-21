@@ -4,7 +4,7 @@ Small JSX authoring layer for creating pdfme templates from stacking layout prim
 
 ```tsx
 /** @jsxImportSource @pdfme/jsx */
-import { Document, MultiVariableText, Page, Stack, Text, renderToTemplate } from '@pdfme/jsx';
+import { Document, MultiVariableText, Page, Stack, Text, renderToTemplate } from "@pdfme/jsx";
 
 const { template, inputs } = await renderToTemplate(
   <Document margin={{ x: 12, y: 16 }}>
@@ -15,7 +15,7 @@ const { template, inputs } = await renderToTemplate(
         <MultiVariableText
           name="message"
           text="Hello **{name}**, status: `{status}`"
-          values={{ name: 'Alice **literal**', status: 'draft' }}
+          values={{ name: "Alice **literal**", status: "draft" }}
           textFormat="inline-markdown"
         />
       </Stack>
@@ -107,8 +107,12 @@ it provides its own `jsx-runtime` and `jsx-dev-runtime`.
 
 ```tsx
 <Row width={120}>
-  <Text width={20} flex={1}>A</Text>
-  <Text width={20} flex={3}>B</Text>
+  <Text width={20} flex={1}>
+    A
+  </Text>
+  <Text width={20} flex={3}>
+    B
+  </Text>
 </Row>
 // A width: 40, B width: 80
 ```

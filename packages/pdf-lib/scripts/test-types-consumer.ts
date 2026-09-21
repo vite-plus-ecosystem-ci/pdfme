@@ -1,15 +1,15 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
-import { createRequire } from 'node:module';
-import { tmpdir } from 'node:os';
-import { join, resolve, sep } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
+import { join, resolve, sep } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 // This script is compiled into scripts/dist before execution.
-const pdfLibDir = fileURLToPath(new URL('../..', import.meta.url));
-const repoRoot = resolve(pdfLibDir, '../..');
+const pdfLibDir = fileURLToPath(new URL("../..", import.meta.url));
+const repoRoot = resolve(pdfLibDir, "../..");
 const require = createRequire(import.meta.url);
-const lockedTypeScriptVersion = String(require('typescript/package.json').version);
+const lockedTypeScriptVersion = String(require("typescript/package.json").version);
 
 const SMOKE_SOURCE = `import { PDFDocument, StandardFonts, rgb } from '@pdfme/pdf-lib';
 
@@ -50,16 +50,16 @@ type ResolutionCase = {
 };
 
 const resolutionCases: ResolutionCase[] = [
-  { name: 'NodeNext', module: 'NodeNext', moduleResolution: 'NodeNext' },
-  { name: 'Node16', module: 'Node16', moduleResolution: 'Node16' },
-  { name: 'Bundler', module: 'ESNext', moduleResolution: 'Bundler' },
+  { name: "NodeNext", module: "NodeNext", moduleResolution: "NodeNext" },
+  { name: "Node16", module: "Node16", moduleResolution: "Node16" },
+  { name: "Bundler", module: "ESNext", moduleResolution: "Bundler" },
 ];
 const compilerCases = [
   {
-    version: '6.0.2',
+    version: "6.0.2",
     resolutions: [
       ...resolutionCases,
-      { name: 'node10', module: 'ESNext', moduleResolution: 'node10', ignoreDeprecations: '6.0' },
+      { name: "node10", module: "ESNext", moduleResolution: "node10", ignoreDeprecations: "6.0" },
     ],
   },
   // Legacy node10 resolution was removed in TypeScript 7.
@@ -67,11 +67,11 @@ const compilerCases = [
 ];
 
 const run = (command: string, args: string[], cwd: string): string => {
-  const result = spawnSync(command, args, { cwd, encoding: 'utf8' });
+  const result = spawnSync(command, args, { cwd, encoding: "utf8" });
   if (result.error) throw result.error;
   if (result.status !== 0) {
     throw new Error(
-      `${command} ${args.join(' ')} failed (exit ${result.status}, signal ${result.signal}):\n${result.stdout}\n${result.stderr}`,
+      `${command} ${args.join(" ")} failed (exit ${result.status}, signal ${result.signal}):\n${result.stdout}\n${result.stderr}`,
     );
   }
   return result.stdout;
@@ -83,87 +83,87 @@ const writeJson = (path: string, value: unknown): void => {
 
 const checkPackage = (consumerDir: string, packedFiles: string[]): void => {
   const packageJson = JSON.parse(
-    readFileSync(join(consumerDir, 'node_modules/@pdfme/pdf-lib/package.json'), 'utf8'),
+    readFileSync(join(consumerDir, "node_modules/@pdfme/pdf-lib/package.json"), "utf8"),
   ) as {
     types?: string;
-    exports?: { '.': { types?: string; import?: string } };
+    exports?: { ".": { types?: string; import?: string } };
   };
   for (const entry of [
     packageJson.types,
-    packageJson.exports?.['.']?.types,
-    packageJson.exports?.['.']?.import,
+    packageJson.exports?.["."]?.types,
+    packageJson.exports?.["."]?.import,
   ]) {
-    if (!entry || !packedFiles.includes(entry.replace(/^\.\//, ''))) {
+    if (!entry || !packedFiles.includes(entry.replace(/^\.\//, ""))) {
       throw new Error(`Missing types/exports target in tarball: ${entry}`);
     }
   }
 };
 
 const main = (): void => {
-  for (const entry of ['dist/index.js', 'dist/index.d.ts']) {
+  for (const entry of ["dist/index.js", "dist/index.d.ts"]) {
     if (!existsSync(join(pdfLibDir, entry)))
       throw new Error(`Missing ${entry}; run npm run build first.`);
   }
-  const tempRoot = mkdtempSync(join(tmpdir(), 'pdfme-pdf-lib-consumer-'));
+  const tempRoot = mkdtempSync(join(tmpdir(), "pdfme-pdf-lib-consumer-"));
   try {
     if (tempRoot === repoRoot || tempRoot.startsWith(`${repoRoot}${sep}`)) {
-      throw new Error('Consumer directory must be outside the repository.');
+      throw new Error("Consumer directory must be outside the repository.");
     }
     const [packed] = JSON.parse(
-      run('npm', ['pack', '--json', `--pack-destination=${tempRoot}`], pdfLibDir),
+      run("npm", ["pack", "--json", `--pack-destination=${tempRoot}`], pdfLibDir),
     ) as Array<{
       filename: string;
       files: Array<{ path: string }>;
     }>;
-    if (!packed?.filename) throw new Error('npm pack returned no tarball.');
+    if (!packed?.filename) throw new Error("npm pack returned no tarball.");
     const tarball = pathToFileURL(join(tempRoot, packed.filename)).href;
     const packedFiles = packed.files.map(({ path }) => path);
     if (
-      packedFiles.some((file) => file.startsWith('dist/typecheck/') || file.startsWith('scripts/'))
+      packedFiles.some((file) => file.startsWith("dist/typecheck/") || file.startsWith("scripts/"))
     ) {
-      throw new Error('Tarball includes internal typecheck output or build scripts.');
+      throw new Error("Tarball includes internal typecheck output or build scripts.");
     }
 
     for (const { version, resolutions } of compilerCases) {
       const consumerDir = join(tempRoot, `ts-${version}`);
       mkdirSync(consumerDir, { recursive: true });
-      writeJson(join(consumerDir, 'package.json'), { private: true, type: 'module' });
+      writeJson(join(consumerDir, "package.json"), { private: true, type: "module" });
       run(
-        'npm',
+        "npm",
         [
-          'install',
-          '--ignore-scripts',
-          '--no-audit',
-          '--no-fund',
+          "install",
+          "--ignore-scripts",
+          "--no-audit",
+          "--no-fund",
           tarball,
           `typescript@${version}`,
         ],
         consumerDir,
       );
       checkPackage(consumerDir, packedFiles);
-      writeFileSync(join(consumerDir, 'test.ts'), SMOKE_SOURCE);
+      writeFileSync(join(consumerDir, "test.ts"), SMOKE_SOURCE);
       for (const { name, ...options } of resolutions) {
-        writeJson(join(consumerDir, 'tsconfig.json'), {
+        writeJson(join(consumerDir, "tsconfig.json"), {
           compilerOptions: {
-            target: 'ES2020',
+            target: "ES2020",
             strict: true,
             skipLibCheck: false,
             noEmit: true,
             ...options,
           },
-          include: ['test.ts'],
+          include: ["test.ts"],
         });
         run(
           process.execPath,
-          [join(consumerDir, 'node_modules/typescript/bin/tsc'), '--pretty', 'false', '--noEmit'],
+          [join(consumerDir, "node_modules/typescript/bin/tsc"), "--pretty", "false", "--noEmit"],
           consumerDir,
         );
         console.log(`[typescript@${version} ${name}] ok`);
       }
-      writeFileSync(join(consumerDir, 'runtime.mjs'), RUNTIME_SOURCE);
-      console.log(run(process.execPath, [join(consumerDir, 'runtime.mjs')], consumerDir).trim());
+      writeFileSync(join(consumerDir, "runtime.mjs"), RUNTIME_SOURCE);
+      console.log(run(process.execPath, [join(consumerDir, "runtime.mjs")], consumerDir).trim());
     }
-    console.log('test:types:consumer passed (node10 checked with TypeScript 6.0.2 only)');
+    console.log("test:types:consumer passed (node10 checked with TypeScript 6.0.2 only)");
   } finally {
     rmSync(tempRoot, { recursive: true, force: true });
   }

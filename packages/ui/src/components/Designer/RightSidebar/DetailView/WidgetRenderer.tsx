@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import type { PropPanelWidgetProps } from '@pdfme/common';
+import React, { useEffect, useRef } from "react";
+import type { PropPanelWidgetProps } from "@pdfme/common";
 
 type Props = PropPanelWidgetProps & {
   widget: (props: PropPanelWidgetProps) => void;
@@ -12,13 +12,13 @@ const WidgetRenderer = (props: Props) => {
     const element = ref.current;
     if (element) {
       const { widget, ...otherProps } = props;
-      element.innerHTML = '';
+      element.innerHTML = "";
       widget({ ...otherProps, rootElement: element });
     }
 
     return () => {
       if (element) {
-        element.innerHTML = '';
+        element.innerHTML = "";
       }
     };
   }, [props]);

@@ -1,4 +1,4 @@
-import type { BasePdf, Font, PageOrientation, PageSize, Schema, Template } from '@pdfme/common';
+import type { BasePdf, Font, PageOrientation, PageSize, Schema, Template } from "@pdfme/common";
 import type {
   ALIGNMENT,
   ImageSchema,
@@ -11,30 +11,30 @@ import type {
   TableSchema,
   TextSchema,
   MultiVariableTextSchema,
-} from '@pdfme/schemas/types';
-export type { PageOrientation, PageSize, PageSizePreset } from '@pdfme/common';
+} from "@pdfme/schemas/types";
+export type { PageOrientation, PageSize, PageSizePreset } from "@pdfme/common";
 
 export type BuiltinKind =
-  | 'document'
-  | 'page'
-  | 'header'
-  | 'footer'
-  | 'static'
-  | 'absolute'
-  | 'stack'
-  | 'row'
-  | 'box'
-  | 'spacer'
-  | 'text'
-  | 'multiVariableText'
-  | 'image'
-  | 'svg'
-  | 'rectangle'
-  | 'ellipse'
-  | 'line'
-  | 'list'
-  | 'table'
-  | 'pagebreak';
+  | "document"
+  | "page"
+  | "header"
+  | "footer"
+  | "static"
+  | "absolute"
+  | "stack"
+  | "row"
+  | "box"
+  | "spacer"
+  | "text"
+  | "multiVariableText"
+  | "image"
+  | "svg"
+  | "rectangle"
+  | "ellipse"
+  | "line"
+  | "list"
+  | "table"
+  | "pagebreak";
 
 export type PdfJsxElement<K extends BuiltinKind = BuiltinKind> = {
   kind: K;
@@ -44,7 +44,7 @@ export type PdfJsxElement<K extends BuiltinKind = BuiltinKind> = {
 };
 
 export type PdfJsxFragment = {
-  kind: 'fragment';
+  kind: "fragment";
   children: PdfJsxChild[];
   key?: string | number | null;
 };
@@ -79,8 +79,8 @@ export type BoxSides = {
   y?: number;
 };
 
-export type LayoutAlignItems = 'start' | 'center' | 'end' | 'stretch';
-export type LayoutJustifyContent = 'start' | 'center' | 'end' | 'space-between';
+export type LayoutAlignItems = "start" | "center" | "end" | "stretch";
+export type LayoutJustifyContent = "start" | "center" | "end" | "space-between";
 
 export type LayoutProps = {
   margin?: number | BoxSides;
@@ -90,7 +90,7 @@ export type LayoutProps = {
   flex?: number;
 };
 
-export type CommonProps = LayoutProps & Partial<Pick<Schema, 'rotate' | 'opacity'>>;
+export type CommonProps = LayoutProps & Partial<Pick<Schema, "rotate" | "opacity">>;
 
 export type DocumentProps = {
   size?: PageSize;
@@ -108,7 +108,7 @@ export type PageProps = {
   children?: PdfJsxChild;
 };
 
-export type StaticPlacement = 'top' | 'bottom';
+export type StaticPlacement = "top" | "bottom";
 
 export type StaticProps = {
   /** Page edge used to anchor this low-level repeated block. Defaults to top. */
@@ -145,7 +145,7 @@ export type RowProps = LayoutProps & {
   gap?: number;
   width?: number;
   height?: number;
-  alignItems?: Exclude<LayoutAlignItems, 'stretch'>;
+  alignItems?: Exclude<LayoutAlignItems, "stretch">;
   justifyContent?: LayoutJustifyContent;
   children?: PdfJsxChild;
 };
@@ -169,33 +169,33 @@ export type SpacerProps = LayoutProps & {
 type TextSchemaProps = Partial<
   Pick<
     TextSchema,
-    | 'name'
-    | 'width'
-    | 'height'
-    | 'lineHeight'
-    | 'strikethrough'
-    | 'underline'
-    | 'readOnly'
-    | 'required'
-    | 'textFormat'
-    | 'overflow'
+    | "name"
+    | "width"
+    | "height"
+    | "lineHeight"
+    | "strikethrough"
+    | "underline"
+    | "readOnly"
+    | "required"
+    | "textFormat"
+    | "overflow"
   >
 >;
 
 export type TextProps = CommonProps &
   TextSchemaProps & {
     children?: PdfJsxChild;
-    size?: TextSchema['fontSize'];
-    font?: TextSchema['fontName'];
-    align?: TextSchema['alignment'];
-    valign?: TextSchema['verticalAlignment'];
-    spacing?: TextSchema['characterSpacing'];
-    color?: TextSchema['fontColor'];
-    background?: TextSchema['backgroundColor'];
+    size?: TextSchema["fontSize"];
+    font?: TextSchema["fontName"];
+    align?: TextSchema["alignment"];
+    valign?: TextSchema["verticalAlignment"];
+    spacing?: TextSchema["characterSpacing"];
+    color?: TextSchema["fontColor"];
+    background?: TextSchema["backgroundColor"];
     borderColor?: string;
     borderWidth?: number | BoxSides;
     padding?: number | BoxSides;
-    dynamicFontSize?: Partial<NonNullable<TextSchema['dynamicFontSize']>>;
+    dynamicFontSize?: Partial<NonNullable<TextSchema["dynamicFontSize"]>>;
   };
 
 export type MultiVariableTextValues = Record<string, string | number | boolean | null | undefined>;
@@ -203,16 +203,16 @@ export type MultiVariableTextValues = Record<string, string | number | boolean |
 type MultiVariableTextSchemaProps = Partial<
   Pick<
     MultiVariableTextSchema,
-    | 'name'
-    | 'width'
-    | 'height'
-    | 'lineHeight'
-    | 'strikethrough'
-    | 'underline'
-    | 'readOnly'
-    | 'required'
-    | 'textFormat'
-    | 'overflow'
+    | "name"
+    | "width"
+    | "height"
+    | "lineHeight"
+    | "strikethrough"
+    | "underline"
+    | "readOnly"
+    | "required"
+    | "textFormat"
+    | "overflow"
   >
 >;
 
@@ -222,21 +222,21 @@ export type MultiVariableTextProps = CommonProps &
     text?: string;
     variables?: string[];
     values?: MultiVariableTextValues;
-    size?: MultiVariableTextSchema['fontSize'];
-    font?: MultiVariableTextSchema['fontName'];
-    align?: MultiVariableTextSchema['alignment'];
-    valign?: MultiVariableTextSchema['verticalAlignment'];
-    spacing?: MultiVariableTextSchema['characterSpacing'];
-    color?: MultiVariableTextSchema['fontColor'];
-    background?: MultiVariableTextSchema['backgroundColor'];
+    size?: MultiVariableTextSchema["fontSize"];
+    font?: MultiVariableTextSchema["fontName"];
+    align?: MultiVariableTextSchema["alignment"];
+    valign?: MultiVariableTextSchema["verticalAlignment"];
+    spacing?: MultiVariableTextSchema["characterSpacing"];
+    color?: MultiVariableTextSchema["fontColor"];
+    background?: MultiVariableTextSchema["backgroundColor"];
     borderColor?: string;
     borderWidth?: number | BoxSides;
     padding?: number | BoxSides;
-    dynamicFontSize?: Partial<NonNullable<MultiVariableTextSchema['dynamicFontSize']>>;
+    dynamicFontSize?: Partial<NonNullable<MultiVariableTextSchema["dynamicFontSize"]>>;
   };
 
 type ImageSchemaProps = Partial<
-  Pick<ImageSchema, 'name' | 'width' | 'height' | 'readOnly' | 'required'>
+  Pick<ImageSchema, "name" | "width" | "height" | "readOnly" | "required">
 >;
 
 export type ImageProps = CommonProps &
@@ -245,7 +245,7 @@ export type ImageProps = CommonProps &
   };
 
 type SvgSchemaProps = Partial<
-  Pick<SVGSchema, 'name' | 'width' | 'height' | 'readOnly' | 'required'>
+  Pick<SVGSchema, "name" | "width" | "height" | "readOnly" | "required">
 >;
 
 export type SvgProps = SvgSchemaProps & {
@@ -254,23 +254,23 @@ export type SvgProps = SvgSchemaProps & {
 } & CommonProps;
 
 type ShapeSchemaProps = Partial<
-  Pick<ShapeSchema, 'name' | 'width' | 'height' | 'borderWidth' | 'borderColor' | 'radius'>
+  Pick<ShapeSchema, "name" | "width" | "height" | "borderWidth" | "borderColor" | "radius">
 >;
 
 export type RectangleProps = CommonProps &
   ShapeSchemaProps & {
-    fill?: ShapeSchema['color'];
+    fill?: ShapeSchema["color"];
   };
 
 export type EllipseProps = CommonProps &
-  Omit<ShapeSchemaProps, 'radius'> & {
-    fill?: ShapeSchema['color'];
+  Omit<ShapeSchemaProps, "radius"> & {
+    fill?: ShapeSchema["color"];
   };
 
 export type LineProps = CommonProps &
-  Partial<Pick<LineSchema, 'name' | 'width' | 'height' | 'color'>>;
+  Partial<Pick<LineSchema, "name" | "width" | "height" | "color">>;
 
-export type ListItem = string | { text: SchemaListItem['text']; level?: SchemaListItem['level'] };
+export type ListItem = string | { text: SchemaListItem["text"]; level?: SchemaListItem["level"] };
 
 export type ListProps = CommonProps & {
   name?: string;
@@ -294,7 +294,7 @@ export type ListProps = CommonProps & {
   itemSpacing?: number;
 };
 
-export type CellStyle = Partial<Omit<SchemaCellStyle, 'borderWidth' | 'padding'>> & {
+export type CellStyle = Partial<Omit<SchemaCellStyle, "borderWidth" | "padding">> & {
   borderWidth?: number | BoxSides;
   padding?: number | BoxSides;
 };
@@ -319,10 +319,10 @@ export type TableProps = CommonProps & {
   headerHeight?: number;
   readOnly?: boolean;
   required?: boolean;
-  tableStyles?: Partial<TableSchema['tableStyles']>;
+  tableStyles?: Partial<TableSchema["tableStyles"]>;
   headStyles?: CellStyle;
   bodyStyles?: CellStyle & { alternateBackgroundColor?: string };
-  columnStyles?: TableSchema['columnStyles'];
+  columnStyles?: TableSchema["columnStyles"];
 };
 
 export type PageBreakProps = Record<string, unknown>;

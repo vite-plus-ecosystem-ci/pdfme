@@ -1,6 +1,6 @@
 # Expression
 
-Expressions are a feature that evaluates expressions enclosed in `{}`.   
+Expressions are a feature that evaluates expressions enclosed in `{}`.  
 The simplest example is `{1+1}`, which evaluates to `2`.
 
 In pdfme, expressions can be used not only for simple calculations but also by utilizing user input.

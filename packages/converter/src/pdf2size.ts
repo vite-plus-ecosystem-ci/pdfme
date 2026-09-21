@@ -1,4 +1,4 @@
-import { Size, pt2mm } from '@pdfme/common';
+import { Size, pt2mm } from "@pdfme/common";
 
 interface Environment {
   openDocument: (pdf: ArrayBuffer | Uint8Array) => Promise<PdfDocument>;

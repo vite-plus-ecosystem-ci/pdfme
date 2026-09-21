@@ -29,25 +29,21 @@ If you write JSX in TypeScript, configure the JSX runtime:
 ## Basic Usage
 
 ```tsx
-import { generate } from '@pdfme/generator';
-import { text, table } from '@pdfme/schemas';
-import { Document, Page, Stack, Text, Table, renderToTemplate } from '@pdfme/jsx';
+import { generate } from "@pdfme/generator";
+import { text, table } from "@pdfme/schemas";
+import { Document, Page, Stack, Text, Table, renderToTemplate } from "@pdfme/jsx";
 
 const { template, inputs } = await renderToTemplate(
   <Document size="A4" margin={{ x: 16, y: 18 }}>
     <Page>
       <Stack gap={6}>
-        <Text size={24}>
-          Invoice
-        </Text>
-        <Text color="#64748b">
-          Generated from JSX, rendered by pdfme.
-        </Text>
+        <Text size={24}>Invoice</Text>
+        <Text color="#64748b">Generated from JSX, rendered by pdfme.</Text>
         <Table
-          head={['Item', 'Qty', 'Price']}
+          head={["Item", "Qty", "Price"]}
           rows={[
-            ['Design', 1, '$800'],
-            ['Automation', 2, '$1,200'],
+            ["Design", 1, "$800"],
+            ["Automation", 2, "$1,200"],
           ]}
         />
       </Stack>
@@ -137,9 +133,7 @@ return (
       <Text>Report</Text>
     </Header>
     <Footer>
-      <Text align="right">
-        {'Page {currentPage} of {totalPages}'}
-      </Text>
+      <Text align="right">{"Page {currentPage} of {totalPages}"}</Text>
     </Footer>
     <Page>
       <Text>Body</Text>

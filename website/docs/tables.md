@@ -13,9 +13,9 @@ You can add the table schema as a plugin to `@pdfme/ui` and `@pdfme/generator` u
 To support page breaks, ensure to set the `basePdf` property in the template to `{ width: number, height: number, padding: [number,number,number,number] }`. Custom PDF data used as `basePdf` keeps the original pages fixed, so dynamic layout and automatic page breaks are not applied.
 
 ```javascript
-import { table } from '@pdfme/schemas';
-import { Designer } from '@pdfme/ui';
-import { generate } from '@pdfme/generator';
+import { table } from "@pdfme/schemas";
+import { Designer } from "@pdfme/ui";
+import { generate } from "@pdfme/generator";
 
 new Designer({
   domContainer,

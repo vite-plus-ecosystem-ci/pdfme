@@ -1,5 +1,5 @@
-import fontkit from '@pdf-lib/fontkit';
-import fs from 'fs';
+import fontkit from "@pdf-lib/fontkit";
+import fs from "fs";
 
 import {
   CustomFontSubsetEmbedder,
@@ -7,12 +7,10 @@ import {
   PDFDict,
   PDFDocument,
   PDFHexString,
-} from '../../../src/index';
+} from "../../../src/index";
 
-const ubuntuFont = fs.readFileSync('./assets/fonts/ubuntu/Ubuntu-R.ttf');
-const sarabunFont = fs.readFileSync(
-  './assets/fonts/sarabun/Sarabun-Regular.ttf',
-);
+const ubuntuFont = fs.readFileSync("./assets/fonts/ubuntu/Ubuntu-R.ttf");
+const sarabunFont = fs.readFileSync("./assets/fonts/sarabun/Sarabun-Regular.ttf");
 
 type SubsetGlyph = { id: number; codePoints: number[] };
 const subsetGlyphs = (embedder: CustomFontSubsetEmbedder): SubsetGlyph[] =>
@@ -26,10 +24,7 @@ describe(`CustomFontSubsetEmbedder`, () => {
 
   it(`can embed standard font dictionaries into PDFContexts`, async () => {
     const context = PDFContext.create();
-    const embedder = await CustomFontSubsetEmbedder.for(
-      fontkit,
-      new Uint8Array(ubuntuFont),
-    );
+    const embedder = await CustomFontSubsetEmbedder.for(fontkit, new Uint8Array(ubuntuFont));
 
     expect(context.enumerateIndirectObjects().length).toBe(0);
     const ref = await embedder.embedIntoContext(context);
@@ -38,19 +33,16 @@ describe(`CustomFontSubsetEmbedder`, () => {
   });
 
   it(`can encode text strings into PDFHexString objects`, async () => {
-    const text = 'Stuff and thingz!';
-    const hexCodes =
-      '00010002000300040005000600070008000500020009000A0007000B000C000D';
+    const text = "Stuff and thingz!";
+    const hexCodes = "00010002000300040005000600070008000500020009000A0007000B000C000D";
     const embedder = await CustomFontSubsetEmbedder.for(fontkit, ubuntuFont);
 
     expect(embedder.encodeText(text)).toBeInstanceOf(PDFHexString);
-    expect(String(embedder.encodeText(text))).toBe(
-      String(PDFHexString.of(hexCodes)),
-    );
+    expect(String(embedder.encodeText(text))).toBe(String(PDFHexString.of(hexCodes)));
   });
 
   it(`can measure the width of text strings at the given font size`, async () => {
-    const text = 'Stuff and thingz!';
+    const text = "Stuff and thingz!";
     const embedder = await CustomFontSubsetEmbedder.for(fontkit, ubuntuFont);
     expect(embedder.widthOfTextAtSize(text, 12)).toBe(90.672);
     expect(embedder.widthOfTextAtSize(text, 24)).toBe(181.344);
@@ -70,7 +62,7 @@ describe(`CustomFontSubsetEmbedder`, () => {
 
   it(`subsets mixed Latin+Thai with the raised mark glyph and ToUnicode`, async () => {
     const embedder = await CustomFontSubsetEmbedder.for(fontkit, sarabunFont);
-    const encoded = embedder.encodeText('A วันที่');
+    const encoded = embedder.encodeText("A วันที่");
 
     expect(encoded.asString()).toMatch(/^[0-9A-F]{32}$/);
 
@@ -83,7 +75,7 @@ describe(`CustomFontSubsetEmbedder`, () => {
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
     const font = await pdfDoc.embedFont(sarabunFont, { subset: true });
-    pdfDoc.addPage().drawText('A วันที่', { font, size: 24 });
+    pdfDoc.addPage().drawText("A วันที่", { font, size: 24 });
     const bytes = await pdfDoc.save();
     expect(bytes.byteLength).toBeGreaterThan(0);
   });

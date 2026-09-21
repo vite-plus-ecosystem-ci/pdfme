@@ -1,4 +1,4 @@
-import * as fontkit from 'fontkit';
+import * as fontkit from "fontkit";
 import {
   Schema,
   Plugins,
@@ -11,8 +11,8 @@ import {
   normalizeSafeLinkUri,
   pluginRegistry,
   BasePdf,
-} from '@pdfme/common';
-import { builtInPlugins } from '@pdfme/schemas/builtins';
+} from "@pdfme/common";
+import { builtInPlugins } from "@pdfme/schemas/builtins";
 import {
   PDFPage,
   PDFDocument,
@@ -24,18 +24,18 @@ import {
   PDFString,
   PDFHexString,
   EncryptedPDFError,
-} from '@pdfme/pdf-lib';
-import { TOOL_NAME } from './constants.js';
-import type { EmbedPdfBox, PdfBox } from './types.js';
+} from "@pdfme/pdf-lib";
+import { TOOL_NAME } from "./constants.js";
+import type { EmbedPdfBox, PdfBox } from "./types.js";
 
 const isEncryptedPdfError = (error: unknown) =>
   error instanceof EncryptedPDFError ||
   (error instanceof Error &&
-    error.message.startsWith('Input document to `PDFDocument.load` is encrypted.'));
+    error.message.startsWith("Input document to `PDFDocument.load` is encrypted."));
 
 const isPasswordFailure = (error: unknown) =>
   error instanceof Error &&
-  (error.message === 'NEEDS PASSWORD' || error.message === 'Password incorrect');
+  (error.message === "NEEDS PASSWORD" || error.message === "Password incorrect");
 
 const loadBasePdfWithPassword = async (
   pdf: string | Uint8Array | ArrayBuffer,
@@ -48,7 +48,7 @@ const loadBasePdfWithPassword = async (
       throw error;
     }
     throw new Error(
-      '[@pdfme/generator] basePdf is encrypted and requires a valid password. Pass options.basePdfPassword to generate().',
+      "[@pdfme/generator] basePdf is encrypted and requires a valid password. Pass options.basePdfPassword to generate().",
     );
   }
 };
@@ -64,13 +64,13 @@ const loadBasePdf = async (pdf: string | Uint8Array | ArrayBuffer, password?: st
     if (!isEncryptedPdfError(error)) {
       throw error;
     }
-    return loadBasePdfWithPassword(pdf, '');
+    return loadBasePdfWithPassword(pdf, "");
   }
 };
 
 const getBasePdfPassword = (options?: GeneratorOptions) => {
   const password = options?.basePdfPassword;
-  return typeof password === 'string' ? password : undefined;
+  return typeof password === "string" ? password : undefined;
 };
 
 const toBoundingBox = ({ x, y, width, height }: PdfBox) => ({
@@ -157,14 +157,14 @@ export const getEmbedPdfPages = async (arg: {
 };
 
 const getSafeUriFromLinkAnnotation = (annotation: PDFDict) => {
-  if (annotation.lookupMaybe(PDFName.of('Subtype'), PDFName) !== PDFName.of('Link')) return;
+  if (annotation.lookupMaybe(PDFName.of("Subtype"), PDFName) !== PDFName.of("Link")) return;
 
-  const action = annotation.lookupMaybe(PDFName.of('A'), PDFDict);
+  const action = annotation.lookupMaybe(PDFName.of("A"), PDFDict);
   if (!action) return;
 
-  if (action.lookupMaybe(PDFName.of('S'), PDFName) !== PDFName.of('URI')) return;
+  if (action.lookupMaybe(PDFName.of("S"), PDFName) !== PDFName.of("URI")) return;
 
-  const uri = action.lookupMaybe(PDFName.of('URI'), PDFString, PDFHexString);
+  const uri = action.lookupMaybe(PDFName.of("URI"), PDFString, PDFHexString);
   return uri ? normalizeSafeLinkUri(uri.decodeText()) : undefined;
 };
 
@@ -186,20 +186,20 @@ const copyBasePdfUriLinkAnnotations = (arg: {
 
     const safeUri = getSafeUriFromLinkAnnotation(sourceAnnotation);
     if (!safeUri) continue;
-    const rect = sourceAnnotation.lookupMaybe(PDFName.of('Rect'), PDFArray);
+    const rect = sourceAnnotation.lookupMaybe(PDFName.of("Rect"), PDFArray);
     if (!rect) continue;
     const visibleRect = getVisibleRect(rect.asRectangle(), sourceBox);
     if (!visibleRect) continue;
 
-    const border = sourceAnnotation.lookupMaybe(PDFName.of('Border'), PDFArray);
-    const color = sourceAnnotation.lookupMaybe(PDFName.of('C'), PDFArray);
-    const highlightMode = sourceAnnotation.lookupMaybe(PDFName.of('H'), PDFName);
+    const border = sourceAnnotation.lookupMaybe(PDFName.of("Border"), PDFArray);
+    const color = sourceAnnotation.lookupMaybe(PDFName.of("C"), PDFArray);
+    const highlightMode = sourceAnnotation.lookupMaybe(PDFName.of("H"), PDFName);
 
     // Preserve the clickable area and common link hints, but rebuild the URI action so page-bound
     // or unsafe source annotation data is not copied into the generated document.
     const copiedAnnotation = pdfDoc.context.obj({
-      Type: PDFName.of('Annot'),
-      Subtype: PDFName.of('Link'),
+      Type: PDFName.of("Annot"),
+      Subtype: PDFName.of("Link"),
       Rect: [
         visibleRect.x,
         visibleRect.y,
@@ -210,8 +210,8 @@ const copyBasePdfUriLinkAnnotations = (arg: {
       C: color ? copier.copy(color) : undefined,
       H: highlightMode ? copier.copy(highlightMode) : undefined,
       A: {
-        Type: PDFName.of('Action'),
-        S: PDFName.of('URI'),
+        Type: PDFName.of("Action"),
+        S: PDFName.of("URI"),
         URI: PDFString.of(safeUri),
       },
     });
@@ -292,11 +292,11 @@ export const postProcessing = (props: { pdfDoc: PDFDocument; options: GeneratorO
     creationDate = new Date(),
     creator = TOOL_NAME,
     keywords = [],
-    lang = 'en',
+    lang = "en",
     modificationDate = new Date(),
     producer = TOOL_NAME,
-    subject = '',
-    title = '',
+    subject = "",
+    title = "",
   } = options;
   pdfDoc.setAuthor(author);
   pdfDoc.setCreationDate(creationDate);

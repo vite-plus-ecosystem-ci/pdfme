@@ -1,4 +1,4 @@
-import { toHexString } from './strings.js';
+import { toHexString } from "./strings.js";
 
 /**
  * Encodes a string to UTF-8.
@@ -256,11 +256,11 @@ export const highSurrogate = (codePoint: number) =>
 export const lowSurrogate = (codePoint: number) => ((codePoint - 0x10000) % 0x400) + 0xdc00;
 
 enum ByteOrder {
-  BigEndian = 'BigEndian',
-  LittleEndian = 'LittleEndian',
+  BigEndian = "BigEndian",
+  LittleEndian = "LittleEndian",
 }
 
-const REPLACEMENT = '�'.codePointAt(0)!;
+const REPLACEMENT = "�".codePointAt(0)!;
 
 /**
  * Decodes a Uint8Array of data to a string using UTF-16.

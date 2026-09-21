@@ -9,6 +9,7 @@ PDFme is an open-source TypeScript-based PDF generation and manipulation library
 ## Claude Code Integration
 
 ### Triggering Claude Code
+
 - Use `@claude` in GitHub issues, PR comments, or reviews to trigger Claude Code assistance
 - Claude Code is configured via `.github/workflows/claude.yml` with appropriate permissions
 - Best practices:
@@ -17,6 +18,7 @@ PDFme is an open-source TypeScript-based PDF generation and manipulation library
   - Mention specific files or components when applicable
 
 ### GitHub Workflow Integration
+
 - Claude Code automatically runs on issue comments, PR reviews, and new issues containing `@claude`
 - Has read access to repository contents, pull requests, and issues
 - Can assist with code analysis, debugging, and implementation suggestions
@@ -24,17 +26,20 @@ PDFme is an open-source TypeScript-based PDF generation and manipulation library
 ## Environment Requirements
 
 ### Node.js and Package Manager
+
 - **Node.js**: Version 16 or higher (recommended: 18+ or 20+ for better performance)
 - **npm**: Compatible with Node.js version (npm 8+ recommended)
 - **Memory**: Minimum 4GB RAM, 8GB+ recommended for large PDF operations
 
 ### Required Development Tools
+
 - **TypeScript**: For type checking and compilation
 - **Vite+ (`vp`)**: Unified task runner used for install/run/lint/fmt
 - **Oxlint/Oxfmt**: Native linting and formatting through `vp`
 - **Vitest**: Testing framework with image snapshot support
 
 ### OS-Specific Considerations
+
 - **Windows**: Use Git Bash or WSL for shell commands
 - **macOS/Linux**: Standard terminal works fine
 - **Memory limits**: Increase Node.js heap size for large PDFs: `node --max-old-space-size=8192`
@@ -42,13 +47,16 @@ PDFme is an open-source TypeScript-based PDF generation and manipulation library
 ## Common Development Commands
 
 ### Initial Setup and Build
+
 ```bash
 npm install          # Install all dependencies
 npm run build        # Build all packages in correct order
 ```
 
 ### Development Workflow
+
 To work on packages with live reloading:
+
 1. Run development mode in the packages you're working on:
    ```bash
    cd packages/[package-name] && npm run dev
@@ -59,6 +67,7 @@ To work on packages with live reloading:
    ```
 
 ### Testing
+
 ```bash
 npm run test                      # Run all tests
 npm run test -w packages/ui -- -u # Update UI snapshot tests
@@ -67,12 +76,14 @@ cd packages/[package-name] && npm run test
 ```
 
 ### Code Quality
+
 ```bash
 npm run lint  # Run vp native lint
 npm run fmt   # Format code with vp native fmt
 ```
 
 ### Building Individual Packages
+
 ```bash
 npm run build -w packages/common    # Build @pdfme/common
 npm run build -w packages/schemas   # Build @pdfme/schemas
@@ -83,6 +94,7 @@ npm run build -w packages/ui        # Build @pdfme/ui
 ## Architecture and Code Structure
 
 ### Monorepo Structure
+
 - **packages/common**: Core types, utilities, and shared logic
 - **packages/pdf-lib**: Forked pdf-lib with custom modifications
 - **packages/schemas**: Built-in field types (text, image, table, barcode, etc.)
@@ -96,7 +108,9 @@ npm run build -w packages/ui        # Build @pdfme/ui
 ### Key Architectural Patterns
 
 #### 1. Plugin-Based Field System
+
 Each field type (text, image, table, etc.) is a plugin with three components:
+
 - `pdf`: Renders in the PDF using pdf-lib
 - `ui`: Renders interactively in the browser
 - `propPanel`: Configuration UI for the Designer
@@ -104,7 +118,9 @@ Each field type (text, image, table, etc.) is a plugin with three components:
 Location: `packages/schemas/src/[field-type]/index.ts`
 
 #### 2. Template Structure
+
 Templates consist of:
+
 - `basePdf`: Either blank PDF with dimensions or custom PDF file
 - `schemas`: 2D array where each sub-array represents a page
 - `staticSchemas`: Optional fields that appear on every page
@@ -112,7 +128,9 @@ Templates consist of:
 Type definitions: `packages/common/src/types.ts`
 
 #### 3. Dynamic Layout Engine
+
 Handles:
+
 - Dynamic height calculation for expandable fields
 - Automatic page breaking
 - Layout tree management
@@ -120,7 +138,9 @@ Handles:
 Key function: `packages/generator/src/dynamicTemplate.ts:getDynamicTemplate`
 
 #### 4. UI Component Hierarchy
+
 All UI components extend `BaseUIClass` and support three modes:
+
 - `viewer`: Read-only display
 - `form`: Interactive input
 - `designer`: Template creation
@@ -128,7 +148,9 @@ All UI components extend `BaseUIClass` and support three modes:
 Base class: `packages/ui/src/class.ts`
 
 #### 5. Expression System
+
 Secure JavaScript expression evaluator for dynamic content:
+
 - Uses Acorn for parsing
 - AST validation for security
 - Cached compilation
@@ -162,9 +184,10 @@ Implementation: `packages/common/src/expression.ts`
 ## Contribution Guidelines
 
 ### Pull Request Workflow
+
 1. **Branch Naming**: Use format `feature/description` or `fix/description`
 2. **Base Branch**: Always create PRs against `main` branch
-3. **Testing Requirements**: 
+3. **Testing Requirements**:
    - Run `npm run test` and ensure all tests pass
    - Run `npm run lint` and fix any linting issues
    - Update snapshots if UI changes are intentional: `npm run test -w packages/ui -- -u`
@@ -177,12 +200,14 @@ Implementation: `packages/common/src/expression.ts`
    - Review output is saved under `tmp/claude-reviews/`; local `memories/` notes and review outputs are gitignored so they do not leak into public PRs
 
 ### Code Standards
+
 - **TypeScript**: All new code must be written in TypeScript
 - **Lint**: Follow the shared `vp lint` / `.oxlintrc.json` setup
 - **Format**: Format code using `npm run fmt`
 - **Type Safety**: Ensure proper type definitions and avoid `any` types
 
 ### Commit Message Standards
+
 - Use conventional commit format: `type(scope): description`
 - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 - Examples:
@@ -191,6 +216,7 @@ Implementation: `packages/common/src/expression.ts`
   - `docs(readme): update installation instructions`
 
 ### Code Review Process
+
 - All PRs require review before merging
 - Address reviewer feedback promptly
 - Ensure CI checks pass before requesting review
@@ -199,6 +225,7 @@ Implementation: `packages/common/src/expression.ts`
 ## Performance Optimization
 
 ### Memory Management for Large PDFs
+
 - **Heap Size**: Increase Node.js heap size for large operations:
   ```bash
   node --max-old-space-size=8192 your-script.js
@@ -207,17 +234,20 @@ Implementation: `packages/common/src/expression.ts`
 - **Cleanup**: Properly dispose of PDF documents and clear caches
 
 ### Rendering Optimization
+
 - **Lazy Loading**: Implement lazy loading for large template lists
 - **Caching**: Leverage built-in caching for expressions and parsed data
 - **Batch Operations**: Process multiple PDFs in batches rather than individually
 - **Font Subsetting**: Use font subsetting to reduce PDF file sizes
 
 ### Bundle Size Optimization
+
 - **Tree Shaking**: Ensure proper tree shaking in webpack configurations
 - **Dynamic Imports**: Use dynamic imports for large dependencies
 - **Package Analysis**: Regularly analyze bundle sizes with tools like webpack-bundle-analyzer
 
 ### Browser vs Node.js Performance
+
 - **Browser**: Limited by available memory and processing power
 - **Node.js**: Can handle larger operations but watch for memory leaks
 - **Worker Threads**: Consider worker threads for CPU-intensive operations in Node.js
@@ -227,6 +257,7 @@ Implementation: `packages/common/src/expression.ts`
 ### Build Errors
 
 #### TypeScript Compilation Issues
+
 ```bash
 # Clear TypeScript cache
 rm -rf packages/*/dist packages/*/.tsbuildinfo
@@ -234,6 +265,7 @@ npm run build
 ```
 
 #### Webpack/Bundling Problems
+
 ```bash
 # Clear node_modules and reinstall
 rm -rf node_modules packages/*/node_modules
@@ -242,6 +274,7 @@ npm run build
 ```
 
 #### Dependency Resolution Issues
+
 ```bash
 # Check for version conflicts
 npm ls
@@ -252,11 +285,13 @@ npm install --legacy-peer-deps
 ### Type Errors
 
 #### Missing Type Definitions
+
 - Check `packages/common/src/types.ts` for core type definitions
 - Ensure proper imports: `import type { Template } from '@pdfme/common'`
 - Update type definitions when adding new features
 
 #### Import Resolution Problems
+
 ```bash
 # Rebuild packages in correct order
 npm run build -w packages/common
@@ -268,6 +303,7 @@ npm run build -w packages/ui
 ### Environment Issues
 
 #### Node Version Conflicts
+
 ```bash
 # Check Node version
 node --version
@@ -276,6 +312,7 @@ nvm use 18
 ```
 
 #### Package Manager Issues
+
 ```bash
 # Clear npm cache
 npm cache clean --force
@@ -287,6 +324,7 @@ npm install
 ### Memory Issues
 
 #### Large PDF Processing
+
 ```bash
 # Increase heap size
 export NODE_OPTIONS="--max-old-space-size=8192"
@@ -294,6 +332,7 @@ npm run dev
 ```
 
 #### Memory Leaks in Development
+
 - Restart development servers regularly
 - Monitor memory usage in browser dev tools
 - Clear caches periodically
@@ -301,11 +340,13 @@ npm run dev
 ### Font Issues
 
 #### Font Loading Failures
+
 - Ensure fonts are properly embedded in PDFs
 - Check font file paths and accessibility
 - Verify font format compatibility (TTF, OTF)
 
 #### CJK Font Problems
+
 - Use the forked `@pdfme/pdf-lib` which includes CJK support
 - Ensure proper font subsetting for large character sets
 - Test with actual CJK content
@@ -313,6 +354,7 @@ npm run dev
 ### Dependency Conflicts
 
 #### Package Version Mismatches
+
 ```bash
 # Check for outdated packages
 npm outdated
@@ -321,6 +363,7 @@ npm update @pdfme/common @pdfme/generator
 ```
 
 #### Peer Dependency Issues
+
 ```bash
 # Install with legacy peer deps
 npm install --legacy-peer-deps
@@ -331,26 +374,31 @@ npm install <missing-peer-dependency>
 ## Common Error Patterns
 
 ### Font-Related Errors
+
 - **Error**: `Font not found` or `Invalid font`
 - **Solution**: Verify font file exists and is accessible, check font embedding settings
 - **Prevention**: Test with standard fonts first, then add custom fonts
 
 ### Memory Allocation Errors
+
 - **Error**: `JavaScript heap out of memory`
 - **Solution**: Increase heap size with `--max-old-space-size=8192`
 - **Prevention**: Process large PDFs in smaller chunks, implement proper cleanup
 
 ### Import/Export Resolution Issues
+
 - **Error**: `Module not found` or `Cannot resolve module`
 - **Solution**: Check build order, ensure packages are built before importing
 - **Prevention**: Follow proper build sequence, use TypeScript path mapping
 
 ### Plugin Development Pitfalls
+
 - **Error**: Plugin not rendering correctly
 - **Solution**: Ensure plugin exports `{ ui, pdf, propPanel }` correctly
 - **Prevention**: Follow existing plugin patterns in `packages/schemas/src/`
 
 ### Playground Connection Issues
+
 - **Error**: Changes not reflecting in playground
 - **Solution**: Restart development servers, check if packages are in dev mode
 - **Prevention**: Ensure proper hot reload setup across packages
@@ -358,17 +406,19 @@ npm install <missing-peer-dependency>
 ## Enhanced Development Workflow
 
 ### Hot Reload Setup
+
 1. **Start package development servers**:
+
    ```bash
    # Terminal 1
    cd packages/common && npm run dev
-   
-   # Terminal 2  
+
+   # Terminal 2
    cd packages/schemas && npm run dev
-   
+
    # Terminal 3
    cd packages/generator && npm run dev
-   
+
    # Terminal 4
    cd packages/ui && npm run dev
    ```
@@ -380,6 +430,7 @@ npm install <missing-peer-dependency>
    ```
 
 ### E2E Testing Procedures
+
 ```bash
 # Run full test suite
 npm run test
@@ -392,12 +443,14 @@ npm run test -w packages/ui -- -u
 ```
 
 ### Debugging with Playground
+
 - Use playground for rapid prototyping and testing
 - Add console.log statements for debugging
 - Test with various template configurations
 - Verify changes across different browsers
 
 ### CI/CD Integration
+
 - All PRs automatically run tests via GitHub Actions
 - Ensure local tests pass before pushing
 - Monitor CI status and address failures promptly

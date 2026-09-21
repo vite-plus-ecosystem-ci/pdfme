@@ -11,12 +11,12 @@
  * test) to extend the allowlist.
  */
 
-type MarkCriticalScript = (typeof MARK_CRITICAL_SCRIPTS)[number]['name'];
-type ScriptClass = MarkCriticalScript | 'default' | null;
+type MarkCriticalScript = (typeof MARK_CRITICAL_SCRIPTS)[number]["name"];
+type ScriptClass = MarkCriticalScript | "default" | null;
 
 const MARK_CRITICAL_SCRIPTS = [
-  { name: 'thai' as const, test: /\p{Script=Thai}/u },
-  { name: 'lao' as const, test: /\p{Script=Lao}/u },
+  { name: "thai" as const, test: /\p{Script=Thai}/u },
+  { name: "lao" as const, test: /\p{Script=Lao}/u },
 ] as const;
 
 const MARK_CRITICAL_ANY = /[\p{Script=Thai}\p{Script=Lao}]/u;
@@ -27,7 +27,7 @@ const classifyCodePoint = (ch: string): ScriptClass => {
   for (const { name, test } of MARK_CRITICAL_SCRIPTS) {
     if (test.test(ch)) return name;
   }
-  return 'default';
+  return "default";
 };
 
 /**
@@ -39,7 +39,7 @@ export const splitTextIntoShapingRuns = (text: string): string[] => {
   if (!MARK_CRITICAL_ANY.test(text)) return [text];
 
   const runs: string[] = [];
-  let current = '';
+  let current = "";
   let currentClass: ScriptClass = null;
 
   for (const ch of text) {
@@ -47,7 +47,7 @@ export const splitTextIntoShapingRuns = (text: string): string[] => {
     const continues = cls === null || currentClass === null || currentClass === cls;
     if (!continues && current.length > 0) {
       runs.push(current);
-      current = '';
+      current = "";
       currentClass = null;
     }
     current += ch;

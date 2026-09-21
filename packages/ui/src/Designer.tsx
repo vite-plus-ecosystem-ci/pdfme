@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   cloneDeep,
   Template,
@@ -6,11 +6,11 @@ import {
   checkDesignerProps,
   checkTemplate,
   PDFME_VERSION,
-} from '@pdfme/common';
-import { BaseUIClass } from './class.js';
-import { DESTROYED_ERR_MSG } from './constants.js';
-import DesignerComponent from './components/Designer/index.js';
-import AppContextProvider from './components/AppContextProvider.js';
+} from "@pdfme/common";
+import { BaseUIClass } from "./class.js";
+import { DESTROYED_ERR_MSG } from "./constants.js";
+import DesignerComponent from "./components/Designer/index.js";
+import AppContextProvider from "./components/AppContextProvider.js";
 import {
   EMPTY_DESIGNER_SELECTION,
   type DesignerSelectSchemas,
@@ -19,7 +19,7 @@ import {
   type DesignerSelectedSchema,
   type DesignerSelection,
   type DesignerSelectionChangeCallback,
-} from './designerSelection.js';
+} from "./designerSelection.js";
 
 export type DesignerUpdateTemplateOptions = {
   page?: number;

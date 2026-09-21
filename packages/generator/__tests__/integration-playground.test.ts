@@ -1,8 +1,8 @@
-import generate from '../src/generate.js';
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { BLANK_PDF, getInputFromTemplate, Template, type Schema } from '@pdfme/common';
+import generate from "../src/generate.js";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
+import { BLANK_PDF, getInputFromTemplate, Template, type Schema } from "@pdfme/common";
 import {
   text,
   image,
@@ -22,22 +22,22 @@ import {
   checkbox,
   radioGroup,
   circleMark,
-} from '@pdfme/schemas';
-import { getFont, getImageSnapshotOptions, pdfToImages } from './utils.js';
+} from "@pdfme/schemas";
+import { getFont, getImageSnapshotOptions, pdfToImages } from "./utils.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const PERFORMANCE_THRESHOLD = parseFloat(process.env.PERFORMANCE_THRESHOLD || '1.5');
+const PERFORMANCE_THRESHOLD = parseFloat(process.env.PERFORMANCE_THRESHOLD || "1.5");
 const GENERATOR_BENCHMARK_THRESHOLD = parseFloat(
-  process.env.GENERATOR_BENCHMARK_THRESHOLD || '2.5',
+  process.env.GENERATOR_BENCHMARK_THRESHOLD || "2.5",
 );
 const GENERATOR_BENCHMARK_RUN_COUNT = 6;
 const GENERATOR_BENCHMARK_WARMUP_RUN_COUNT = 1;
 const ADDRESS_LABEL_BENCHMARK_INPUT_COUNT = 20;
 const PLAYGROUND_TEMPLATE_PERFORMANCE_THRESHOLDS: Record<string, number> = {
-  'nenkin-shougai-seishin-shindansho': 5,
-  'nenkin-shougai-seishin-shindansho-initial': 5,
-  'nenkin-shougai-seishin-shindansho-update': 7,
+  "nenkin-shougai-seishin-shindansho": 5,
+  "nenkin-shougai-seishin-shindansho-initial": 5,
+  "nenkin-shougai-seishin-shindansho-update": 7,
 };
 const generatorPlugins = {
   text,
@@ -99,7 +99,7 @@ const measureGenerate = async (name: string, fn: () => Promise<void>) => {
   console.info(
     `[@pdfme/generator benchmark] ${name} runs: ${runs
       .map((duration) => duration.toFixed(2))
-      .join(', ')}ms`,
+      .join(", ")}ms`,
   );
 
   expect(average).toBeGreaterThan(0);
@@ -108,7 +108,7 @@ const measureGenerate = async (name: string, fn: () => Promise<void>) => {
 
 // Load all templates from playground/public/template-assets
 function loadPlaygroundTemplates(): Record<string, Template> {
-  const templatesDir = path.join(__dirname, '../../../playground/public/template-assets');
+  const templatesDir = path.join(__dirname, "../../../playground/public/template-assets");
   const templates: Record<string, Template> = {};
 
   const folders = fs.readdirSync(templatesDir);
@@ -118,11 +118,11 @@ function loadPlaygroundTemplates(): Record<string, Template> {
     const stat = fs.statSync(folderPath);
 
     if (stat.isDirectory()) {
-      const templatePath = path.join(folderPath, 'template.json');
+      const templatePath = path.join(folderPath, "template.json");
 
       if (fs.existsSync(templatePath)) {
         try {
-          const templateContent = fs.readFileSync(templatePath, 'utf-8');
+          const templateContent = fs.readFileSync(templatePath, "utf-8");
           const template = JSON.parse(templateContent) as Template;
           templates[folder] = template;
         } catch (error) {
@@ -135,7 +135,7 @@ function loadPlaygroundTemplates(): Record<string, Template> {
   return templates;
 }
 
-describe('generate integration test(playground)', () => {
+describe("generate integration test(playground)", () => {
   const playgroundTemplates = loadPlaygroundTemplates();
 
   const RealDate = Date;
@@ -143,7 +143,7 @@ describe('generate integration test(playground)', () => {
     class MockDate extends RealDate {
       constructor(...args: any[]) {
         if (args.length === 0) {
-          super('2024-01-01T00:00:00.000Z');
+          super("2024-01-01T00:00:00.000Z");
         } else {
           // @ts-expect-error Allow passing arguments to Date constructor
           super(...args);
@@ -177,7 +177,7 @@ describe('generate integration test(playground)', () => {
       checkPerformanceThreshold(key, execSeconds, PLAYGROUND_TEMPLATE_PERFORMANCE_THRESHOLDS[key]);
 
       const images = await pdfToImages(pdf);
-      if (key === 'invoice' || key === 'quotes') {
+      if (key === "invoice" || key === "quotes") {
         expect(images).toHaveLength(1);
       }
       for (let i = 0; i < images.length; i++) {
@@ -186,12 +186,12 @@ describe('generate integration test(playground)', () => {
     });
   }
 
-  test('benchmarks generator-only paths used by performance-sensitive templates', async () => {
+  test("benchmarks generator-only paths used by performance-sensitive templates", async () => {
     const font = getFont();
     const textSchemas: Schema[] = Array.from({ length: 120 }, (_, index) => ({
       name: `field${index}`,
-      type: 'text',
-      content: '',
+      type: "text",
+      content: "",
       position: { x: 10 + (index % 4) * 45, y: 10 + Math.floor(index / 4) * 8 },
       width: 40,
       height: 6,
@@ -204,18 +204,18 @@ describe('generate integration test(playground)', () => {
       ),
     );
 
-    await measureGenerate('blank text-heavy template', () =>
+    await measureGenerate("blank text-heavy template", () =>
       generate({ inputs: textHeavyInputs, template: textHeavyTemplate, options: { font } }),
     );
 
-    const labelTemplate = playgroundTemplates['address-label-30'];
+    const labelTemplate = playgroundTemplates["address-label-30"];
     if (!labelTemplate) {
       throw new Error('Failed to load playground template "address-label-30".');
     }
     const [baseLabelInput = {}] = getInputFromTemplate(labelTemplate);
     const labelInputs = Array.from({ length: ADDRESS_LABEL_BENCHMARK_INPUT_COUNT }, (_, index) => ({
       ...baseLabelInput,
-      '{1}Name': `Kyohei Fukuda ${index}`,
+      "{1}Name": `Kyohei Fukuda ${index}`,
     }));
 
     await measureGenerate(

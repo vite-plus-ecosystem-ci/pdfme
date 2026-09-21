@@ -6,7 +6,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
-} from 'react';
+} from "react";
 import {
   cloneDeep,
   ZOOM,
@@ -17,8 +17,8 @@ import {
   SchemaForUI,
   ChangeSchemas,
   isBlankPdf,
-} from '@pdfme/common';
-import { pdf2img, pdf2size } from '@pdfme/converter';
+} from "@pdfme/common";
+import { pdf2img, pdf2size } from "@pdfme/converter";
 
 import {
   schemasList2template,
@@ -35,8 +35,8 @@ import {
   getStickyScrollPageIndex,
   type ZoomAnchor,
   type ZoomMode,
-} from './helper.js';
-import { RULER_HEIGHT } from './constants.js';
+} from "./helper.js";
+import { RULER_HEIGHT } from "./constants.js";
 
 export const usePrevious = <T>(value: T) => {
   const ref = useRef<T | null>(null);
@@ -83,7 +83,7 @@ export const useUIPreProcessor = ({ template, size, zoomLevel, maxZoom }: UIPreP
         paperHeight = height * ZOOM;
         _backgrounds = schemas.map(
           () =>
-            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=',
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=",
         );
         _pageSizes = schemas.map(() => ({ width, height }));
       } else {
@@ -148,7 +148,7 @@ export const useUIPreProcessor = ({ template, size, zoomLevel, maxZoom }: UIPreP
         const error = err instanceof Error ? err : new Error(String(err));
         if (isMountedRef.current && requestId === requestIdRef.current) {
           setError(error);
-          console.error('[@pdfme/ui]', error);
+          console.error("[@pdfme/ui]", error);
         }
       }
     },
@@ -231,7 +231,7 @@ export const useZoom = ({
   onZoomCommit,
 }: UseZoomProps) => {
   const [zoomLevel, setZoomLevelState] = useState(initialZoomLevel);
-  const [zoomMode, setZoomModeState] = useState<ZoomMode>('manual');
+  const [zoomMode, setZoomModeState] = useState<ZoomMode>("manual");
   const [displayScale, setDisplayScale] = useState(0);
   const [renderScale, setRenderScale] = useState(0);
 
@@ -355,7 +355,7 @@ export const useZoom = ({
 
         updateZoom({
           nextZoomLevel: queued.zoomLevel,
-          mode: 'manual',
+          mode: "manual",
           anchor: queued.anchor,
           commitRender: false,
         });
@@ -368,7 +368,7 @@ export const useZoom = ({
     (nextZoomLevel: number) => {
       updateZoom({
         nextZoomLevel,
-        mode: 'manual',
+        mode: "manual",
         anchor: getAnchor(),
         commitRender: true,
       });
@@ -377,7 +377,7 @@ export const useZoom = ({
   );
 
   const fitZoom = useCallback(
-    (mode: Exclude<ZoomMode, 'manual'>) => {
+    (mode: Exclude<ZoomMode, "manual">) => {
       const nextZoomLevel = getFitZoomLevel({
         mode,
         pageSize: pageSizes[pageCursor],
@@ -404,7 +404,7 @@ export const useZoom = ({
     }
 
     const nextZoomLevel =
-      zoomModeRef.current === 'manual'
+      zoomModeRef.current === "manual"
         ? clampZoomLevel(zoomLevelRef.current, maxZoom)
         : getFitZoomLevel({
             mode: zoomModeRef.current,
@@ -500,18 +500,18 @@ export const useZoom = ({
       commitRenderScale();
     };
 
-    node.addEventListener('wheel', onWheel, { passive: false });
-    node.addEventListener('touchstart', onTouchStart, { passive: false });
-    node.addEventListener('touchmove', onTouchMove, { passive: false });
-    node.addEventListener('touchend', onTouchEnd);
-    node.addEventListener('touchcancel', onTouchEnd);
+    node.addEventListener("wheel", onWheel, { passive: false });
+    node.addEventListener("touchstart", onTouchStart, { passive: false });
+    node.addEventListener("touchmove", onTouchMove, { passive: false });
+    node.addEventListener("touchend", onTouchEnd);
+    node.addEventListener("touchcancel", onTouchEnd);
 
     return () => {
-      node.removeEventListener('wheel', onWheel);
-      node.removeEventListener('touchstart', onTouchStart);
-      node.removeEventListener('touchmove', onTouchMove);
-      node.removeEventListener('touchend', onTouchEnd);
-      node.removeEventListener('touchcancel', onTouchEnd);
+      node.removeEventListener("wheel", onWheel);
+      node.removeEventListener("touchstart", onTouchStart);
+      node.removeEventListener("touchmove", onTouchMove);
+      node.removeEventListener("touchend", onTouchEnd);
+      node.removeEventListener("touchcancel", onTouchEnd);
     };
   }, [commitRenderScale, containerRef, getAnchor, queueGestureZoom, zoomContainerReady]);
 
@@ -531,8 +531,8 @@ export const useZoom = ({
     zoomLevel,
     zoomMode,
     setZoomLevel,
-    fitWidth: () => fitZoom('fit-width'),
-    fitHeight: () => fitZoom('fit-height'),
+    fitWidth: () => fitZoom("fit-width"),
+    fitHeight: () => fitZoom("fit-height"),
   };
 };
 
@@ -566,12 +566,12 @@ export const useScrollPageCursor = ({
 
   useEffect(() => {
     const node = ref.current;
-    node?.addEventListener('scroll', onScroll);
+    node?.addEventListener("scroll", onScroll);
     const animationFrame = window.requestAnimationFrame(onScroll);
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
-      node?.removeEventListener('scroll', onScroll);
+      node?.removeEventListener("scroll", onScroll);
     };
   }, [ref, onScroll, scale]);
 };
@@ -633,8 +633,8 @@ export const useInitEvents = ({
 
       return schemasList[pageCursor].filter((s) => ids.includes(s.id));
     };
-    const timeTravel = (mode: 'undo' | 'redo') => {
-      const isUndo = mode === 'undo';
+    const timeTravel = (mode: "undo" | "redo") => {
+      const isUndo = mode === "undo";
       const stack = isUndo ? past : future;
       if (stack.current.length <= 0) return;
       (isUndo ? future : past).current.push(cloneDeep(schemasList[pageCursor]));
@@ -681,8 +681,8 @@ export const useInitEvents = ({
         });
         copiedSchemas.current = pasteSchemas;
       },
-      redo: () => timeTravel('redo'),
-      undo: () => timeTravel('undo'),
+      redo: () => timeTravel("redo"),
+      undo: () => timeTravel("undo"),
       save: () =>
         onSaveTemplate && onSaveTemplate(schemasList2template(schemasList, template.basePdf)),
       remove: () => removeSchemas(getActiveSchemas().map((s) => s.id)),

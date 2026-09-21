@@ -1,7 +1,7 @@
-import Embeddable from './Embeddable.js';
-import PDFDocument from './PDFDocument.js';
-import { PDFPageEmbedder, PDFRef } from '../core/index.js';
-import { assertIs } from '../utils/index.js';
+import Embeddable from "./Embeddable.js";
+import PDFDocument from "./PDFDocument.js";
+import { PDFPageEmbedder, PDFRef } from "../core/index.js";
+import { assertIs } from "../utils/index.js";
 
 /**
  * Represents a PDF page that has been embedded in a [[PDFDocument]].
@@ -38,9 +38,9 @@ export default class PDFEmbeddedPage implements Embeddable {
   private readonly embedder: PDFPageEmbedder;
 
   private constructor(ref: PDFRef, doc: PDFDocument, embedder: PDFPageEmbedder) {
-    assertIs(ref, 'ref', [[PDFRef, 'PDFRef']]);
-    assertIs(doc, 'doc', [[PDFDocument, 'PDFDocument']]);
-    assertIs(embedder, 'embedder', [[PDFPageEmbedder, 'PDFPageEmbedder']]);
+    assertIs(ref, "ref", [[PDFRef, "PDFRef"]]);
+    assertIs(doc, "doc", [[PDFDocument, "PDFDocument"]]);
+    assertIs(embedder, "embedder", [[PDFPageEmbedder, "PDFPageEmbedder"]]);
 
     this.ref = ref;
     this.doc = doc;
@@ -67,7 +67,7 @@ export default class PDFEmbeddedPage implements Embeddable {
    * @returns The width and height of the page after being scaled.
    */
   scale(factor: number) {
-    assertIs(factor, 'factor', ['number']);
+    assertIs(factor, "factor", ["number"]);
     return { width: this.width * factor, height: this.height * factor };
   }
 

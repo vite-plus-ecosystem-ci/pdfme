@@ -1,11 +1,11 @@
-import { CommonOptions, getDefaultFont, mm2pt, pt2mm } from '@pdfme/common';
+import { CommonOptions, getDefaultFont, mm2pt, pt2mm } from "@pdfme/common";
 import {
   DEFAULT_CHARACTER_SPACING,
   DEFAULT_FONT_SIZE,
   DEFAULT_LINE_HEIGHT,
-} from '../text/constants.js';
-import { getFontKitFont, splitTextToSize } from '../text/helper.js';
-import type { ListItem, ListItemLayout, ListLayout, ListSchema } from './types.js';
+} from "../text/constants.js";
+import { getFontKitFont, splitTextToSize } from "../text/helper.js";
+import type { ListItem, ListItemLayout, ListLayout, ListSchema } from "./types.js";
 import {
   DEFAULT_INDENT_SIZE,
   DEFAULT_ITEM_SPACING,
@@ -15,12 +15,12 @@ import {
   DEFAULT_MARKER_WIDTH,
   LIST_STYLE_ORDERED,
   MAX_INDENT_LEVEL,
-} from './constants.js';
+} from "./constants.js";
 
 export const normalizeListItems = (value: unknown): string[] => {
   if (Array.isArray(value)) return value.map((item) => String(item));
 
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     return value == null ? [] : [String(value)];
   }
 
@@ -49,7 +49,7 @@ export const normalizeListItemEntries = (value: unknown): ListItem[] =>
   normalizeListItems(value).map(parseListItem);
 
 const formatListItem = (item: ListItem): string =>
-  `${'\t'.repeat(Math.max(0, item.level))}${item.text}`;
+  `${"\t".repeat(Math.max(0, item.level))}${item.text}`;
 
 export const serializeListItems = (items: ListItem[]): string => {
   const lines = items.map(formatListItem);
@@ -86,7 +86,7 @@ export const calculateListLayout = async (arg: {
   const fontKitFont = await getFontKitFont(
     schema.fontName,
     font,
-    _cache as Map<string | number, import('fontkit').Font>,
+    _cache as Map<string | number, import("fontkit").Font>,
   );
 
   const fontSize = schema.fontSize ?? DEFAULT_FONT_SIZE;

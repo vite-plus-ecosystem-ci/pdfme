@@ -1,19 +1,19 @@
-import type { GenerateProps, PdfBytes, Plugins, Schema, Template } from '@pdfme/common';
-import { cloneDeep } from '@pdfme/common';
-import { checkbox, radioGroup, text } from '@pdfme/schemas';
-import { acroCheckboxPlugin, acroRadioGroupPlugin, acroTextPlugin } from './acroForm.js';
-import generate from './generate.js';
+import type { GenerateProps, PdfBytes, Plugins, Schema, Template } from "@pdfme/common";
+import { cloneDeep } from "@pdfme/common";
+import { checkbox, radioGroup, text } from "@pdfme/schemas";
+import { acroCheckboxPlugin, acroRadioGroupPlugin, acroTextPlugin } from "./acroForm.js";
+import generate from "./generate.js";
 
-export type GenerateFormProps = Omit<GenerateProps, 'inputs'> & {
-  inputs?: GenerateProps['inputs'];
+export type GenerateFormProps = Omit<GenerateProps, "inputs"> & {
+  inputs?: GenerateProps["inputs"];
 };
 
-const ACRO_TEXT_TYPE = 'acroText';
-const ACRO_CHECKBOX_TYPE = 'acroCheckbox';
-const ACRO_RADIO_GROUP_TYPE = 'acroRadioGroup';
-const TEXT_TYPE = 'text';
-const CHECKBOX_TYPE = 'checkbox';
-const RADIO_GROUP_TYPE = 'radioGroup';
+const ACRO_TEXT_TYPE = "acroText";
+const ACRO_CHECKBOX_TYPE = "acroCheckbox";
+const ACRO_RADIO_GROUP_TYPE = "acroRadioGroup";
+const TEXT_TYPE = "text";
+const CHECKBOX_TYPE = "checkbox";
+const RADIO_GROUP_TYPE = "radioGroup";
 
 const hasPluginForType = (plugins: Plugins, type: string) =>
   Object.values(plugins).some((plugin) => plugin.propPanel.defaultSchema.type === type);
@@ -81,7 +81,7 @@ const getAcroFormTemplate = (template: Template): Template => {
   return clonedTemplate;
 };
 
-const normalizeInputs = (inputs?: GenerateProps['inputs']) =>
+const normalizeInputs = (inputs?: GenerateProps["inputs"]) =>
   inputs && inputs.length > 0 ? inputs : [{}];
 
 const generateForm = async (props: GenerateFormProps): Promise<PdfBytes> => {

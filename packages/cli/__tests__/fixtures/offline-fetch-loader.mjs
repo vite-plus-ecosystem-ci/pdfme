@@ -1,5 +1,5 @@
 function getUrl(input) {
-  if (typeof input === 'string') {
+  if (typeof input === "string") {
     return input;
   }
 

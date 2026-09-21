@@ -1,20 +1,20 @@
-import PDFDict from '../objects/PDFDict.js';
-import PDFName from '../objects/PDFName.js';
-import PDFRef from '../objects/PDFRef.js';
-import PDFString from '../objects/PDFString.js';
-import PDFHexString from '../objects/PDFHexString.js';
-import PDFContext from '../PDFContext.js';
-import BorderStyle from './BorderStyle.js';
-import PDFAnnotation from './PDFAnnotation.js';
-import AppearanceCharacteristics from './AppearanceCharacteristics.js';
+import PDFDict from "../objects/PDFDict.js";
+import PDFName from "../objects/PDFName.js";
+import PDFRef from "../objects/PDFRef.js";
+import PDFString from "../objects/PDFString.js";
+import PDFHexString from "../objects/PDFHexString.js";
+import PDFContext from "../PDFContext.js";
+import BorderStyle from "./BorderStyle.js";
+import PDFAnnotation from "./PDFAnnotation.js";
+import AppearanceCharacteristics from "./AppearanceCharacteristics.js";
 
 class PDFWidgetAnnotation extends PDFAnnotation {
   static fromDict = (dict: PDFDict): PDFWidgetAnnotation => new PDFWidgetAnnotation(dict);
 
   static create = (context: PDFContext, parent: PDFRef) => {
     const dict = context.obj({
-      Type: 'Annot',
-      Subtype: 'Widget',
+      Type: "Annot",
+      Subtype: "Widget",
       Rect: [0, 0, 0, 0],
       Parent: parent,
     });
@@ -22,35 +22,35 @@ class PDFWidgetAnnotation extends PDFAnnotation {
   };
 
   MK(): PDFDict | undefined {
-    const MK = this.dict.lookup(PDFName.of('MK'));
+    const MK = this.dict.lookup(PDFName.of("MK"));
     if (MK instanceof PDFDict) return MK;
     return undefined;
   }
 
   BS(): PDFDict | undefined {
-    const BS = this.dict.lookup(PDFName.of('BS'));
+    const BS = this.dict.lookup(PDFName.of("BS"));
     if (BS instanceof PDFDict) return BS;
     return undefined;
   }
 
   DA(): PDFString | PDFHexString | undefined {
-    const da = this.dict.lookup(PDFName.of('DA'));
+    const da = this.dict.lookup(PDFName.of("DA"));
     if (da instanceof PDFString || da instanceof PDFHexString) return da;
     return undefined;
   }
 
   P(): PDFRef | undefined {
-    const P = this.dict.get(PDFName.of('P'));
+    const P = this.dict.get(PDFName.of("P"));
     if (P instanceof PDFRef) return P;
     return undefined;
   }
 
   setP(page: PDFRef) {
-    this.dict.set(PDFName.of('P'), page);
+    this.dict.set(PDFName.of("P"), page);
   }
 
   setDefaultAppearance(appearance: string) {
-    this.dict.set(PDFName.of('DA'), PDFString.of(appearance));
+    this.dict.set(PDFName.of("DA"), PDFString.of(appearance));
   }
 
   getDefaultAppearance(): string | undefined {
@@ -74,7 +74,7 @@ class PDFWidgetAnnotation extends PDFAnnotation {
     if (MK) return AppearanceCharacteristics.fromDict(MK);
 
     const ac = AppearanceCharacteristics.fromDict(this.dict.context.obj({}));
-    this.dict.set(PDFName.of('MK'), ac.dict);
+    this.dict.set(PDFName.of("MK"), ac.dict);
     return ac;
   }
 
@@ -89,7 +89,7 @@ class PDFWidgetAnnotation extends PDFAnnotation {
     if (BS) return BorderStyle.fromDict(BS);
 
     const bs = BorderStyle.fromDict(this.dict.context.obj({}));
-    this.dict.set(PDFName.of('BS'), bs.dict);
+    this.dict.set(PDFName.of("BS"), bs.dict);
     return bs;
   }
 
@@ -100,7 +100,7 @@ class PDFWidgetAnnotation extends PDFAnnotation {
       const keys = normal.keys();
       for (let idx = 0, len = keys.length; idx < len; idx++) {
         const key = keys[idx];
-        if (key !== PDFName.of('Off')) return key;
+        if (key !== PDFName.of("Off")) return key;
       }
     }
 

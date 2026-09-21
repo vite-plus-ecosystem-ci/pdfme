@@ -1,17 +1,17 @@
-import { dirname, resolve } from 'node:path';
-import { PAGE_SIZE_PRESETS, checkTemplate, isBlankPdf, type BasePdf } from '@pdfme/common';
-import { fail } from './contract.js';
-import { schemaTypes } from './schema-plugins.js';
-import { detectPaperSize, readJsonFile, readJsonFromStdin } from './utils.js';
+import { dirname, resolve } from "node:path";
+import { PAGE_SIZE_PRESETS, checkTemplate, isBlankPdf, type BasePdf } from "@pdfme/common";
+import { fail } from "./contract.js";
+import { schemaTypes } from "./schema-plugins.js";
+import { detectPaperSize, readJsonFile, readJsonFromStdin } from "./utils.js";
 
 export const KNOWN_TEMPLATE_KEYS = new Set([
-  'author',
-  'basePdf',
-  'columns',
-  'pdfmeVersion',
-  'schemas',
+  "author",
+  "basePdf",
+  "columns",
+  "pdfmeVersion",
+  "schemas",
 ]);
-export const KNOWN_JOB_KEYS = new Set(['template', 'inputs', 'options']);
+export const KNOWN_JOB_KEYS = new Set(["template", "inputs", "options"]);
 
 export interface ValidationResult {
   errors: string[];
@@ -40,7 +40,7 @@ export interface FieldInputHint {
   pages: number[];
   required: boolean;
   expectedInput: {
-    kind: 'string' | 'jsonStringObject' | 'enumString' | 'stringMatrix' | 'stringArray';
+    kind: "string" | "jsonStringObject" | "enumString" | "stringMatrix" | "stringArray";
     variableNames?: string[];
     allowedValues?: string[];
     example?: string | string[] | string[][];
@@ -57,7 +57,7 @@ export interface FieldInputHint {
 }
 
 export interface ValidationSource {
-  mode: 'template' | 'job';
+  mode: "template" | "job";
   template: Record<string, unknown>;
   inputs?: Record<string, unknown>[];
   options?: unknown;
@@ -116,8 +116,8 @@ export function validateTemplate(template: Record<string, unknown>): ValidationR
   let pageHeight: number = PAGE_SIZE_PRESETS.A4.height;
   if (
     template.basePdf &&
-    typeof template.basePdf === 'object' &&
-    'width' in (template.basePdf as object)
+    typeof template.basePdf === "object" &&
+    "width" in (template.basePdf as object)
   ) {
     pageWidth = (template.basePdf as { width: number }).width;
     pageHeight = (template.basePdf as { height: number }).height;
@@ -132,7 +132,7 @@ export function validateTemplate(template: Record<string, unknown>): ValidationR
     const pageNames = new Set<string>();
 
     for (const schema of page) {
-      if (typeof schema !== 'object' || schema === null) continue;
+      if (typeof schema !== "object" || schema === null) continue;
 
       const name = schema.name as string;
       const type = schema.type as string;
@@ -142,9 +142,9 @@ export function validateTemplate(template: Record<string, unknown>): ValidationR
 
       if (type && !schemaTypes.has(type)) {
         const suggestion = findClosestType(type);
-        const hint = suggestion ? ` Did you mean: ${suggestion}?` : '';
+        const hint = suggestion ? ` Did you mean: ${suggestion}?` : "";
         errors.push(
-          `Field "${name}" has unknown type "${type}".${hint} Available types: ${[...schemaTypes].join(', ')}`,
+          `Field "${name}" has unknown type "${type}".${hint} Available types: ${[...schemaTypes].join(", ")}`,
         );
       }
 
@@ -178,7 +178,7 @@ export function validateTemplate(template: Record<string, unknown>): ValidationR
 
   for (const [name, pages] of allNames) {
     if (pages.length > 1) {
-      warnings.push(`Field name "${name}" appears on multiple pages: ${pages.join(', ')}`);
+      warnings.push(`Field name "${name}" appears on multiple pages: ${pages.join(", ")}`);
     }
   }
 
@@ -221,18 +221,18 @@ export function collectInputHints(template: Record<string, unknown>): FieldInput
       hint.type,
       hint.expectedInput.kind,
       JSON.stringify(hint.expectedInput.example ?? null),
-      hint.expectedInput.format ?? '',
-      hint.expectedInput.canonicalFormat ?? '',
-      hint.expectedInput.contentKind ?? '',
-      hint.expectedInput.rule ?? '',
-      (hint.expectedInput.variableNames ?? []).join('\u0000'),
-      (hint.expectedInput.allowedValues ?? []).join('\u0000'),
-      hint.expectedInput.groupName ?? '',
-      (hint.expectedInput.groupMemberNames ?? []).join('\u0000'),
-      String(hint.expectedInput.columnCount ?? ''),
-      (hint.expectedInput.columnHeaders ?? []).join('\u0000'),
-      hint.expectedInput.acceptsJsonString === true ? '1' : '0',
-    ].join('\u0001');
+      hint.expectedInput.format ?? "",
+      hint.expectedInput.canonicalFormat ?? "",
+      hint.expectedInput.contentKind ?? "",
+      hint.expectedInput.rule ?? "",
+      (hint.expectedInput.variableNames ?? []).join("\u0000"),
+      (hint.expectedInput.allowedValues ?? []).join("\u0000"),
+      hint.expectedInput.groupName ?? "",
+      (hint.expectedInput.groupMemberNames ?? []).join("\u0000"),
+      String(hint.expectedInput.columnCount ?? ""),
+      (hint.expectedInput.columnHeaders ?? []).join("\u0000"),
+      hint.expectedInput.acceptsJsonString === true ? "1" : "0",
+    ].join("\u0001");
     const existing = hintMap.get(key);
 
     if (existing) {
@@ -265,7 +265,7 @@ export function validateInputContracts(
 ): void {
   const issues = getInputContractIssues(template, inputs);
   if (issues.length > 0) {
-    fail(issues[0], { code: 'EVALIDATE', exitCode: 1 });
+    fail(issues[0], { code: "EVALIDATE", exitCode: 1 });
   }
 }
 
@@ -297,21 +297,21 @@ export async function loadValidationSource(
   options: { noInputMessage: string },
 ): Promise<ValidationSource> {
   const data = await loadValidationInput(file, options.noInputMessage);
-  const record = assertRecordObject(data.json, 'Validation input');
-  const hasTemplate = 'template' in record;
-  const hasInputs = 'inputs' in record;
+  const record = assertRecordObject(data.json, "Validation input");
+  const hasTemplate = "template" in record;
+  const hasInputs = "inputs" in record;
 
   if (hasTemplate || hasInputs) {
     if (!hasTemplate || !hasInputs) {
       fail('Unified job validation requires both "template" and "inputs" keys.', {
-        code: 'EARG',
+        code: "EARG",
         exitCode: 1,
       });
     }
 
     return {
-      mode: 'job',
-      template: assertRecordObject(record.template, 'Unified job template'),
+      mode: "job",
+      template: assertRecordObject(record.template, "Unified job template"),
       inputs: record.inputs as Record<string, unknown>[],
       options: record.options,
       templateDir: data.templateDir,
@@ -323,8 +323,8 @@ export async function loadValidationSource(
   }
 
   return {
-    mode: 'template',
-    template: assertRecordObject(record, 'Template'),
+    mode: "template",
+    template: assertRecordObject(record, "Template"),
     templateDir: data.templateDir,
     jobWarnings: [],
   };
@@ -334,13 +334,13 @@ async function loadValidationInput(
   file: string | undefined,
   noInputMessage: string,
 ): Promise<{ json: unknown; templateDir?: string }> {
-  if (!file || file === '-') {
-    if (file === '-' || !process.stdin.isTTY) {
+  if (!file || file === "-") {
+    if (file === "-" || !process.stdin.isTTY) {
       return { json: await readJsonFromStdin() };
     }
 
     fail(noInputMessage, {
-      code: 'EARG',
+      code: "EARG",
       exitCode: 1,
     });
   }
@@ -353,8 +353,8 @@ async function loadValidationInput(
 }
 
 function assertRecordObject(value: unknown, label: string): Record<string, unknown> {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-    fail(`${label} must be a JSON object.`, { code: 'EARG', exitCode: 1 });
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    fail(`${label} must be a JSON object.`, { code: "EARG", exitCode: 1 });
   }
 
   return value as Record<string, unknown>;
@@ -369,14 +369,14 @@ export function normalizeSchemaPages(rawSchemas: unknown): Array<Array<Record<st
     if (Array.isArray(page)) {
       return page.filter(
         (schema): schema is Record<string, unknown> =>
-          typeof schema === 'object' && schema !== null,
+          typeof schema === "object" && schema !== null,
       );
     }
 
-    if (typeof page === 'object' && page !== null) {
+    if (typeof page === "object" && page !== null) {
       return Object.values(page).filter(
         (schema): schema is Record<string, unknown> =>
-          typeof schema === 'object' && schema !== null,
+          typeof schema === "object" && schema !== null,
       );
     }
 
@@ -391,7 +391,7 @@ function getStaticSchemas(template: Record<string, unknown>): Record<string, unk
   }
 
   return basePdf.staticSchema
-    .filter((schema) => typeof schema === 'object' && schema !== null)
+    .filter((schema) => typeof schema === "object" && schema !== null)
     .map((schema) => schema as Record<string, unknown>);
 }
 
@@ -399,20 +399,20 @@ function shouldCollectInputHint(
   schema: Record<string, unknown>,
   fromStaticSchema: boolean,
 ): boolean {
-  const name = typeof schema.name === 'string' ? schema.name : '';
-  const type = typeof schema.type === 'string' ? schema.type : '';
+  const name = typeof schema.name === "string" ? schema.name : "";
+  const type = typeof schema.type === "string" ? schema.type : "";
   if (!name || !type) {
     return false;
   }
 
   // generate: editable static schemas still use content only.
   if (fromStaticSchema) {
-    return type === 'table' && schema.readOnly === true;
+    return type === "table" && schema.readOnly === true;
   }
 
   // Page tables consume input[name] even when readOnly; other readOnly fields do not.
   if (schema.readOnly === true) {
-    return type === 'table';
+    return type === "table";
   }
 
   return true;
@@ -425,7 +425,7 @@ function buildFieldInputHint(
 ): FieldInputHint {
   const type = schema.type as string;
 
-  if (type === 'multiVariableText') {
+  if (type === "multiVariableText") {
     const variableNames = getUniqueStringValues(
       Array.isArray(schema.variables) ? schema.variables : [],
     );
@@ -436,29 +436,29 @@ function buildFieldInputHint(
       pages: [page],
       required: schema.required === true,
       expectedInput: {
-        kind: 'jsonStringObject',
+        kind: "jsonStringObject",
         variableNames,
         example: buildMultiVariableTextExample(variableNames),
       },
     };
   }
 
-  if (type === 'checkbox' || type === 'circleMark') {
+  if (type === "checkbox" || type === "circleMark") {
     return {
       name: schema.name as string,
       type,
       pages: [page],
       required: schema.required === true,
       expectedInput: {
-        kind: 'enumString',
-        allowedValues: ['false', 'true'],
-        example: 'true',
+        kind: "enumString",
+        allowedValues: ["false", "true"],
+        example: "true",
       },
     };
   }
 
-  if (type === 'radioGroup') {
-    const groupName = typeof schema.group === 'string' ? schema.group : '';
+  if (type === "radioGroup") {
+    const groupName = typeof schema.group === "string" ? schema.group : "";
     const groupMemberNames = groupName ? (radioGroupMembers.get(groupName) ?? []) : [];
 
     return {
@@ -467,16 +467,16 @@ function buildFieldInputHint(
       pages: [page],
       required: schema.required === true,
       expectedInput: {
-        kind: 'enumString',
-        allowedValues: ['false', 'true'],
-        example: 'true',
+        kind: "enumString",
+        allowedValues: ["false", "true"],
+        example: "true",
         ...(groupName ? { groupName } : {}),
         ...(groupMemberNames.length > 0 ? { groupMemberNames } : {}),
       },
     };
   }
 
-  if (type === 'select') {
+  if (type === "select") {
     const allowedValues = getUniqueOrderedStringValues(
       Array.isArray(schema.options) ? schema.options : [],
     );
@@ -488,7 +488,7 @@ function buildFieldInputHint(
         pages: [page],
         required: schema.required === true,
         expectedInput: {
-          kind: 'enumString',
+          kind: "enumString",
           allowedValues,
           example: allowedValues[0],
         },
@@ -504,8 +504,8 @@ function buildFieldInputHint(
       pages: [page],
       required: schema.required === true,
       expectedInput: {
-        kind: 'string',
-        contentKind: 'barcodeText',
+        kind: "string",
+        contentKind: "barcodeText",
         rule: barcodeRule,
       },
     };
@@ -519,13 +519,13 @@ function buildFieldInputHint(
       pages: [page],
       required: schema.required === true,
       expectedInput: {
-        kind: 'string',
+        kind: "string",
         contentKind: assetContentKind,
       },
     };
   }
 
-  if (type === 'table') {
+  if (type === "table") {
     const columnHeaders = getOrderedStringValues(Array.isArray(schema.head) ? schema.head : []);
     const columnCount = getTableColumnCount(schema, columnHeaders);
 
@@ -535,7 +535,7 @@ function buildFieldInputHint(
       pages: [page],
       required: schema.required === true,
       expectedInput: {
-        kind: 'stringMatrix',
+        kind: "stringMatrix",
         ...(columnCount > 0 ? { columnCount } : {}),
         ...(columnHeaders.length > 0 ? { columnHeaders } : {}),
         example: buildTableInputExample(columnHeaders, columnCount),
@@ -544,21 +544,21 @@ function buildFieldInputHint(
     };
   }
 
-  if (type === 'list') {
+  if (type === "list") {
     return {
       name: schema.name as string,
       type,
       pages: [page],
       required: schema.required === true,
       expectedInput: {
-        kind: 'stringArray',
-        example: ['First item', 'Second item'],
+        kind: "stringArray",
+        example: ["First item", "Second item"],
         acceptsJsonString: true,
       },
     };
   }
 
-  if (type === 'date' || type === 'time' || type === 'dateTime') {
+  if (type === "date" || type === "time" || type === "dateTime") {
     const canonicalFormat = getCanonicalDateStoredFormat(type);
 
     return {
@@ -567,7 +567,7 @@ function buildFieldInputHint(
       pages: [page],
       required: schema.required === true,
       expectedInput: {
-        kind: 'string',
+        kind: "string",
         format: getDateHintFormat(schema, canonicalFormat),
         canonicalFormat,
         example: getDateInputExample(type),
@@ -581,7 +581,7 @@ function buildFieldInputHint(
     pages: [page],
     required: schema.required === true,
     expectedInput: {
-      kind: 'string',
+      kind: "string",
     },
   };
 }
@@ -622,12 +622,12 @@ function getTableColumnCount(schema: Record<string, unknown>, columnHeaders: str
 
 function getAssetContentKind(type: string): string | null {
   switch (type) {
-    case 'image':
-      return 'imageDataUrl';
-    case 'signature':
-      return 'signatureImageDataUrl';
-    case 'svg':
-      return 'svgMarkup';
+    case "image":
+      return "imageDataUrl";
+    case "signature":
+      return "signatureImageDataUrl";
+    case "svg":
+      return "svgMarkup";
     default:
       return null;
   }
@@ -635,63 +635,63 @@ function getAssetContentKind(type: string): string | null {
 
 function getBarcodeRule(type: string): string | null {
   switch (type) {
-    case 'qrcode':
-      return 'Any non-empty string up to 499 characters.';
-    case 'japanpost':
-      return 'Start with 7 digits, then continue with digits, A-Z, or hyphen (-).';
-    case 'ean13':
-      return '12 or 13 digits; if 13 digits are provided, the final check digit must be valid.';
-    case 'ean8':
-      return '7 or 8 digits; if 8 digits are provided, the final check digit must be valid.';
-    case 'code39':
-      return 'Use uppercase A-Z, digits, spaces, and symbols - . $ / + %.';
-    case 'code128':
-      return 'Text must not contain Kanji, Hiragana, Katakana, or full-width ASCII characters.';
-    case 'nw7':
-      return 'Start and end with A-D; inner characters may be digits or - . $ : / +.';
-    case 'itf14':
-      return '13 or 14 digits; if 14 digits are provided, the final check digit must be valid.';
-    case 'upca':
-      return '11 or 12 digits; if 12 digits are provided, the final check digit must be valid.';
-    case 'upce':
-      return 'Must start with 0 and be 7 or 8 digits total; if 8 digits are provided, the final check digit must be valid.';
-    case 'gs1datamatrix':
-      return 'Include (01) followed by a GTIN of 8, 12, 13, or 14 digits with a valid check digit; total length must be 52 characters or fewer.';
-    case 'pdf417':
-      return 'Any non-empty string up to 1000 characters.';
+    case "qrcode":
+      return "Any non-empty string up to 499 characters.";
+    case "japanpost":
+      return "Start with 7 digits, then continue with digits, A-Z, or hyphen (-).";
+    case "ean13":
+      return "12 or 13 digits; if 13 digits are provided, the final check digit must be valid.";
+    case "ean8":
+      return "7 or 8 digits; if 8 digits are provided, the final check digit must be valid.";
+    case "code39":
+      return "Use uppercase A-Z, digits, spaces, and symbols - . $ / + %.";
+    case "code128":
+      return "Text must not contain Kanji, Hiragana, Katakana, or full-width ASCII characters.";
+    case "nw7":
+      return "Start and end with A-D; inner characters may be digits or - . $ : / +.";
+    case "itf14":
+      return "13 or 14 digits; if 14 digits are provided, the final check digit must be valid.";
+    case "upca":
+      return "11 or 12 digits; if 12 digits are provided, the final check digit must be valid.";
+    case "upce":
+      return "Must start with 0 and be 7 or 8 digits total; if 8 digits are provided, the final check digit must be valid.";
+    case "gs1datamatrix":
+      return "Include (01) followed by a GTIN of 8, 12, 13, or 14 digits with a valid check digit; total length must be 52 characters or fewer.";
+    case "pdf417":
+      return "Any non-empty string up to 1000 characters.";
     default:
       return null;
   }
 }
 
-function getCanonicalDateStoredFormat(type: 'date' | 'time' | 'dateTime'): string {
+function getCanonicalDateStoredFormat(type: "date" | "time" | "dateTime"): string {
   switch (type) {
-    case 'date':
-      return 'yyyy/MM/dd';
-    case 'time':
-      return 'HH:mm';
-    case 'dateTime':
-      return 'yyyy/MM/dd HH:mm';
+    case "date":
+      return "yyyy/MM/dd";
+    case "time":
+      return "HH:mm";
+    case "dateTime":
+      return "yyyy/MM/dd HH:mm";
   }
 }
 
 function getDateHintFormat(schema: Record<string, unknown>, canonicalFormat: string): string {
-  const formatValue = typeof schema.format === 'string' ? schema.format.trim() : '';
-  if (!formatValue || formatValue === 'undefined') {
+  const formatValue = typeof schema.format === "string" ? schema.format.trim() : "";
+  if (!formatValue || formatValue === "undefined") {
     return canonicalFormat;
   }
 
   return formatValue;
 }
 
-function getDateInputExample(type: 'date' | 'time' | 'dateTime'): string {
+function getDateInputExample(type: "date" | "time" | "dateTime"): string {
   switch (type) {
-    case 'date':
-      return '2026/03/28';
-    case 'time':
-      return '14:30';
-    case 'dateTime':
-      return '2026/03/28 14:30';
+    case "date":
+      return "2026/03/28";
+    case "time":
+      return "14:30";
+    case "dateTime":
+      return "2026/03/28 14:30";
   }
 }
 
@@ -700,19 +700,19 @@ function getInputContractIssue(
   input: Record<string, unknown>,
   inputIndex: number,
 ): string | null {
-  if (hint.expectedInput.kind === 'jsonStringObject') {
+  if (hint.expectedInput.kind === "jsonStringObject") {
     return getMultiVariableTextInputIssue(hint, input, inputIndex);
   }
 
-  if (hint.expectedInput.kind === 'enumString') {
+  if (hint.expectedInput.kind === "enumString") {
     return getEnumStringInputIssue(hint, input, inputIndex);
   }
 
-  if (hint.expectedInput.kind === 'stringMatrix') {
+  if (hint.expectedInput.kind === "stringMatrix") {
     return getStringMatrixInputIssue(hint, input, inputIndex);
   }
 
-  if (hint.expectedInput.kind === 'stringArray') {
+  if (hint.expectedInput.kind === "stringArray") {
     return getStringArrayInputIssue(hint, input, inputIndex);
   }
 
@@ -730,9 +730,9 @@ function getMultiVariableTextInputIssue(
 ): string | null {
   const rawValue = input[hint.name];
   const variableNames = hint.expectedInput.variableNames ?? [];
-  const example = hint.expectedInput.example ?? '{}';
+  const example = hint.expectedInput.example ?? "{}";
 
-  if (rawValue === undefined || rawValue === '') {
+  if (rawValue === undefined || rawValue === "") {
     if (!hint.required || variableNames.length === 0) {
       return null;
     }
@@ -740,12 +740,12 @@ function getMultiVariableTextInputIssue(
     return buildMultiVariableTextErrorMessage({
       hint,
       inputIndex,
-      extra: `Missing variables: ${variableNames.join(', ')}.`,
+      extra: `Missing variables: ${variableNames.join(", ")}.`,
       example,
     });
   }
 
-  if (typeof rawValue !== 'string') {
+  if (typeof rawValue !== "string") {
     return buildMultiVariableTextErrorMessage({
       hint,
       inputIndex,
@@ -766,7 +766,7 @@ function getMultiVariableTextInputIssue(
     });
   }
 
-  if (typeof parsedValue !== 'object' || parsedValue === null || Array.isArray(parsedValue)) {
+  if (typeof parsedValue !== "object" || parsedValue === null || Array.isArray(parsedValue)) {
     return buildMultiVariableTextErrorMessage({
       hint,
       inputIndex,
@@ -785,7 +785,7 @@ function getMultiVariableTextInputIssue(
     return buildMultiVariableTextErrorMessage({
       hint,
       inputIndex,
-      extra: `Missing variables: ${missingVariables.join(', ')}.`,
+      extra: `Missing variables: ${missingVariables.join(", ")}.`,
       example,
     });
   }
@@ -802,7 +802,7 @@ function getRadioGroupSelectionIssues(
 
   for (const hint of hints) {
     if (
-      hint.type !== 'radioGroup' ||
+      hint.type !== "radioGroup" ||
       !hint.expectedInput.groupName ||
       (hint.expectedInput.groupMemberNames?.length ?? 0) <= 1
     ) {
@@ -822,7 +822,7 @@ function getRadioGroupSelectionIssues(
 
   for (const [groupName, groupHints] of groups) {
     const selectedNames = groupHints
-      .filter((hint) => input[hint.name] === 'true')
+      .filter((hint) => input[hint.name] === "true")
       .map((hint) => hint.name);
 
     if (selectedNames.length <= 1) {
@@ -852,11 +852,11 @@ function getEnumStringInputIssue(
   const allowedValues = hint.expectedInput.allowedValues ?? [];
   const example = hint.expectedInput.example;
 
-  if (rawValue === undefined || rawValue === '') {
+  if (rawValue === undefined || rawValue === "") {
     return null;
   }
 
-  if (typeof rawValue !== 'string') {
+  if (typeof rawValue !== "string") {
     return buildEnumStringErrorMessage({
       hint,
       inputIndex,
@@ -885,12 +885,12 @@ function getStringMatrixInputIssue(
   const rawValue = input[hint.name];
   const example = hint.expectedInput.example;
 
-  if (rawValue === undefined || rawValue === '') {
+  if (rawValue === undefined || rawValue === "") {
     return null;
   }
 
   const parsedValue =
-    typeof rawValue === 'string' && hint.expectedInput.acceptsJsonString === true
+    typeof rawValue === "string" && hint.expectedInput.acceptsJsonString === true
       ? (parseTableStringMatrix(rawValue) ?? rawValue)
       : rawValue;
 
@@ -915,12 +915,12 @@ function getStringArrayInputIssue(
   const rawValue = input[hint.name];
   const example = hint.expectedInput.example;
 
-  if (rawValue === undefined || rawValue === '') {
+  if (rawValue === undefined || rawValue === "") {
     return null;
   }
 
   const parsedValue =
-    typeof rawValue === 'string' && hint.expectedInput.acceptsJsonString === true
+    typeof rawValue === "string" && hint.expectedInput.acceptsJsonString === true
       ? (parseListJsonInput(rawValue) ?? rawValue)
       : rawValue;
 
@@ -938,20 +938,20 @@ function getStringArrayInputIssue(
 }
 
 function isCanonicalDateHint(hint: FieldInputHint): hint is FieldInputHint & {
-  type: 'date' | 'time' | 'dateTime';
-  expectedInput: FieldInputHint['expectedInput'] & { canonicalFormat: string };
+  type: "date" | "time" | "dateTime";
+  expectedInput: FieldInputHint["expectedInput"] & { canonicalFormat: string };
 } {
   return (
-    (hint.type === 'date' || hint.type === 'time' || hint.type === 'dateTime') &&
-    typeof hint.expectedInput.canonicalFormat === 'string' &&
+    (hint.type === "date" || hint.type === "time" || hint.type === "dateTime") &&
+    typeof hint.expectedInput.canonicalFormat === "string" &&
     hint.expectedInput.canonicalFormat.length > 0
   );
 }
 
 function getCanonicalDateInputIssue(
   hint: FieldInputHint & {
-    type: 'date' | 'time' | 'dateTime';
-    expectedInput: FieldInputHint['expectedInput'] & { canonicalFormat: string };
+    type: "date" | "time" | "dateTime";
+    expectedInput: FieldInputHint["expectedInput"] & { canonicalFormat: string };
   },
   input: Record<string, unknown>,
   inputIndex: number,
@@ -959,11 +959,11 @@ function getCanonicalDateInputIssue(
   const rawValue = input[hint.name];
   const example = hint.expectedInput.example;
 
-  if (rawValue === undefined || rawValue === '') {
+  if (rawValue === undefined || rawValue === "") {
     return null;
   }
 
-  if (typeof rawValue !== 'string') {
+  if (typeof rawValue !== "string") {
     return buildCanonicalDateErrorMessage({
       hint,
       inputIndex,
@@ -1003,7 +1003,7 @@ function getStringMatrixShapeIssue(value: unknown, expectedColumnCount?: number)
 
     for (let colIndex = 0; colIndex < row.length; colIndex++) {
       const cell = row[colIndex];
-      if (typeof cell !== 'string') {
+      if (typeof cell !== "string") {
         return `Cell [${rowIndex + 1}, ${colIndex + 1}] must be a string. Received ${describeValue(cell)}.`;
       }
     }
@@ -1013,7 +1013,7 @@ function getStringMatrixShapeIssue(value: unknown, expectedColumnCount?: number)
 }
 
 function getStringArrayShapeIssue(value: unknown): string | null {
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     return null;
   }
 
@@ -1022,7 +1022,7 @@ function getStringArrayShapeIssue(value: unknown): string | null {
   }
 
   for (let index = 0; index < value.length; index++) {
-    if (typeof value[index] !== 'string') {
+    if (typeof value[index] !== "string") {
       return `Item ${index + 1} must be a string. Received ${describeValue(value[index])}.`;
     }
   }
@@ -1041,7 +1041,7 @@ function getFirstArrayLength(rows: unknown[]): number {
 }
 
 function parseTableStringMatrix(rawValue: unknown): string[][] | null {
-  if (typeof rawValue !== 'string') {
+  if (typeof rawValue !== "string") {
     return null;
   }
 
@@ -1053,12 +1053,12 @@ function parseTableStringMatrix(rawValue: unknown): string[][] | null {
 }
 
 function parseListJsonInput(rawValue: unknown): unknown | null {
-  if (typeof rawValue !== 'string') {
+  if (typeof rawValue !== "string") {
     return null;
   }
 
   const trimmed = rawValue.trim();
-  if (!trimmed.startsWith('[') && !trimmed.startsWith('{')) {
+  if (!trimmed.startsWith("[") && !trimmed.startsWith("{")) {
     return null;
   }
 
@@ -1069,13 +1069,13 @@ function parseListJsonInput(rawValue: unknown): unknown | null {
   }
 }
 
-function isValidCanonicalDateValue(value: string, type: 'date' | 'time' | 'dateTime'): boolean {
+function isValidCanonicalDateValue(value: string, type: "date" | "time" | "dateTime"): boolean {
   switch (type) {
-    case 'date':
+    case "date":
       return isValidCanonicalDate(value);
-    case 'time':
+    case "time":
       return isValidCanonicalTime(value);
-    case 'dateTime':
+    case "dateTime":
       return isValidCanonicalDateTime(value);
   }
 }
@@ -1091,8 +1091,8 @@ function isValidCanonicalDate(value: string): boolean {
     return false;
   }
 
-  const parsed = parseRendererDateValue(value, 'date');
-  return parsed !== null && formatCanonicalDateValue(parsed, 'date') === value;
+  const parsed = parseRendererDateValue(value, "date");
+  return parsed !== null && formatCanonicalDateValue(parsed, "date") === value;
 }
 
 function isValidCanonicalTime(value: string): boolean {
@@ -1119,8 +1119,8 @@ function isValidCanonicalDateTime(value: string): boolean {
     return false;
   }
 
-  const parsed = parseRendererDateValue(value, 'dateTime');
-  return parsed !== null && formatCanonicalDateValue(parsed, 'dateTime') === value;
+  const parsed = parseRendererDateValue(value, "dateTime");
+  return parsed !== null && formatCanonicalDateValue(parsed, "dateTime") === value;
 }
 
 function isValidCalendarDate(year: number, month: number, day: number): boolean {
@@ -1151,25 +1151,25 @@ function isValidClockTime(hours: number, minutes: number): boolean {
   );
 }
 
-function parseRendererDateValue(value: string, type: 'date' | 'time' | 'dateTime'): Date | null {
-  const parsed = type === 'time' ? new Date(`2021-01-01T${value}`) : new Date(value);
+function parseRendererDateValue(value: string, type: "date" | "time" | "dateTime"): Date | null {
+  const parsed = type === "time" ? new Date(`2021-01-01T${value}`) : new Date(value);
 
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
-function formatCanonicalDateValue(date: Date, type: 'date' | 'time' | 'dateTime'): string {
-  const year = String(date.getFullYear()).padStart(4, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
+function formatCanonicalDateValue(date: Date, type: "date" | "time" | "dateTime"): string {
+  const year = String(date.getFullYear()).padStart(4, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
 
   switch (type) {
-    case 'date':
+    case "date":
       return `${year}/${month}/${day}`;
-    case 'time':
+    case "time":
       return `${hours}:${minutes}`;
-    case 'dateTime':
+    case "dateTime":
       return `${year}/${month}/${day} ${hours}:${minutes}`;
   }
 }
@@ -1182,8 +1182,8 @@ function buildMultiVariableTextErrorMessage(args: {
 }): string {
   const variableLabel =
     args.hint.expectedInput.variableNames && args.hint.expectedInput.variableNames.length > 0
-      ? ` with variables: ${args.hint.expectedInput.variableNames.join(', ')}`
-      : '';
+      ? ` with variables: ${args.hint.expectedInput.variableNames.join(", ")}`
+      : "";
 
   return `Field "${args.hint.name}" (multiVariableText) in input ${args.inputIndex + 1} expects a JSON string object${variableLabel}. Example: ${args.example}. ${args.extra}`;
 }
@@ -1198,9 +1198,9 @@ function buildEnumStringErrorMessage(args: {
     JSON.stringify(value),
   );
   const allowedLabel =
-    allowedValues.length > 0 ? ` one of: ${allowedValues.join(', ')}` : ' a supported string value';
+    allowedValues.length > 0 ? ` one of: ${allowedValues.join(", ")}` : " a supported string value";
   const exampleLabel =
-    args.example !== undefined ? ` Example: ${JSON.stringify(args.example)}.` : '';
+    args.example !== undefined ? ` Example: ${JSON.stringify(args.example)}.` : "";
 
   return `Field "${args.hint.name}" (${args.hint.type}) in input ${args.inputIndex + 1} expects${allowedLabel}.${exampleLabel} ${args.extra}`.trim();
 }
@@ -1214,15 +1214,15 @@ function buildStringMatrixErrorMessage(args: {
   const columnCount = args.hint.expectedInput.columnCount;
   const columnHeaders = args.hint.expectedInput.columnHeaders ?? [];
   const columnLabel =
-    typeof columnCount === 'number' && columnCount > 0 ? ` with ${columnCount} cells per row` : '';
+    typeof columnCount === "number" && columnCount > 0 ? ` with ${columnCount} cells per row` : "";
   const headerLabel =
-    columnHeaders.length > 0 ? ` Column headers: ${columnHeaders.join(', ')}.` : '';
+    columnHeaders.length > 0 ? ` Column headers: ${columnHeaders.join(", ")}.` : "";
   const exampleLabel =
-    args.example !== undefined ? ` Example: ${JSON.stringify(args.example)}.` : '';
+    args.example !== undefined ? ` Example: ${JSON.stringify(args.example)}.` : "";
   const compatibilityLabel =
     args.hint.expectedInput.acceptsJsonString === true
-      ? ' JSON string input is also accepted for compatibility.'
-      : '';
+      ? " JSON string input is also accepted for compatibility."
+      : "";
 
   return `Field "${args.hint.name}" (${args.hint.type}) in input ${args.inputIndex + 1} expects a JSON array of string arrays${columnLabel}.${headerLabel}${exampleLabel}${compatibilityLabel} ${args.extra}`.trim();
 }
@@ -1234,19 +1234,19 @@ function buildStringArrayErrorMessage(args: {
   example?: string | string[] | string[][];
 }): string {
   const exampleLabel =
-    args.example !== undefined ? ` Example: ${JSON.stringify(args.example)}.` : '';
+    args.example !== undefined ? ` Example: ${JSON.stringify(args.example)}.` : "";
   const compatibilityLabel =
     args.hint.expectedInput.acceptsJsonString === true
-      ? ' A newline string or JSON string array is also accepted.'
-      : '';
+      ? " A newline string or JSON string array is also accepted."
+      : "";
 
   return `Field "${args.hint.name}" (${args.hint.type}) in input ${args.inputIndex + 1} expects an array of strings.${exampleLabel}${compatibilityLabel} ${args.extra}`.trim();
 }
 
 function buildCanonicalDateErrorMessage(args: {
   hint: FieldInputHint & {
-    type: 'date' | 'time' | 'dateTime';
-    expectedInput: FieldInputHint['expectedInput'] & { canonicalFormat: string };
+    type: "date" | "time" | "dateTime";
+    expectedInput: FieldInputHint["expectedInput"] & { canonicalFormat: string };
   };
   inputIndex: number;
   extra: string;
@@ -1254,13 +1254,13 @@ function buildCanonicalDateErrorMessage(args: {
 }): string {
   const displayFormat = args.hint.expectedInput.format;
   const displayLabel =
-    typeof displayFormat === 'string' &&
+    typeof displayFormat === "string" &&
     displayFormat.length > 0 &&
     displayFormat !== args.hint.expectedInput.canonicalFormat
       ? ` Display format hint: ${displayFormat}.`
-      : '';
+      : "";
   const exampleLabel =
-    args.example !== undefined ? ` Example: ${JSON.stringify(args.example)}.` : '';
+    args.example !== undefined ? ` Example: ${JSON.stringify(args.example)}.` : "";
 
   return `Field "${args.hint.name}" (${args.hint.type}) in input ${args.inputIndex + 1} expects canonical stored content in format ${args.hint.expectedInput.canonicalFormat}.${displayLabel}${exampleLabel} ${args.extra}`.trim();
 }
@@ -1271,25 +1271,25 @@ function buildRadioGroupSelectionErrorMessage(args: {
   groupMemberNames: string[];
   selectedNames: string[];
 }): string {
-  return `Radio group "${args.groupName}" in input ${args.inputIndex + 1} allows at most one "true" value across fields: ${args.groupMemberNames.join(', ')}. Received "true" for: ${args.selectedNames.join(', ')}. Set one field to "true" and the others to "false".`;
+  return `Radio group "${args.groupName}" in input ${args.inputIndex + 1} allows at most one "true" value across fields: ${args.groupMemberNames.join(", ")}. Received "true" for: ${args.selectedNames.join(", ")}. Set one field to "true" and the others to "false".`;
 }
 
 function describeValue(value: unknown): string {
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     const trimmed = value.trim();
-    const kind = trimmed.startsWith('{') || trimmed.startsWith('[') ? 'string' : 'plain string';
+    const kind = trimmed.startsWith("{") || trimmed.startsWith("[") ? "string" : "plain string";
     return `${kind} ${JSON.stringify(value)}`;
   }
 
   if (value === null) {
-    return 'null';
+    return "null";
   }
 
   if (Array.isArray(value)) {
-    return 'array';
+    return "array";
   }
 
-  if (typeof value === 'number' || typeof value === 'boolean') {
+  if (typeof value === "number" || typeof value === "boolean") {
     return `${typeof value} ${JSON.stringify(value)}`;
   }
 
@@ -1299,7 +1299,7 @@ function describeValue(value: unknown): string {
 export function getUniqueStringValues(values: unknown[]): string[] {
   return [
     ...new Set(
-      values.filter((value): value is string => typeof value === 'string' && value.length > 0),
+      values.filter((value): value is string => typeof value === "string" && value.length > 0),
     ),
   ].sort();
 }
@@ -1307,13 +1307,13 @@ export function getUniqueStringValues(values: unknown[]): string[] {
 function getUniqueOrderedStringValues(values: unknown[]): string[] {
   return [
     ...new Set(
-      values.filter((value): value is string => typeof value === 'string' && value.length > 0),
+      values.filter((value): value is string => typeof value === "string" && value.length > 0),
     ),
   ];
 }
 
 function getOrderedStringValues(values: unknown[]): string[] {
-  return values.filter((value): value is string => typeof value === 'string' && value.length > 0);
+  return values.filter((value): value is string => typeof value === "string" && value.length > 0);
 }
 
 function collectRadioGroupMembers(
@@ -1323,12 +1323,12 @@ function collectRadioGroupMembers(
 
   for (const page of schemaPages) {
     for (const schema of page) {
-      if (schema.readOnly === true || schema.type !== 'radioGroup') {
+      if (schema.readOnly === true || schema.type !== "radioGroup") {
         continue;
       }
 
-      const name = typeof schema.name === 'string' ? schema.name : '';
-      const groupName = typeof schema.group === 'string' ? schema.group : '';
+      const name = typeof schema.name === "string" ? schema.name : "";
+      const groupName = typeof schema.group === "string" ? schema.group : "";
       if (!name || !groupName) {
         continue;
       }
@@ -1350,36 +1350,36 @@ function collectRadioGroupMembers(
 export function summarizeBasePdf(
   basePdf: unknown,
   templateDir: string | undefined,
-): ValidationInspection['basePdf'] {
-  if (typeof basePdf === 'string') {
-    if (basePdf.startsWith('data:')) {
-      return { kind: 'dataUri' };
+): ValidationInspection["basePdf"] {
+  if (typeof basePdf === "string") {
+    if (basePdf.startsWith("data:")) {
+      return { kind: "dataUri" };
     }
 
-    if (basePdf.endsWith('.pdf')) {
+    if (basePdf.endsWith(".pdf")) {
       return {
-        kind: 'pdfPath',
+        kind: "pdfPath",
         path: basePdf,
         resolvedPath: templateDir ? resolve(templateDir, basePdf) : resolve(basePdf),
       };
     }
 
-    return { kind: 'string' };
+    return { kind: "string" };
   }
 
-  if (basePdf && typeof basePdf === 'object') {
-    if ('width' in basePdf && 'height' in basePdf) {
+  if (basePdf && typeof basePdf === "object") {
+    if ("width" in basePdf && "height" in basePdf) {
       const width =
-        typeof (basePdf as { width?: unknown }).width === 'number'
+        typeof (basePdf as { width?: unknown }).width === "number"
           ? (basePdf as { width: number }).width
           : undefined;
       const height =
-        typeof (basePdf as { height?: unknown }).height === 'number'
+        typeof (basePdf as { height?: unknown }).height === "number"
           ? (basePdf as { height: number }).height
           : undefined;
 
       return {
-        kind: 'blank',
+        kind: "blank",
         width,
         height,
         paperSize:
@@ -1387,7 +1387,7 @@ export function summarizeBasePdf(
       };
     }
 
-    return { kind: 'object' };
+    return { kind: "object" };
   }
-  return { kind: 'missing' };
+  return { kind: "missing" };
 }

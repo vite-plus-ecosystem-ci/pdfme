@@ -1,4 +1,4 @@
-export type PageOrientation = 'portrait' | 'landscape';
+export type PageOrientation = "portrait" | "landscape";
 
 export const PAGE_SIZE_PRESETS = {
   A3: { width: 297, height: 420 },
@@ -17,17 +17,17 @@ export type PageSizePreset = keyof typeof PAGE_SIZE_PRESETS;
 export type PageSize = PageSizePreset | { width: number; height: number };
 
 export const resolvePageSize = (
-  size: PageSize = 'A4',
-  orientation: PageOrientation = 'portrait',
+  size: PageSize = "A4",
+  orientation: PageOrientation = "portrait",
 ): { width: number; height: number } => {
   const resolved =
-    typeof size === 'string' ? PAGE_SIZE_PRESETS[size] : { width: size.width, height: size.height };
+    typeof size === "string" ? PAGE_SIZE_PRESETS[size] : { width: size.width, height: size.height };
 
   if (!resolved) {
     throw new Error(`@pdfme/common: unknown page size preset "${String(size)}"`);
   }
 
-  if (orientation === 'landscape') {
+  if (orientation === "landscape") {
     return { width: resolved.height, height: resolved.width };
   }
   return { width: resolved.width, height: resolved.height };
@@ -48,7 +48,7 @@ export const detectPaperSize = (
       (Math.abs(width - size.width) <= tolerance && Math.abs(height - size.height) <= tolerance) ||
       (Math.abs(width - size.height) <= tolerance && Math.abs(height - size.width) <= tolerance)
     ) {
-      const orientation = width < height ? 'portrait' : 'landscape';
+      const orientation = width < height ? "portrait" : "landscape";
       return `${name} ${orientation}`;
     }
   }

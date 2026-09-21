@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
-import {
-  getReadOnlyTableValue,
-  isBlankPdf,
-  resolveReadOnlyContent,
-  Template,
-} from '@pdfme/common';
-import Renderer from './Renderer.js';
-import { stabilizeSchemaIds } from '../helper.js';
+import React, { useState } from "react";
+import { getReadOnlyTableValue, isBlankPdf, resolveReadOnlyContent, Template } from "@pdfme/common";
+import Renderer from "./Renderer.js";
+import { stabilizeSchemaIds } from "../helper.js";
 
 const StaticSchema = (props: {
   template: Template;
@@ -33,7 +28,7 @@ const StaticSchema = (props: {
           schema={schema}
           basePdf={basePdf}
           value={
-            schema.readOnly && schema.type === 'table'
+            schema.readOnly && schema.type === "table"
               ? getReadOnlyTableValue(schema, input)
               : schema.readOnly
                 ? resolveReadOnlyContent({
@@ -41,12 +36,12 @@ const StaticSchema = (props: {
                     variables: { ...input, totalPages, currentPage },
                     schemas,
                   })
-                : schema.content || ''
+                : schema.content || ""
           }
           onChangeHoveringSchemaId={() => {
             void 0;
           }}
-          mode={'viewer'}
+          mode={"viewer"}
           outline={`none`}
           scale={scale}
           selectable={false}

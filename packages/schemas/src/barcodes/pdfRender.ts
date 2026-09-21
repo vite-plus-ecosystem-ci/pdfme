@@ -1,14 +1,9 @@
-import { PDFRenderProps } from '@pdfme/common';
-import type { SvgColorMapper } from '@pdfme/pdf-lib';
-import {
-  popGraphicsState,
-  pushGraphicsState,
-  rotateDegrees,
-  translate,
-} from '@pdfme/pdf-lib';
-import { convertForPdfLayoutProps, rgbColorToCmykColor } from '../utils.js';
-import type { BarcodeSchema } from './types.js';
-import { createBarCodeSvg, validateBarcodeInput } from './helper.js';
+import { PDFRenderProps } from "@pdfme/common";
+import type { SvgColorMapper } from "@pdfme/pdf-lib";
+import { popGraphicsState, pushGraphicsState, rotateDegrees, translate } from "@pdfme/pdf-lib";
+import { convertForPdfLayoutProps, rgbColorToCmykColor } from "../utils.js";
+import type { BarcodeSchema } from "./types.js";
+import { createBarCodeSvg, validateBarcodeInput } from "./helper.js";
 
 const getBarcodeCacheKey = (schema: BarcodeSchema, value: string) => {
   return `svg:${schema.type}:${schema.width}:${schema.height}:${schema.backgroundColor}:${schema.barColor}:${schema.textColor}:${schema.includetext}:${value}`;
@@ -18,8 +13,8 @@ const addSvgOpacity = (svg: string, opacity?: number) => {
   return opacity === undefined ? svg : svg.replace(/<svg\b/, `<svg opacity="${opacity}"`);
 };
 
-const getSvgColorMapper = (colorType = ''): SvgColorMapper | undefined => {
-  return colorType.toLowerCase() === 'cmyk'
+const getSvgColorMapper = (colorType = ""): SvgColorMapper | undefined => {
+  return colorType.toLowerCase() === "cmyk"
     ? ({ parsed }) => ({
         color: rgbColorToCmykColor(parsed.rgb),
         alpha: parsed.alpha,

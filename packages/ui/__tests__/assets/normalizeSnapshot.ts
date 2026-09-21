@@ -5,21 +5,21 @@ export const normalizeElementIdsForSnapshot = (container: HTMLElement) => {
       .filter(Boolean)
       .filter(
         (token) =>
-          !token.startsWith('css-dev-only-do-not-override-')
-          && token !== 'css-var-root'
-          && token !== 'ant-divider-rail',
+          !token.startsWith("css-dev-only-do-not-override-") &&
+          token !== "css-var-root" &&
+          token !== "ant-divider-rail",
       )
-      .join(' ');
+      .join(" ");
 
-  container.querySelectorAll<HTMLElement>('*').forEach((element) => {
-    element.removeAttribute('data-pdfme-render-ready');
-    const className = element.getAttribute('class');
+  container.querySelectorAll<HTMLElement>("*").forEach((element) => {
+    element.removeAttribute("data-pdfme-render-ready");
+    const className = element.getAttribute("class");
     if (className) {
       const normalizedClassName = normalizeClassName(className);
       if (normalizedClassName) {
-        element.setAttribute('class', normalizedClassName);
+        element.setAttribute("class", normalizedClassName);
       } else {
-        element.removeAttribute('class');
+        element.removeAttribute("class");
       }
     }
     element.childNodes.forEach((childNode) => {
@@ -33,7 +33,7 @@ export const normalizeElementIdsForSnapshot = (container: HTMLElement) => {
   let nextId = 1;
 
   const normalizeId = (value: string) => {
-    const hasTextPrefix = value.startsWith('text-');
+    const hasTextPrefix = value.startsWith("text-");
     const key = hasTextPrefix ? value.slice(5) : value;
 
     if (!idMap.has(key)) {
@@ -44,11 +44,11 @@ export const normalizeElementIdsForSnapshot = (container: HTMLElement) => {
     return hasTextPrefix ? `text-${normalizedValue}` : normalizedValue;
   };
 
-  container.querySelectorAll<HTMLElement>('[id]').forEach((element) => {
+  container.querySelectorAll<HTMLElement>("[id]").forEach((element) => {
     element.id = normalizeId(element.id);
   });
 
-  container.querySelectorAll<HTMLElement>('*').forEach((element) => {
+  container.querySelectorAll<HTMLElement>("*").forEach((element) => {
     element.getAttributeNames().forEach((attributeName) => {
       const value = element.getAttribute(attributeName);
 
@@ -61,12 +61,12 @@ export const normalizeElementIdsForSnapshot = (container: HTMLElement) => {
         return;
       }
 
-      if (attributeName === 'aria-describedby') {
+      if (attributeName === "aria-describedby") {
         element.removeAttribute(attributeName);
         return;
       }
 
-      if (value.startsWith('text-')) {
+      if (value.startsWith("text-")) {
         const key = value.slice(5);
         if (idMap.has(key)) {
           element.setAttribute(attributeName, `text-${idMap.get(key)!}`);

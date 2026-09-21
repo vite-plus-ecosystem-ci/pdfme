@@ -1,11 +1,11 @@
-import { readFileSync } from 'node:fs';
-import { builtinModules } from 'node:module';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { readFileSync } from "node:fs";
+import { builtinModules } from "node:module";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite-plus";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const packageJson = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf8')) as {
+const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8")) as {
   dependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
 };
@@ -24,20 +24,27 @@ const isExternal = (id: string) =>
   packageDependencies.some((dependency) => id === dependency || id.startsWith(`${dependency}/`));
 
 export default defineConfig({
+  test: {
+    // Vitest v4 compatibility: preserve mock call history.
+    // Remove after tests no longer rely on calls from setup or earlier tests.
+    // https://rfc-vitest-v5-upgrade-viteplus-dev.voidzero-docs.workers.dev/guide/vitest-v5#remove-unneeded-compatibility-settings
+    // https://vitest.dev/guide/migration/#clearmocks-is-enabled-by-default
+    clearMocks: false,
+  },
   build: {
     lib: {
       entry: {
-        index: resolve(__dirname, 'src/index.ts'),
-        'jsx-runtime': resolve(__dirname, 'src/jsx-runtime.ts'),
-        'jsx-dev-runtime': resolve(__dirname, 'src/jsx-dev-runtime.ts'),
+        index: resolve(__dirname, "src/index.ts"),
+        "jsx-runtime": resolve(__dirname, "src/jsx-runtime.ts"),
+        "jsx-dev-runtime": resolve(__dirname, "src/jsx-dev-runtime.ts"),
       },
       fileName: (_format, entryName) => `${entryName}.js`,
-      formats: ['es'],
+      formats: ["es"],
     },
     minify: false,
-    outDir: 'dist',
+    outDir: "dist",
     rollupOptions: { external: isExternal },
     sourcemap: true,
-    target: 'es2020',
+    target: "es2020",
   },
 });

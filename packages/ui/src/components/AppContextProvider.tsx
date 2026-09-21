@@ -1,9 +1,9 @@
-import React from 'react';
-import { ConfigProvider as ThemeConfigProvider } from 'antd';
-import { I18nContext, FontContext, PluginsRegistry, OptionsContext } from '../contexts.js';
-import { i18n, getDict } from '../i18n.js';
-import { defaultTheme } from '../theme.js';
-import type { Dict, Font, Lang, UIOptions, PluginRegistry } from '@pdfme/common';
+import React from "react";
+import { ConfigProvider as ThemeConfigProvider } from "antd";
+import { I18nContext, FontContext, PluginsRegistry, OptionsContext } from "../contexts.js";
+import { i18n, getDict } from "../i18n.js";
+import { defaultTheme } from "../theme.js";
+import type { Dict, Font, Lang, UIOptions, PluginRegistry } from "@pdfme/common";
 
 type Props = {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const isObject = (item: unknown): item is Record<string, unknown> =>
-  Boolean(item) && typeof item === 'object' && !Array.isArray(item);
+  Boolean(item) && typeof item === "object" && !Array.isArray(item);
 
 const deepMerge = <T extends Record<string, unknown>, U extends Record<string, unknown>>(
   target: T,

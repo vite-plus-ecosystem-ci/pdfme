@@ -1,5 +1,5 @@
-import fs from 'fs';
-import { decodeFromBase64DataUri } from '../../src/utils';
+import fs from "fs";
+import { decodeFromBase64DataUri } from "../../src/utils";
 
 const pdfBytes = fs.readFileSync(`${__dirname}/data/simple.pdf`);
 const pdfBase64Bytes = fs.readFileSync(`${__dirname}/data/simple.pdf.base64`);

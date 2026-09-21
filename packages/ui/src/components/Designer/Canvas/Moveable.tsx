@@ -1,13 +1,13 @@
-import React, { useEffect, forwardRef, Ref, useRef } from 'react';
+import React, { useEffect, forwardRef, Ref, useRef } from "react";
 import MoveableComponent, {
   OnDrag,
   OnRotate,
   OnRotateEnd,
   OnClick,
   OnResize,
-} from 'react-moveable';
-import { uuid } from '../../../helper.js';
-import { theme } from 'antd';
+} from "react-moveable";
+import { uuid } from "../../../helper.js";
+import { theme } from "antd";
 
 type Props = {
   target: HTMLElement[];
@@ -29,7 +29,7 @@ type Props = {
   onClick: (e: OnClick) => void;
 };
 
-const baseClassName = 'pdfme-moveable';
+const baseClassName = "pdfme-moveable";
 const MoveableView = MoveableComponent as unknown as React.ElementType;
 
 const Moveable = (props: Props, ref: Ref<MoveableComponent>) => {
@@ -41,10 +41,10 @@ const Moveable = (props: Props, ref: Ref<MoveableComponent>) => {
     const containerElement = document.querySelector(`.${uniqueClassName}`);
     const moveableLines = document.querySelectorAll(`.${uniqueClassName} .moveable-line`);
     if (containerElement instanceof HTMLElement) {
-      containerElement.style.setProperty('--moveable-color', token.colorPrimary);
+      containerElement.style.setProperty("--moveable-color", token.colorPrimary);
       moveableLines.forEach((e) => {
         if (e instanceof HTMLElement) {
-          e.style.setProperty('--moveable-color', token.colorPrimary);
+          e.style.setProperty("--moveable-color", token.colorPrimary);
         }
       });
     }

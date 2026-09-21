@@ -1,93 +1,93 @@
-import { defineCommand } from 'citty';
-import { PDFDocument } from '@pdfme/pdf-lib';
-import { generate } from '@pdfme/generator';
-import { pdf2img, pdf2size } from '@pdfme/converter';
-import { PAGE_SIZE_PRESETS, checkGenerateProps } from '@pdfme/common';
-import type { Font, GenerateProps, Template } from '@pdfme/common';
+import { defineCommand } from "citty";
+import { PDFDocument } from "@pdfme/pdf-lib";
+import { generate } from "@pdfme/generator";
+import { pdf2img, pdf2size } from "@pdfme/converter";
+import { PAGE_SIZE_PRESETS, checkGenerateProps } from "@pdfme/common";
+import type { Font, GenerateProps, Template } from "@pdfme/common";
 import {
   assertNoUnknownFlags,
   fail,
   parsePositiveNumberArg,
   printJson,
   runWithContract,
-} from '../contract.js';
-import { validateInputContracts } from '../diagnostics.js';
+} from "../contract.js";
+import { validateInputContracts } from "../diagnostics.js";
 import {
   ensureSafeDefaultOutputPath,
   getImageOutputPaths,
   loadInput,
   resolveBasePdf,
   writeOutput,
-} from '../utils.js';
-import { normalizeExplicitFontOption, resolveFont } from '../fonts.js';
-import { detectCJKInTemplate, detectCJKInInputs } from '../cjk-detect.js';
-import { drawGridOnImage } from '../grid.js';
-import { schemaPlugins, schemaTypes } from '../schema-plugins.js';
+} from "../utils.js";
+import { normalizeExplicitFontOption, resolveFont } from "../fonts.js";
+import { detectCJKInTemplate, detectCJKInInputs } from "../cjk-detect.js";
+import { drawGridOnImage } from "../grid.js";
+import { schemaPlugins, schemaTypes } from "../schema-plugins.js";
 
 const generateArgs = {
   file: {
-    type: 'positional' as const,
-    description: 'Unified JSON file: { template, inputs }',
+    type: "positional" as const,
+    description: "Unified JSON file: { template, inputs }",
     required: false,
   },
-  template: { type: 'string' as const, alias: 't', description: 'Template JSON file' },
-  inputs: { type: 'string' as const, alias: 'i', description: 'Input data JSON file' },
+  template: { type: "string" as const, alias: "t", description: "Template JSON file" },
+  inputs: { type: "string" as const, alias: "i", description: "Input data JSON file" },
   output: {
-    type: 'string' as const,
-    alias: 'o',
-    description: 'Output PDF path',
-    default: 'output.pdf',
+    type: "string" as const,
+    alias: "o",
+    description: "Output PDF path",
+    default: "output.pdf",
   },
   force: {
-    type: 'boolean' as const,
-    description: 'Allow overwriting the implicit default output path',
+    type: "boolean" as const,
+    description: "Allow overwriting the implicit default output path",
     default: false,
   },
   image: {
-    type: 'boolean' as const,
-    description: 'Also output PNG images per page',
+    type: "boolean" as const,
+    description: "Also output PNG images per page",
     default: false,
   },
-  scale: { type: 'string' as const, description: 'Image render scale', default: '1' },
+  scale: { type: "string" as const, description: "Image render scale", default: "1" },
   grid: {
-    type: 'boolean' as const,
-    description: 'Overlay grid + schema boundaries on images',
+    type: "boolean" as const,
+    description: "Overlay grid + schema boundaries on images",
     default: false,
   },
-  gridSize: { type: 'string' as const, description: 'Grid spacing in mm', default: '10' },
+  gridSize: { type: "string" as const, description: "Grid spacing in mm", default: "10" },
   font: {
-    type: 'string' as const,
-    description: 'Custom font(s): name=path (comma-separated for multiple)',
+    type: "string" as const,
+    description: "Custom font(s): name=path (comma-separated for multiple)",
   },
-  basePdf: { type: 'string' as const, description: 'Override basePdf with PDF file path' },
+  basePdf: { type: "string" as const, description: "Override basePdf with PDF file path" },
   noAutoFont: {
-    type: 'boolean' as const,
-    description: 'Disable automatic CJK font download',
+    type: "boolean" as const,
+    description: "Disable automatic CJK font download",
     default: false,
   },
-  verbose: { type: 'boolean' as const, alias: 'v', description: 'Verbose output', default: false },
-  json: { type: 'boolean' as const, description: 'Machine-readable JSON output', default: false },
+  verbose: { type: "boolean" as const, alias: "v", description: "Verbose output", default: false },
+  json: { type: "boolean" as const, description: "Machine-readable JSON output", default: false },
 };
 
 export default defineCommand({
   meta: {
-    name: 'generate',
-    description: 'Generate PDF from template and inputs',
+    name: "generate",
+    description: "Generate PDF from template and inputs",
   },
   args: generateArgs,
   async run({ args, rawArgs }) {
     return runWithContract({ json: Boolean(args.json) }, async () => {
       assertNoUnknownFlags(rawArgs, generateArgs);
 
-      const scale = parsePositiveNumberArg('scale', args.scale);
-      const gridSize = parsePositiveNumberArg('gridSize', args.gridSize);
+      const scale = parsePositiveNumberArg("scale", args.scale);
+      const gridSize = parsePositiveNumberArg("gridSize", args.gridSize);
 
       ensureSafeDefaultOutputPath({
         filePath: args.output,
         rawArgs,
-        optionName: 'output',
-        optionAlias: 'o',
-        defaultValue: 'output.pdf',
+        optionName: "output",
+        optionAlias: "o",
+        defaultValue: "output.pdf",
         force: Boolean(args.force),
       });
 
@@ -107,14 +107,14 @@ export default defineCommand({
         args.basePdf,
         templateDir,
       ) as unknown as Template;
-      const mode = args.file ? 'job' : 'template+inputs';
+      const mode = args.file ? "job" : "template+inputs";
       const templatePageCount = normalizeSchemaPages(template.schemas).length;
       const jobOptions = normalizeJobOptions(rawJobOptions);
       assertSupportedSchemaTypes(template);
 
       const fontArgs = args.font
         ? args.font
-            .split(',')
+            .split(",")
             .map((value: string) => value.trim())
             .filter(Boolean)
         : undefined;
@@ -138,7 +138,7 @@ export default defineCommand({
         fail(
           `Invalid generation input. ${error instanceof Error ? error.message : String(error)}`,
           {
-            code: 'EVALIDATE',
+            code: "EVALIDATE",
             exitCode: 1,
             cause: error,
           },
@@ -156,11 +156,11 @@ export default defineCommand({
         console.error(
           `Images: ${
             args.image || args.grid
-              ? `enabled (png, scale=${scale}, grid=${args.grid ? `${gridSize}mm` : 'disabled'})`
-              : 'disabled'
+              ? `enabled (png, scale=${scale}, grid=${args.grid ? `${gridSize}mm` : "disabled"})`
+              : "disabled"
           }`,
         );
-        console.error(`Fonts: ${Object.keys(font).join(', ')}`);
+        console.error(`Fonts: ${Object.keys(font).join(", ")}`);
         if (args.basePdf) {
           console.error(`Base PDF override: ${args.basePdf}`);
         }
@@ -170,7 +170,7 @@ export default defineCommand({
         template,
         inputs,
         options: generateOptions,
-        plugins: schemaPlugins as NonNullable<GenerateProps['plugins']>,
+        plugins: schemaPlugins as NonNullable<GenerateProps["plugins"]>,
       });
 
       const generatedPdf = await PDFDocument.load(pdf, { updateMetadata: false });
@@ -179,7 +179,7 @@ export default defineCommand({
       writeOutput(args.output, pdf);
 
       const result: Record<string, unknown> = {
-        command: 'generate',
+        command: "generate",
         mode,
         templatePageCount,
         inputCount: inputs.length,
@@ -251,9 +251,9 @@ function normalizeJobOptions(rawJobOptions: unknown): Record<string, unknown> {
     return {};
   }
 
-  if (typeof rawJobOptions !== 'object' || rawJobOptions === null || Array.isArray(rawJobOptions)) {
-    fail('Unified job options must be a JSON object.', {
-      code: 'EARG',
+  if (typeof rawJobOptions !== "object" || rawJobOptions === null || Array.isArray(rawJobOptions)) {
+    fail("Unified job options must be a JSON object.", {
+      code: "EARG",
       exitCode: 1,
     });
   }
@@ -266,9 +266,9 @@ function mergeFontConfig(jobFont: unknown, resolvedFont: Font): Font {
     return resolvedFont;
   }
 
-  if (typeof jobFont !== 'object' || jobFont === null || Array.isArray(jobFont)) {
-    fail('Unified job options.font must be an object.', {
-      code: 'EARG',
+  if (typeof jobFont !== "object" || jobFont === null || Array.isArray(jobFont)) {
+    fail("Unified job options.font must be an object.", {
+      code: "EARG",
       exitCode: 1,
     });
   }
@@ -280,7 +280,7 @@ function mergeFontConfig(jobFont: unknown, resolvedFont: Font): Font {
 }
 
 function hasExplicitFontEntries(jobFont: unknown): boolean {
-  if (typeof jobFont !== 'object' || jobFont === null || Array.isArray(jobFont)) {
+  if (typeof jobFont !== "object" || jobFont === null || Array.isArray(jobFont)) {
     return false;
   }
 
@@ -293,8 +293,8 @@ function assertSupportedSchemaTypes(template: Template): void {
   for (const page of normalizeSchemaPages(template.schemas)) {
     for (const schema of page) {
       const type = schema.type;
-      if (typeof type === 'string' && !schemaTypes.has(type)) {
-        const name = typeof schema.name === 'string' && schema.name.length > 0 ? schema.name : null;
+      if (typeof type === "string" && !schemaTypes.has(type)) {
+        const name = typeof schema.name === "string" && schema.name.length > 0 ? schema.name : null;
         unsupported.push(
           name ? `Field "${name}" has unknown type "${type}"` : `Unknown schema type "${type}"`,
         );
@@ -303,8 +303,8 @@ function assertSupportedSchemaTypes(template: Template): void {
   }
 
   if (unsupported.length > 0) {
-    fail(`Invalid generation input. ${unsupported.join('; ')}`, {
-      code: 'EVALIDATE',
+    fail(`Invalid generation input. ${unsupported.join("; ")}`, {
+      code: "EVALIDATE",
       exitCode: 1,
     });
   }
@@ -320,10 +320,10 @@ function describeGenerateInput(
   }
 
   if (template || inputs) {
-    return `${template ?? '(missing template)'} + ${inputs ?? '(missing inputs)'}`;
+    return `${template ?? "(missing template)"} + ${inputs ?? "(missing inputs)"}`;
   }
 
-  return '(unknown)';
+  return "(unknown)";
 }
 
 function normalizeSchemaPages(rawSchemas: unknown): Array<Array<Record<string, unknown>>> {
@@ -335,14 +335,14 @@ function normalizeSchemaPages(rawSchemas: unknown): Array<Array<Record<string, u
     if (Array.isArray(page)) {
       return page.filter(
         (schema): schema is Record<string, unknown> =>
-          typeof schema === 'object' && schema !== null,
+          typeof schema === "object" && schema !== null,
       );
     }
 
-    if (typeof page === 'object' && page !== null) {
+    if (typeof page === "object" && page !== null) {
       return Object.values(page).filter(
         (schema): schema is Record<string, unknown> =>
-          typeof schema === 'object' && schema !== null,
+          typeof schema === "object" && schema !== null,
       );
     }
 

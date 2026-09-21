@@ -1,7 +1,7 @@
-import React, { MutableRefObject, ReactNode, useContext } from 'react';
-import { ZOOM, SchemaForUI, Size, getFallbackFontName } from '@pdfme/common';
-import { FontContext } from '../contexts.js';
-import { RULER_HEIGHT, PAGE_GAP } from '../constants.js';
+import React, { MutableRefObject, ReactNode, useContext } from "react";
+import { ZOOM, SchemaForUI, Size, getFallbackFontName } from "@pdfme/common";
+import { FontContext } from "../contexts.js";
+import { RULER_HEIGHT, PAGE_GAP } from "../constants.js";
 
 const Paper = (props: {
   paperRefs: MutableRefObject<HTMLDivElement[]>;
@@ -36,7 +36,7 @@ const Paper = (props: {
     <div
       style={{
         transform: `scale(${scale})`,
-        transformOrigin: 'top left',
+        transformOrigin: "top left",
         // NOTE: These values do not impact the UI unless they exceed the Paper sizes.
         // We set them to the scale value to ensure the container is redrawn when you zoom in/out.
         height: scale,
@@ -87,7 +87,7 @@ const Paper = (props: {
               fontFamily: `'${getFallbackFontName(font)}'`,
               top: `${pageTop}px`,
               left: leftCenteringIndent,
-              position: 'relative',
+              position: "relative",
               backgroundImage: `url(${background})`,
               backgroundSize: `${paperSize.width}px ${paperSize.height}px`,
               ...paperSize,

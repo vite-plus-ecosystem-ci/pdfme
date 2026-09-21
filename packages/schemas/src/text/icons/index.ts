@@ -7,8 +7,8 @@ import {
   ArrowUpToLine,
   ArrowDownToLine,
   AlignJustify,
-} from 'lucide';
-import { createSvgStr } from '../../utils.js';
+} from "lucide";
+import { createSvgStr } from "../../utils.js";
 
 export const TextStrikethroughIcon = createSvgStr(Strikethrough);
 

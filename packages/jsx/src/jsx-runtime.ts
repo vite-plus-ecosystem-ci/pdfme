@@ -1,5 +1,5 @@
-import { createFragmentNode, Fragment } from './node.js';
-import type { PdfJsxChild, PdfJsxElement, PdfJsxFragment } from './types.js';
+import { createFragmentNode, Fragment } from "./node.js";
+import type { PdfJsxChild, PdfJsxElement, PdfJsxFragment } from "./types.js";
 
 type Component = (props: Record<string, unknown>) => PdfJsxChild;
 
@@ -11,8 +11,8 @@ export const jsx = (
   key?: string | number | null,
 ): PdfJsxChild => {
   if (type === Fragment) return createFragmentNode(props, key);
-  if (typeof type === 'function') return type({ ...props, key });
-  throw new Error('@pdfme/jsx: intrinsic JSX elements are not supported. Use pdfme components.');
+  if (typeof type === "function") return type({ ...props, key });
+  throw new Error("@pdfme/jsx: intrinsic JSX elements are not supported. Use pdfme components.");
 };
 
 export const jsxs = jsx;

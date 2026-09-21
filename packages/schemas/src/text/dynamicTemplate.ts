@@ -1,19 +1,19 @@
-import type { DynamicLayoutArgs, DynamicLayoutResult } from '@pdfme/common';
-import { TEXT_OVERFLOW_EXPAND } from './constants.js';
+import type { DynamicLayoutArgs, DynamicLayoutResult } from "@pdfme/common";
+import { TEXT_OVERFLOW_EXPAND } from "./constants.js";
 import {
   getTextLineHeightsWithBox,
   getTextSplitBoxStyle,
   measureTextLines,
   sumLineHeights,
-} from './measure.js';
-import type { TextSchema } from './types.js';
-import { createTextLineSplitRange } from '../splitRange.js';
+} from "./measure.js";
+import type { TextSchema } from "./types.js";
+import { createTextLineSplitRange } from "../splitRange.js";
 
 export const getDynamicLayoutForText = async (
   value: string,
   args: DynamicLayoutArgs,
 ): Promise<DynamicLayoutResult> => {
-  if (args.schema.type !== 'text') return { heights: [args.schema.height] };
+  if (args.schema.type !== "text") return { heights: [args.schema.height] };
 
   const schema = args.schema as TextSchema;
   if (schema.overflow !== TEXT_OVERFLOW_EXPAND) {

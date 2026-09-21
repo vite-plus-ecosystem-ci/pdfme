@@ -1,4 +1,4 @@
-import { cloneDeep, type Schema, type SchemaForUI } from '@pdfme/common';
+import { cloneDeep, type Schema, type SchemaForUI } from "@pdfme/common";
 
 export type DesignerSelectionBounds = {
   height: number;
@@ -121,7 +121,7 @@ export const getDesignerSelectionPageIndex = (
 
   const firstObjectTarget = targets.find(
     (target): target is Exclude<DesignerSchemaSelectionTarget, string> =>
-      typeof target === 'object' && target !== null,
+      typeof target === "object" && target !== null,
   );
 
   const targetPageIndex = firstObjectTarget?.pageIndex;
@@ -143,7 +143,7 @@ export const getSelectedSchemaIds = ({
 
   targets.forEach((target) => {
     schemas.forEach((schema, schemaIndex) => {
-      if (typeof target === 'string') {
+      if (typeof target === "string") {
         if (schema.id === target || schema.name === target) selectedIds.add(schema.id);
         return;
       }

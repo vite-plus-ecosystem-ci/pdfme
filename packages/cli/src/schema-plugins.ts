@@ -1,8 +1,8 @@
-import type { Plugin, Plugins } from '@pdfme/common';
-import * as schemas from '@pdfme/schemas';
+import type { Plugin, Plugins } from "@pdfme/common";
+import * as schemas from "@pdfme/schemas";
 
 function isPlugin(value: unknown): value is Plugin {
-  if (!value || typeof value !== 'object') {
+  if (!value || typeof value !== "object") {
     return false;
   }
 
@@ -11,18 +11,18 @@ function isPlugin(value: unknown): value is Plugin {
   };
 
   return (
-    typeof plugin.pdf === 'function' &&
-    typeof plugin.ui === 'function' &&
-    typeof plugin.propPanel === 'object' &&
+    typeof plugin.pdf === "function" &&
+    typeof plugin.ui === "function" &&
+    typeof plugin.propPanel === "object" &&
     plugin.propPanel !== null &&
-    typeof plugin.propPanel.defaultSchema === 'object' &&
+    typeof plugin.propPanel.defaultSchema === "object" &&
     plugin.propPanel.defaultSchema !== null &&
-    typeof plugin.propPanel.defaultSchema.type === 'string'
+    typeof plugin.propPanel.defaultSchema.type === "string"
   );
 }
 
 function collectPluginsByType(value: unknown, plugins: Plugins, seen: WeakSet<object>): void {
-  if (!value || typeof value !== 'object') {
+  if (!value || typeof value !== "object") {
     return;
   }
 

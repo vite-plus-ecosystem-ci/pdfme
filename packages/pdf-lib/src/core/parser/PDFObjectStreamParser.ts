@@ -1,11 +1,11 @@
-import { ReparseError } from '../errors.js';
-import PDFName from '../objects/PDFName.js';
-import PDFNumber from '../objects/PDFNumber.js';
-import PDFRawStream from '../objects/PDFRawStream.js';
-import PDFRef from '../objects/PDFRef.js';
-import ByteStream from './ByteStream.js';
-import PDFObjectParser from './PDFObjectParser.js';
-import { waitForTick } from '../../utils/index.js';
+import { ReparseError } from "../errors.js";
+import PDFName from "../objects/PDFName.js";
+import PDFNumber from "../objects/PDFNumber.js";
+import PDFRawStream from "../objects/PDFRawStream.js";
+import PDFRef from "../objects/PDFRef.js";
+import ByteStream from "./ByteStream.js";
+import PDFObjectParser from "./PDFObjectParser.js";
+import { waitForTick } from "../../utils/index.js";
 
 class PDFObjectStreamParser extends PDFObjectParser {
   static forStream = (rawStream: PDFRawStream, shouldWaitForTick?: () => boolean) =>
@@ -23,13 +23,13 @@ class PDFObjectStreamParser extends PDFObjectParser {
 
     this.alreadyParsed = false;
     this.shouldWaitForTick = shouldWaitForTick || (() => false);
-    this.firstOffset = dict.lookup(PDFName.of('First'), PDFNumber).asNumber();
-    this.objectCount = dict.lookup(PDFName.of('N'), PDFNumber).asNumber();
+    this.firstOffset = dict.lookup(PDFName.of("First"), PDFNumber).asNumber();
+    this.objectCount = dict.lookup(PDFName.of("N"), PDFNumber).asNumber();
   }
 
   async parseIntoContext(): Promise<void> {
     if (this.alreadyParsed) {
-      throw new ReparseError('PDFObjectStreamParser', 'parseIntoContext');
+      throw new ReparseError("PDFObjectStreamParser", "parseIntoContext");
     }
     this.alreadyParsed = true;
 

@@ -1,12 +1,12 @@
-import { ReparseError } from '../errors.js';
-import PDFArray from '../objects/PDFArray.js';
-import PDFDict from '../objects/PDFDict.js';
-import PDFName from '../objects/PDFName.js';
-import PDFNumber from '../objects/PDFNumber.js';
-import PDFRawStream from '../objects/PDFRawStream.js';
-import PDFRef from '../objects/PDFRef.js';
-import ByteStream from './ByteStream.js';
-import PDFContext from '../PDFContext.js';
+import { ReparseError } from "../errors.js";
+import PDFArray from "../objects/PDFArray.js";
+import PDFDict from "../objects/PDFDict.js";
+import PDFName from "../objects/PDFName.js";
+import PDFNumber from "../objects/PDFNumber.js";
+import PDFRawStream from "../objects/PDFRawStream.js";
+import PDFRef from "../objects/PDFRef.js";
+import ByteStream from "./ByteStream.js";
+import PDFContext from "../PDFContext.js";
 
 export interface Entry {
   ref: PDFRef;
@@ -36,9 +36,9 @@ class PDFXRefStreamParser {
     this.bytes = ByteStream.fromPDFRawStream(rawStream);
     this.context = this.dict.context;
 
-    const Size = this.dict.lookup(PDFName.of('Size'), PDFNumber);
+    const Size = this.dict.lookup(PDFName.of("Size"), PDFNumber);
 
-    const Index = this.dict.lookup(PDFName.of('Index'));
+    const Index = this.dict.lookup(PDFName.of("Index"));
     if (Index instanceof PDFArray) {
       this.subsections = [];
       for (let idx = 0, len = Index.size(); idx < len; idx += 2) {
@@ -50,7 +50,7 @@ class PDFXRefStreamParser {
       this.subsections = [{ firstObjectNumber: 0, length: Size.asNumber() }];
     }
 
-    const W = this.dict.lookup(PDFName.of('W'), PDFArray);
+    const W = this.dict.lookup(PDFName.of("W"), PDFArray);
     this.byteWidths = [-1, -1, -1];
     for (let idx = 0, len = W.size(); idx < len; idx++) {
       this.byteWidths[idx] = W.lookup(idx, PDFNumber).asNumber();
@@ -59,15 +59,15 @@ class PDFXRefStreamParser {
 
   parseIntoContext(): Entry[] {
     if (this.alreadyParsed) {
-      throw new ReparseError('PDFXRefStreamParser', 'parseIntoContext');
+      throw new ReparseError("PDFXRefStreamParser", "parseIntoContext");
     }
     this.alreadyParsed = true;
 
     this.context.trailerInfo = {
-      Root: this.dict.get(PDFName.of('Root')),
-      Encrypt: this.dict.get(PDFName.of('Encrypt')),
-      Info: this.dict.get(PDFName.of('Info')),
-      ID: this.dict.get(PDFName.of('ID')),
+      Root: this.dict.get(PDFName.of("Root")),
+      Encrypt: this.dict.get(PDFName.of("Encrypt")),
+      Info: this.dict.get(PDFName.of("Info")),
+      ID: this.dict.get(PDFName.of("ID")),
     };
 
     const entries = this.parseEntries();

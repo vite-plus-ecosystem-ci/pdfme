@@ -1,8 +1,8 @@
-import { readFileSync } from 'node:fs';
-import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { Font, getDefaultFont } from '@pdfme/common';
-import { pdf2img } from '@pdfme/converter';
+import { readFileSync } from "node:fs";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
+import { Font, getDefaultFont } from "@pdfme/common";
+import { pdf2img } from "@pdfme/converter";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -31,14 +31,14 @@ const IMAGE_SNAPSHOT_ALLOWED_PIXEL_RATIO = 0.001;
 
 export const getFont = (): Font => ({
   ...getDefaultFont(),
-  'NotoSerifJP-Regular': { data: NotoSerifJPRegularData },
-  'NotoSansJP-Regular': { data: NotoSansJPRegularData },
-  'GloriaHallelujah-Regular': { data: GloriaHallelujahRegularData },
-  'GreatVibes-Regular': { data: GreatVibesRegularData },
-  'JuliusSansOne-Regular': { data: JuliusSansOneRegularData },
+  "NotoSerifJP-Regular": { data: NotoSerifJPRegularData },
+  "NotoSansJP-Regular": { data: NotoSansJPRegularData },
+  "GloriaHallelujah-Regular": { data: GloriaHallelujahRegularData },
+  "GreatVibes-Regular": { data: GreatVibesRegularData },
+  "JuliusSansOne-Regular": { data: JuliusSansOneRegularData },
   NotoSerifJP: { data: NotoSerifJPRegularData },
   NotoSansJP: { data: NotoSansJPRegularData },
-  'PinyonScript-Regular': {
+  "PinyonScript-Regular": {
     fallback: false,
     data: PinyonScriptRegularData,
   },

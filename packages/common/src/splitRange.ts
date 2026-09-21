@@ -1,4 +1,4 @@
-import type { DynamicLayoutRange, DynamicLayoutSplitRange } from './types.js';
+import type { DynamicLayoutRange, DynamicLayoutSplitRange } from "./types.js";
 
 export const createDynamicLayoutSplitRange = (
   unit: string,

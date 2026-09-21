@@ -6,7 +6,7 @@ interface CliErrorOptions {
 }
 
 export interface CliArgDefinition {
-  type: 'positional' | 'string' | 'boolean';
+  type: "positional" | "string" | "boolean";
   alias?: string | string[];
   description?: string;
   required?: boolean;
@@ -20,8 +20,8 @@ export class CliError extends Error {
 
   constructor(message: string, options: CliErrorOptions = {}) {
     super(message);
-    this.name = 'CliError';
-    this.code = options.code ?? 'ECLI';
+    this.name = "CliError";
+    this.code = options.code ?? "ECLI";
     this.exitCode = options.exitCode ?? 1;
     this.details = options.details;
     if (options.cause !== undefined) {
@@ -82,12 +82,12 @@ export function assertNoUnknownFlags(
   const negatedBooleanFlags = new Set<string>();
 
   for (const [name, definition] of Object.entries(argsDefinition)) {
-    if (definition.type === 'positional') continue;
+    if (definition.type === "positional") continue;
 
     for (const flag of getFlagVariants(name, definition.alias)) {
-      if (definition.type === 'boolean') {
+      if (definition.type === "boolean") {
         booleanFlags.add(flag);
-        if (flag.startsWith('--') && !name.startsWith('no')) {
+        if (flag.startsWith("--") && !name.startsWith("no")) {
           negatedBooleanFlags.add(`--no-${flag.slice(2)}`);
         }
       } else {
@@ -99,15 +99,15 @@ export function assertNoUnknownFlags(
   for (let i = 0; i < rawArgs.length; i++) {
     const token = rawArgs[i];
 
-    if (token === '--') break;
-    if (!token.startsWith('-') || token === '-') continue;
+    if (token === "--") break;
+    if (!token.startsWith("-") || token === "-") continue;
 
     const [flag, inlineValue] = splitFlagToken(token);
 
     if (booleanFlags.has(flag) || negatedBooleanFlags.has(flag)) {
       if (inlineValue !== undefined) {
         fail(`Boolean flag ${flag} does not take a value.`, {
-          code: 'EARG',
+          code: "EARG",
           exitCode: 1,
         });
       }
@@ -117,19 +117,19 @@ export function assertNoUnknownFlags(
     if (valueFlags.has(flag)) {
       if (inlineValue !== undefined) {
         if (inlineValue.length === 0) {
-          fail(`Missing value for argument ${flag}.`, { code: 'EARG', exitCode: 1 });
+          fail(`Missing value for argument ${flag}.`, { code: "EARG", exitCode: 1 });
         }
       } else {
         const next = rawArgs[i + 1];
-        if (!next || next === '--' || next.startsWith('-')) {
-          fail(`Missing value for argument ${flag}.`, { code: 'EARG', exitCode: 1 });
+        if (!next || next === "--" || next.startsWith("-")) {
+          fail(`Missing value for argument ${flag}.`, { code: "EARG", exitCode: 1 });
         }
         i++;
       }
       continue;
     }
 
-    fail(`Unknown argument: ${flag}`, { code: 'EARG', exitCode: 1 });
+    fail(`Unknown argument: ${flag}`, { code: "EARG", exitCode: 1 });
   }
 }
 
@@ -140,7 +140,7 @@ export function isOptionProvided(
 ): boolean {
   const allowedFlags = new Set(getFlagVariants(name, alias));
   return rawArgs.some((token) => {
-    if (!token.startsWith('-') || token === '-') return false;
+    if (!token.startsWith("-") || token === "-") return false;
     const [flag] = splitFlagToken(token);
     return allowedFlags.has(flag);
   });
@@ -151,10 +151,10 @@ export function parseEnumArg<T extends string>(
   value: unknown,
   allowedValues: readonly T[],
 ): T {
-  if (typeof value !== 'string' || !allowedValues.includes(value as T)) {
+  if (typeof value !== "string" || !allowedValues.includes(value as T)) {
     fail(
-      `Invalid value for --${optionName}: expected one of ${allowedValues.join(', ')}, received ${formatValue(value)}.`,
-      { code: 'EARG', exitCode: 1 },
+      `Invalid value for --${optionName}: expected one of ${allowedValues.join(", ")}, received ${formatValue(value)}.`,
+      { code: "EARG", exitCode: 1 },
     );
   }
 
@@ -162,11 +162,11 @@ export function parseEnumArg<T extends string>(
 }
 
 export function parsePositiveNumberArg(optionName: string, value: unknown): number {
-  const parsed = typeof value === 'number' ? value : Number(value);
+  const parsed = typeof value === "number" ? value : Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) {
     fail(
       `Invalid value for --${optionName}: expected a positive number, received ${formatValue(value)}.`,
-      { code: 'EARG', exitCode: 1 },
+      { code: "EARG", exitCode: 1 },
     );
   }
 
@@ -180,13 +180,13 @@ function normalizeCliError(error: unknown): CliError {
 
   if (error instanceof Error) {
     const errorCode =
-      typeof (error as NodeJS.ErrnoException).code === 'string'
+      typeof (error as NodeJS.ErrnoException).code === "string"
         ? (error as NodeJS.ErrnoException).code
         : undefined;
 
-    if (errorCode && errorCode.startsWith('E')) {
+    if (errorCode && errorCode.startsWith("E")) {
       return new CliError(error.message, {
-        code: 'EIO',
+        code: "EIO",
         exitCode: 3,
         details: { errno: errorCode },
         cause: error,
@@ -194,20 +194,20 @@ function normalizeCliError(error: unknown): CliError {
     }
 
     return new CliError(error.message, {
-      code: 'ERUNTIME',
+      code: "ERUNTIME",
       exitCode: 2,
       cause: error,
     });
   }
 
   return new CliError(String(error), {
-    code: 'ERUNTIME',
+    code: "ERUNTIME",
     exitCode: 2,
   });
 }
 
 function splitFlagToken(token: string): [string, string | undefined] {
-  const eqIndex = token.indexOf('=');
+  const eqIndex = token.indexOf("=");
   if (eqIndex === -1) {
     return [token, undefined];
   }
@@ -245,8 +245,8 @@ function toArray(value?: string | string[]): string[] {
 
 function toKebabCase(value: string): string {
   return value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[_\s]+/g, '-')
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/[_\s]+/g, "-")
     .toLowerCase();
 }
 
@@ -255,7 +255,7 @@ function toCamelCase(value: string): string {
 }
 
 function formatValue(value: unknown): string {
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     return JSON.stringify(value);
   }
 

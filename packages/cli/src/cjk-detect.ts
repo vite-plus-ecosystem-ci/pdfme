@@ -30,11 +30,11 @@ export function detectCJKInTemplate(template: { schemas?: unknown }): boolean {
     }
 
     for (const schema of page) {
-      if (typeof schema !== 'object' || schema === null) {
+      if (typeof schema !== "object" || schema === null) {
         continue;
       }
 
-      if (typeof schema.content === 'string' && containsCJK(schema.content)) {
+      if (typeof schema.content === "string" && containsCJK(schema.content)) {
         return true;
       }
     }
@@ -48,12 +48,12 @@ export function detectCJKInInputs(inputs: unknown): boolean {
   }
 
   for (const input of inputs) {
-    if (typeof input !== 'object' || input === null) {
+    if (typeof input !== "object" || input === null) {
       continue;
     }
 
     for (const value of Object.values(input)) {
-      if (typeof value === 'string' && containsCJK(value)) {
+      if (typeof value === "string" && containsCJK(value)) {
         return true;
       }
     }

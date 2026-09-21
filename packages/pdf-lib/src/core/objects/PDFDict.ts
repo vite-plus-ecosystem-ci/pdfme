@@ -1,15 +1,15 @@
-import PDFArray from './PDFArray.js';
-import PDFBool from './PDFBool.js';
-import PDFHexString from './PDFHexString.js';
-import PDFName from './PDFName.js';
-import PDFNull from './PDFNull.js';
-import PDFNumber from './PDFNumber.js';
-import PDFObject from './PDFObject.js';
-import PDFRef from './PDFRef.js';
-import PDFStream from './PDFStream.js';
-import PDFString from './PDFString.js';
-import PDFContext from '../PDFContext.js';
-import CharCodes from '../syntax/CharCodes.js';
+import PDFArray from "./PDFArray.js";
+import PDFBool from "./PDFBool.js";
+import PDFHexString from "./PDFHexString.js";
+import PDFName from "./PDFName.js";
+import PDFNull from "./PDFNull.js";
+import PDFNumber from "./PDFNumber.js";
+import PDFObject from "./PDFObject.js";
+import PDFRef from "./PDFRef.js";
+import PDFStream from "./PDFStream.js";
+import PDFString from "./PDFString.js";
+import PDFContext from "../PDFContext.js";
+import CharCodes from "../syntax/CharCodes.js";
 
 export type DictMap = Map<PDFName, PDFObject>;
 
@@ -154,7 +154,7 @@ class PDFDict extends PDFObject {
   }
 
   /** Generate a random key that doesn't exist in current key set */
-  uniqueKey(tag = ''): PDFName {
+  uniqueKey(tag = ""): PDFName {
     const existingKeys = this.keys();
     let key = PDFName.of(this.context.addRandomSuffix(tag, 10));
     while (existingKeys.includes(key)) {
@@ -174,13 +174,13 @@ class PDFDict extends PDFObject {
   }
 
   toString(): string {
-    let dictString = '<<\n';
+    let dictString = "<<\n";
     const entries = this.entries();
     for (let idx = 0, len = entries.length; idx < len; idx++) {
       const [key, value] = entries[idx];
-      dictString += key.toString() + ' ' + value.toString() + '\n';
+      dictString += key.toString() + " " + value.toString() + "\n";
     }
-    dictString += '>>';
+    dictString += ">>";
     return dictString;
   }
 

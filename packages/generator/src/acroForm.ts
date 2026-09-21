@@ -5,7 +5,7 @@ import {
   type PDFRenderProps,
   type Plugin,
   type Schema,
-} from '@pdfme/common';
+} from "@pdfme/common";
 import {
   PDFDict,
   PDFDocument,
@@ -13,15 +13,15 @@ import {
   PDFName,
   TextAlignment,
   type PDFRadioGroup,
-} from '@pdfme/pdf-lib';
-import { convertForPdfLayoutProps, hex2PrintingColor } from '@pdfme/schemas/utils';
+} from "@pdfme/pdf-lib";
+import { convertForPdfLayoutProps, hex2PrintingColor } from "@pdfme/schemas/utils";
 
 type AcroFormSchema = Schema & {
   __acroRequired?: boolean;
 };
 
 type AcroTextSchema = AcroFormSchema & {
-  alignment?: 'left' | 'center' | 'right' | 'justify';
+  alignment?: "left" | "center" | "right" | "justify";
   backgroundColor?: string;
   fontColor?: string;
   fontName?: string;
@@ -45,14 +45,14 @@ type RadioGroupCacheState = {
   radioGroup: PDFRadioGroup;
 };
 
-const DEFAULT_FONT_COLOR = '#000000';
+const DEFAULT_FONT_COLOR = "#000000";
 const DEFAULT_FONT_SIZE = 13;
-const DEFAULT_FORM_BORDER_COLOR = '#000000';
-const FIELD_NAME_COUNTS_CACHE_KEY = 'generateForm:fieldNameCounts';
-const RADIO_GROUPS_CACHE_KEY = 'generateForm:radioGroups';
+const DEFAULT_FORM_BORDER_COLOR = "#000000";
+const FIELD_NAME_COUNTS_CACHE_KEY = "generateForm:fieldNameCounts";
+const RADIO_GROUPS_CACHE_KEY = "generateForm:radioGroups";
 
-const getNextFieldName = (baseName: string, cache: PDFRenderProps<Schema>['_cache']) => {
-  const normalizedBaseName = baseName.trim() || 'field';
+const getNextFieldName = (baseName: string, cache: PDFRenderProps<Schema>["_cache"]) => {
+  const normalizedBaseName = baseName.trim() || "field";
   const counts =
     (cache.get(FIELD_NAME_COUNTS_CACHE_KEY) as Map<string, number> | undefined) ??
     new Map<string, number>();
@@ -64,18 +64,18 @@ const getNextFieldName = (baseName: string, cache: PDFRenderProps<Schema>['_cach
   return count === 1 ? normalizedBaseName : `${normalizedBaseName}_${count}`;
 };
 
-const getFieldName = (schema: Schema, cache: PDFRenderProps<Schema>['_cache']) =>
+const getFieldName = (schema: Schema, cache: PDFRenderProps<Schema>["_cache"]) =>
   getNextFieldName(schema.name, cache);
 
-const getRadioOptionName = (schema: Schema) => schema.name.trim() || 'option';
+const getRadioOptionName = (schema: Schema) => schema.name.trim() || "option";
 
 const getRadioGroupName = (schema: AcroRadioGroupSchema) =>
-  (schema.group || schema.name).trim() || 'radioGroup';
+  (schema.group || schema.name).trim() || "radioGroup";
 
 const getRadioGroup = (arg: {
   pdfDoc: PDFDocument;
   schema: AcroRadioGroupSchema;
-  _cache: PDFRenderProps<Schema>['_cache'];
+  _cache: PDFRenderProps<Schema>["_cache"];
 }) => {
   const { pdfDoc, schema, _cache } = arg;
   const baseName = getRadioGroupName(schema);
@@ -103,7 +103,7 @@ const fetchFontData = async (font: Font, fontName: string) => {
     throw new Error(`[@pdfme/generator] Font "${fontName}" is not configured`);
   }
 
-  if (typeof fontValue.data !== 'string' || !fontValue.data.startsWith('http')) {
+  if (typeof fontValue.data !== "string" || !fontValue.data.startsWith("http")) {
     return fontValue.data;
   }
 
@@ -118,7 +118,7 @@ const getPdfFont = async (arg: {
   pdfDoc: PDFDocument;
   font: Font;
   fontName: string;
-  _cache: PDFRenderProps<Schema>['_cache'];
+  _cache: PDFRenderProps<Schema>["_cache"];
 }) => {
   const { pdfDoc, font, fontName, _cache } = arg;
   const cacheKey = `generateForm:font:${fontName}`;
@@ -138,8 +138,8 @@ const registerAcroFormFontResource = (pdfDoc: PDFDocument, pdfFont: PDFFont) => 
   const formDict = pdfDoc.getForm().acroForm.dict;
   const context = formDict.context;
 
-  const defaultResourcesKey = PDFName.of('DR');
-  const fontResourcesKey = PDFName.of('Font');
+  const defaultResourcesKey = PDFName.of("DR");
+  const fontResourcesKey = PDFName.of("Font");
   let defaultResources = formDict.lookupMaybe(defaultResourcesKey, PDFDict);
   if (!defaultResources) {
     defaultResources = context.obj({});
@@ -155,11 +155,11 @@ const registerAcroFormFontResource = (pdfDoc: PDFDocument, pdfFont: PDFFont) => 
   fontResources.set(PDFName.of(pdfFont.name), pdfFont.ref);
 };
 
-const getTextAlignment = (alignment: AcroTextSchema['alignment']) => {
+const getTextAlignment = (alignment: AcroTextSchema["alignment"]) => {
   switch (alignment) {
-    case 'center':
+    case "center":
       return TextAlignment.Center;
-    case 'right':
+    case "right":
       return TextAlignment.Right;
     default:
       return TextAlignment.Left;
@@ -214,7 +214,7 @@ const renderAcroCheckbox = (arg: PDFRenderProps<Schema>) => {
   });
 
   const checkBox = pdfDoc.getForm().createCheckBox(getFieldName(schema, _cache));
-  if (value === 'true') checkBox.check();
+  if (value === "true") checkBox.check();
   if (checkboxSchema.__acroRequired) checkBox.enableRequired();
 
   const color = checkboxSchema.color || DEFAULT_FORM_BORDER_COLOR;
@@ -262,7 +262,7 @@ const renderAcroRadioGroup = (arg: PDFRenderProps<Schema>) => {
     borderWidth: 1,
   });
 
-  if (value === 'true') radioGroup.select(optionName);
+  if (value === "true") radioGroup.select(optionName);
   radioGroup.updateAppearances();
 };
 
@@ -272,8 +272,8 @@ export const acroTextPlugin: Plugin = {
   propPanel: {
     schema: {},
     defaultSchema: {
-      name: '',
-      type: 'acroText',
+      name: "",
+      type: "acroText",
       position: { x: 0, y: 0 },
       width: 10,
       height: 10,
@@ -287,8 +287,8 @@ export const acroRadioGroupPlugin: Plugin = {
   propPanel: {
     schema: {},
     defaultSchema: {
-      name: '',
-      type: 'acroRadioGroup',
+      name: "",
+      type: "acroRadioGroup",
       position: { x: 0, y: 0 },
       width: 8,
       height: 8,
@@ -302,8 +302,8 @@ export const acroCheckboxPlugin: Plugin = {
   propPanel: {
     schema: {},
     defaultSchema: {
-      name: '',
-      type: 'acroCheckbox',
+      name: "",
+      type: "acroCheckbox",
       position: { x: 0, y: 0 },
       width: 8,
       height: 8,

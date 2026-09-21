@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import Head from '@docusaurus/Head';
-import Layout from '@theme/Layout';
-import { useLocation } from '@docusaurus/router';
-import { playgroundUrl } from '../constants';
+import React, { useEffect } from "react";
+import Head from "@docusaurus/Head";
+import Layout from "@theme/Layout";
+import { useLocation } from "@docusaurus/router";
+import { playgroundUrl } from "../constants";
 
 const getPlaygroundDesignUrl = (search: string) => {
   const query = new URLSearchParams(search);
-  const ui = query.get('ui') === 'form-viewer' ? 'form-viewer' : 'designer';
-  const template = query.get('template');
+  const ui = query.get("ui") === "form-viewer" ? "form-viewer" : "designer";
+  const template = query.get("template");
   const playgroundPath = new URL(`${playgroundUrl}/${ui}`);
-  if (template) playgroundPath.searchParams.set('template', template);
+  if (template) playgroundPath.searchParams.set("template", template);
   return playgroundPath.toString();
 };
 
@@ -22,12 +22,15 @@ const TemplateDesign = () => {
   }, [redirectUrl]);
 
   return (
-    <Layout title="Template Design" description='Design your PDF template with the playground editor.'>
+    <Layout
+      title="Template Design"
+      description="Design your PDF template with the playground editor."
+    >
       <Head>
         <link rel="canonical" href={redirectUrl} />
         <meta httpEquiv="refresh" content={`0; url=${redirectUrl}`} />
       </Head>
-      <main style={{ padding: '4rem 1rem', textAlign: 'center' }}>
+      <main style={{ padding: "4rem 1rem", textAlign: "center" }}>
         <p>Opening the pdfme playground...</p>
         <p>
           <a href={redirectUrl} target="_blank" rel="noopener noreferrer">

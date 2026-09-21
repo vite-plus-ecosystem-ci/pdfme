@@ -4,20 +4,20 @@ This document tracks the breaking changes planned for the next major release and
 
 ## Breaking Changes
 
-| Change                            | Affected users                                                 | Required action                        |
-| --------------------------------- | -------------------------------------------------------------- | -------------------------------------- |
-| `ESM-only` packages               | Anyone using `require('@pdfme/...')`                           | Move to `import` / `export` syntax     |
-| `Node 20+` minimum runtime        | Node 16 / 18 users                                             | Upgrade to Node 20 LTS or newer        |
-| Internal `dist/*` imports removed | Anyone importing `@pdfme/*/dist/...` or `@pdfme/*/cjs/src/...` | Import only from package root exports  |
-| Text-only default plugin registry | Anyone relying on implicit non-text schema support             | Import non-text plugins explicitly     |
+| Change                            | Affected users                                                 | Required action                       |
+| --------------------------------- | -------------------------------------------------------------- | ------------------------------------- |
+| `ESM-only` packages               | Anyone using `require('@pdfme/...')`                           | Move to `import` / `export` syntax    |
+| `Node 20+` minimum runtime        | Node 16 / 18 users                                             | Upgrade to Node 20 LTS or newer       |
+| Internal `dist/*` imports removed | Anyone importing `@pdfme/*/dist/...` or `@pdfme/*/cjs/src/...` | Import only from package root exports |
+| Text-only default plugin registry | Anyone relying on implicit non-text schema support             | Import non-text plugins explicitly    |
 
 ## Support Policy
 
-| Item             | Policy     |
-| ---------------- | ---------- |
-| Runtime          | Node 20+   |
-| Browser target   | `es2020`   |
-| Module format    | `ESM-only` |
+| Item           | Policy     |
+| -------------- | ---------- |
+| Runtime        | Node 20+   |
+| Browser target | `es2020`   |
+| Module format  | `ESM-only` |
 
 ## Migrations
 
@@ -26,23 +26,23 @@ This document tracks the breaking changes planned for the next major release and
 Before:
 
 ```js
-const { BLANK_PDF } = require('@pdfme/common');
-const { generate } = require('@pdfme/generator');
+const { BLANK_PDF } = require("@pdfme/common");
+const { generate } = require("@pdfme/generator");
 ```
 
 After:
 
 ```ts
-import { BLANK_PDF } from '@pdfme/common';
-import { generate } from '@pdfme/generator';
+import { BLANK_PDF } from "@pdfme/common";
+import { generate } from "@pdfme/generator";
 ```
 
 If you write files in Node.js from ESM, replace `__dirname` usage with `fileURLToPath(import.meta.url)`.
 
 ```ts
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,15 +53,15 @@ const __dirname = path.dirname(__filename);
 Before:
 
 ```ts
-import { generate } from '@pdfme/generator/cjs/src/index.js';
-import { pdf2img } from '@pdfme/converter/cjs/src/index.node.js';
+import { generate } from "@pdfme/generator/cjs/src/index.js";
+import { pdf2img } from "@pdfme/converter/cjs/src/index.node.js";
 ```
 
 After:
 
 ```ts
-import { generate } from '@pdfme/generator';
-import { pdf2img } from '@pdfme/converter';
+import { generate } from "@pdfme/generator";
+import { pdf2img } from "@pdfme/converter";
 ```
 
 ### Node 20+
@@ -75,7 +75,7 @@ Update local development and CI to Node 20 LTS or newer before adopting the next
 Before:
 
 ```ts
-import { generate } from '@pdfme/generator';
+import { generate } from "@pdfme/generator";
 
 await generate({ template, inputs });
 ```
@@ -83,8 +83,8 @@ await generate({ template, inputs });
 After:
 
 ```ts
-import { generate } from '@pdfme/generator';
-import { text, image, signature, table, barcodes } from '@pdfme/schemas';
+import { generate } from "@pdfme/generator";
+import { text, image, signature, table, barcodes } from "@pdfme/schemas";
 
 await generate({
   template,

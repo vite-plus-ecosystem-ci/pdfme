@@ -1,4 +1,4 @@
-import type { PropPanelSchema } from '@pdfme/common';
+import type { PropPanelSchema } from "@pdfme/common";
 
 export type BoxDimension = {
   top: number;
@@ -90,15 +90,15 @@ export const getSplitBoxDimension = (
 
 export const getBoxDimensionPropPanelSchema = (step = 1): Record<string, PropPanelSchema> => {
   const getCommonProp = (): PropPanelSchema => ({
-    type: 'number',
-    widget: 'inputNumber',
+    type: "number",
+    widget: "inputNumber",
     props: { min: 0, step },
     span: 6,
   });
   return {
-    top: { title: 'Top', ...getCommonProp() },
-    right: { title: 'Right', ...getCommonProp() },
-    bottom: { title: 'Bottom', ...getCommonProp() },
-    left: { title: 'Left', ...getCommonProp() },
+    top: { title: "Top", ...getCommonProp() },
+    right: { title: "Right", ...getCommonProp() },
+    bottom: { title: "Bottom", ...getCommonProp() },
+    left: { title: "Left", ...getCommonProp() },
   };
 };

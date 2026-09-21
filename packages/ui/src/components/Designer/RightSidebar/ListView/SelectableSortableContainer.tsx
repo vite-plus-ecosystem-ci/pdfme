@@ -1,5 +1,5 @@
-import React, { useState, useContext, ReactNode } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState, useContext, ReactNode } from "react";
+import { createPortal } from "react-dom";
 import {
   closestCorners,
   DndContext,
@@ -10,25 +10,25 @@ import {
   PointerSensor,
   useSensors,
   useSensor,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import {
   SortableContext,
   arrayMove,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { SchemaForUI } from '@pdfme/common';
-import type { SidebarProps } from '../../../../types.js';
-import { PluginsRegistry } from '../../../../contexts.js';
-import Item from './Item.js';
-import SelectableSortableItem from './SelectableSortableItem.js';
-import { theme } from 'antd';
-import PluginIcon from '../../PluginIcon.js';
+} from "@dnd-kit/sortable";
+import { SchemaForUI } from "@pdfme/common";
+import type { SidebarProps } from "../../../../types.js";
+import { PluginsRegistry } from "../../../../contexts.js";
+import Item from "./Item.js";
+import SelectableSortableItem from "./SelectableSortableItem.js";
+import { theme } from "antd";
+import PluginIcon from "../../PluginIcon.js";
 
 const SelectableSortableContainer = (
   props: Pick<
     SidebarProps,
-    'schemas' | 'onEdit' | 'onSortEnd' | 'hoveringSchemaId' | 'onChangeHoveringSchemaId'
+    "schemas" | "onEdit" | "onSortEnd" | "hoveringSchemaId" | "onChangeHoveringSchemaId"
   >,
 ) => {
   const { token } = theme.useToken();
@@ -63,7 +63,7 @@ const SelectableSortableContainer = (
   const getPluginIcon = (inSchema: string | SchemaForUI): ReactNode => {
     // Get schema by ID or use directly
     const thisSchema =
-      typeof inSchema === 'string' ? schemas.find((schema) => schema.id === inSchema) : inSchema;
+      typeof inSchema === "string" ? schemas.find((schema) => schema.id === inSchema) : inSchema;
 
     if (!thisSchema) return <></>;
 
@@ -78,7 +78,7 @@ const SelectableSortableContainer = (
         plugin={activePlugin}
         label={pluginLabel}
         size={20}
-        styles={{ marginRight: '0.5rem' }}
+        styles={{ marginRight: "0.5rem" }}
       />
     );
   };
@@ -106,7 +106,7 @@ const SelectableSortableContainer = (
         }
       }}
       onDragEnd={({ active, over }: DragEndEvent) => {
-        const overId = over?.id || '';
+        const overId = over?.id || "";
 
         const activeIndex = schemas.map((i) => i.id).indexOf(String(active.id));
         const overIndex = schemas.map((i) => i.id).indexOf(String(overId));
@@ -138,13 +138,13 @@ const SelectableSortableContainer = (
     >
       <>
         <SortableContext items={schemas} strategy={verticalListSortingStrategy}>
-          <ul style={{ margin: 0, padding: 0, listStyle: 'none', borderRadius: 5 }}>
+          <ul style={{ margin: 0, padding: 0, listStyle: "none", borderRadius: 5 }}>
             {schemas.map((schema) => (
               <SelectableSortableItem
                 key={schema.id}
                 style={{
                   border: `1px solid ${
-                    schema.id === hoveringSchemaId ? token.colorPrimary : 'transparent'
+                    schema.id === hoveringSchemaId ? token.colorPrimary : "transparent"
                   }`,
                 }}
                 schema={schema}
@@ -166,7 +166,7 @@ const SelectableSortableContainer = (
                   if (!activeSchema) return null;
                   return (
                     <>
-                      <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                      <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
                         <Item
                           icon={getPluginIcon(activeId)}
                           value={activeSchema.name}
@@ -176,7 +176,7 @@ const SelectableSortableContainer = (
                           dragOverlay
                         />
                       </ul>
-                      <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                      <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
                         {selectedSchemas
                           .filter((item) => item.id !== activeId)
                           .map((item) => (

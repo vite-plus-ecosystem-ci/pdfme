@@ -14,7 +14,7 @@
  * injects extra break opportunities from `Intl.Segmenter` word dictionaries.
  */
 
-import { LINE_BREAK_RANGE_COUNT, LINE_BREAK_RANGE_DATA } from './lineBreakClasses.generated.js';
+import { LINE_BREAK_RANGE_COUNT, LINE_BREAK_RANGE_DATA } from "./lineBreakClasses.generated.js";
 
 export const OP = 0;
 export const CL = 1;

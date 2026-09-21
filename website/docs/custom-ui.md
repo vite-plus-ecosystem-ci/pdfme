@@ -20,7 +20,7 @@ new Designer({
   options: {
     theme: {
       token: {
-        colorPrimary: 'red',
+        colorPrimary: "red",
       },
     },
   },
@@ -50,10 +50,10 @@ new Designer({
   domContainer,
   template,
   options: {
-    lang: 'ja',
+    lang: "ja",
     labels: {
-      fieldsList: '入力項目一覧ビュー', // override the label for the edit button
-      youCanCreateYourOwnLabel: '独自のラベルを作成できます', // add a new label for the custom plugin
+      fieldsList: "入力項目一覧ビュー", // override the label for the edit button
+      youCanCreateYourOwnLabel: "独自のラベルを作成できます", // add a new label for the custom plugin
     },
   },
 });
@@ -63,9 +63,9 @@ Create your own labels and use the i18n function from the plugin to retrieve the
 
 ## UI Maximum Zoom Level
 
-By default, pdfme can zoom up to 200% of the original PDF size. 
-If you wish to increase this you can pass the `maxZoom` option, the percentage that you want to be the new limit, to the Designer, Form, or Viewer. 
-This value should be greater than 100 and a multiple of 25. 
+By default, pdfme can zoom up to 200% of the original PDF size.
+If you wish to increase this you can pass the `maxZoom` option, the percentage that you want to be the new limit, to the Designer, Form, or Viewer.
+This value should be greater than 100 and a multiple of 25.
 
 ```ts
 new Designer({
@@ -88,13 +88,13 @@ const designer = new Designer({
   template,
   options: {
     zoomLevel: 1.5,
-    sidebarOpen: false,  // (Designer only)
-  }
+    sidebarOpen: false, // (Designer only)
+  },
 });
 
 // Update states after initialization:
 designer.updateOptions({
   zoomLevel: 2,
-  sidebarOpen: true
+  sidebarOpen: true,
 });
 ```

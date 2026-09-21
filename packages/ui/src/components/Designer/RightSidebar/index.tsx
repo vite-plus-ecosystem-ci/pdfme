@@ -1,10 +1,10 @@
-import React from 'react';
-import { theme, Button } from 'antd';
-import type { SidebarProps } from '../../../types.js';
-import { RIGHT_SIDEBAR_WIDTH, DESIGNER_CLASSNAME } from '../../../constants.js';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import ListView from './ListView/index.js';
-import DetailView from './DetailView/index.js';
+import React from "react";
+import { theme, Button } from "antd";
+import type { SidebarProps } from "../../../types.js";
+import { RIGHT_SIDEBAR_WIDTH, DESIGNER_CLASSNAME } from "../../../constants.js";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import ListView from "./ListView/index.js";
+import DetailView from "./DetailView/index.js";
 
 const Sidebar = (props: SidebarProps) => {
   const { sidebarOpen, setSidebarOpen, activeElements, schemas } = props;
@@ -21,25 +21,25 @@ const Sidebar = (props: SidebarProps) => {
 
   return (
     <div
-      className={DESIGNER_CLASSNAME + 'right-sidebar'}
+      className={DESIGNER_CLASSNAME + "right-sidebar"}
       style={{
-        position: 'absolute',
+        position: "absolute",
         right: 0,
         zIndex: 1,
-        height: '100%',
+        height: "100%",
         width: sidebarOpen ? RIGHT_SIDEBAR_WIDTH : 0,
       }}
     >
       <Button
-        className={DESIGNER_CLASSNAME + 'sidebar-toggle'}
+        className={DESIGNER_CLASSNAME + "sidebar-toggle"}
         style={{
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          top: '14px',
-          right: '16px',
-          paddingTop: '2px',
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          top: "14px",
+          right: "16px",
+          paddingTop: "2px",
           zIndex: 100,
         }}
         icon={sidebarOpen ? <ArrowRight {...iconProps} /> : <ArrowLeft {...iconProps} />}
@@ -48,13 +48,13 @@ const Sidebar = (props: SidebarProps) => {
       <div
         style={{
           width: RIGHT_SIDEBAR_WIDTH,
-          height: '100%',
-          display: sidebarOpen ? 'flex' : 'none',
+          height: "100%",
+          display: sidebarOpen ? "flex" : "none",
           top: 0,
           right: 0,
-          position: 'absolute',
+          position: "absolute",
           fontFamily: "'Open Sans', sans-serif",
-          boxSizing: 'border-box',
+          boxSizing: "border-box",
           background: token.colorBgLayout,
           borderLeft: `1px solid ${token.colorSplit}`,
         }}

@@ -1,9 +1,9 @@
-import React from 'react';
-import { PreviewProps } from '@pdfme/common';
-import { PreviewUI } from './class.js';
-import { DESTROYED_ERR_MSG } from './constants.js';
-import Preview from './components/Preview.js';
-import AppContextProvider from './components/AppContextProvider.js';
+import React from "react";
+import { PreviewProps } from "@pdfme/common";
+import { PreviewUI } from "./class.js";
+import { DESTROYED_ERR_MSG } from "./constants.js";
+import Preview from "./components/Preview.js";
+import AppContextProvider from "./components/AppContextProvider.js";
 
 class Viewer extends PreviewUI {
   private onPageChangeCallback?: (pageInfo: { currentPage: number; totalPages: number }) => void;
@@ -12,7 +12,7 @@ class Viewer extends PreviewUI {
   constructor(props: PreviewProps) {
     super(props);
     console.warn(
-      '[@pdfme/ui] Viewer component is deprecated and will be removed in a future version.',
+      "[@pdfme/ui] Viewer component is deprecated and will be removed in a future version.",
     );
   }
 

@@ -1,29 +1,29 @@
-import { getDefaultFont, mm2pt, pt2mm, type DynamicLayoutRange, type Font } from '@pdfme/common';
-import type { Font as FontKitFont } from 'fontkit';
-import { DEFAULT_CHARACTER_SPACING, DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT } from './constants.js';
+import { getDefaultFont, mm2pt, pt2mm, type DynamicLayoutRange, type Font } from "@pdfme/common";
+import type { Font as FontKitFont } from "fontkit";
+import { DEFAULT_CHARACTER_SPACING, DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT } from "./constants.js";
 import {
   calculateDynamicFontSize,
   getFontKitFont,
   getLineBoxHeightPt,
   splitTextToSize,
-} from './helper.js';
-import { parseInlineMarkdown } from './inlineMarkdown.js';
+} from "./helper.js";
+import { parseInlineMarkdown } from "./inlineMarkdown.js";
 import {
   calculateDynamicRichTextFontSize,
   isInlineMarkdownTextSchema,
   layoutRichTextLines,
   resolveRichTextRuns,
   type RichTextLine,
-} from './richText.js';
-import type { TextSchema } from './types.js';
-import { getTextLineRange } from '../splitRange.js';
+} from "./richText.js";
+import type { TextSchema } from "./types.js";
+import { getTextLineRange } from "../splitRange.js";
 import {
   getBoxContentArea,
   getBoxInsets,
   getBoxVerticalInset,
   getSplitBoxDimension,
   hasBoxDimension,
-} from '../box.js';
+} from "../box.js";
 
 type MeasureTextHeightArgs = {
   value: string;
@@ -44,7 +44,7 @@ export const applyTextLineRange = <T>(lines: T[], range?: DynamicLayoutRange) =>
 };
 
 export const plainTextLinesToValue = (lines: string[]) =>
-  lines.map((line) => line.replace(/[\r\n]+$/g, '')).join('\n');
+  lines.map((line) => line.replace(/[\r\n]+$/g, "")).join("\n");
 
 const splitReplacementTextToLines = (value: string) => {
   const lines: string[] = [];
@@ -93,7 +93,7 @@ export const measureTextLines = async ({
       resolvedRuns[0]?.fontKitFont ??
       (await getFontKitFont(schema.fontName, font, _cache as Map<string, FontKitFont>));
     return {
-      lines: lines.map((line) => line.runs.map((run) => run.text).join('')),
+      lines: lines.map((line) => line.runs.map((run) => run.text).join("")),
       lineHeights: measureRichTextLineHeights(lines, resolvedFontSize, lineHeight, fallbackFont),
     };
   }

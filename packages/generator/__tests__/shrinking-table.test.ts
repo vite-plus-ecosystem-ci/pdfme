@@ -1,12 +1,12 @@
-import { PDFDocument } from '@pdfme/pdf-lib';
-import { Template } from '@pdfme/common';
-import { table, text } from '@pdfme/schemas';
-import generate from '../src/generate.js';
-import { getFont } from './utils.js';
+import { PDFDocument } from "@pdfme/pdf-lib";
+import { Template } from "@pdfme/common";
+import { table, text } from "@pdfme/schemas";
+import generate from "../src/generate.js";
+import { getFont } from "./utils.js";
 
-describe('generate a shrinking table with an overlapping caption (#1598)', () => {
+describe("generate a shrinking table with an overlapping caption (#1598)", () => {
   test.each([1, 2])(
-    'generates %s input(s) without changing the template or inputs',
+    "generates %s input(s) without changing the template or inputs",
     async (count) => {
       const tableSchema = structuredClone(table.propPanel.defaultSchema);
       for (const styles of [tableSchema.headStyles, tableSchema.bodyStyles]) {
@@ -20,28 +20,28 @@ describe('generate a shrinking table with an overlapping caption (#1598)', () =>
           [
             {
               ...tableSchema,
-              name: 'tbl',
+              name: "tbl",
               position: { x: 15, y: 19.91 },
               width: 150,
               height: 52.932,
               showHead: true,
-              head: ['A', 'B', 'C'],
+              head: ["A", "B", "C"],
               headWidthPercentages: [30, 30, 40],
-              content: JSON.stringify([['1', '2', '3']]),
+              content: JSON.stringify([["1", "2", "3"]]),
             },
             {
               ...text.propPanel.defaultSchema,
-              name: 'caption',
+              name: "caption",
               position: { x: 15, y: 20 },
               width: 70,
               height: 9,
-              content: 'CAPTION',
+              content: "CAPTION",
             },
           ],
         ],
       };
       const inputs = Array.from({ length: count }, (_, i) => ({
-        tbl: JSON.stringify([['1', '2', '3']]),
+        tbl: JSON.stringify([["1", "2", "3"]]),
         caption: `CAPTION ${i}`,
       }));
       const original = structuredClone({ template, inputs });

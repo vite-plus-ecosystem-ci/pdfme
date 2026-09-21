@@ -1,11 +1,11 @@
-import type { UIRenderProps, Mode } from '@pdfme/common';
-import type { TableSchema, CellStyle, Styles } from './types.js';
-import { px2mm, ZOOM } from '@pdfme/common';
-import { createSingleTable } from './tableHelper.js';
-import { getBody, getBodyWithSchemaRange } from './helper.js';
-import cell from './cell.js';
-import { Row } from './classes.js';
-import { getTableBodyRange } from '../splitRange.js';
+import type { UIRenderProps, Mode } from "@pdfme/common";
+import type { TableSchema, CellStyle, Styles } from "./types.js";
+import { px2mm, ZOOM } from "@pdfme/common";
+import { createSingleTable } from "./tableHelper.js";
+import { getBody, getBodyWithSchemaRange } from "./helper.js";
+import cell from "./cell.js";
+import { Row } from "./classes.js";
+import { getTableBodyRange } from "../splitRange.js";
 
 const buttonSize = 18;
 
@@ -19,38 +19,38 @@ function createButton(options: {
   ariaLabel?: string;
   onClick: (e: MouseEvent) => void;
 }): HTMLButtonElement {
-  const button = document.createElement('button');
-  button.type = 'button';
+  const button = document.createElement("button");
+  button.type = "button";
   button.innerText = options.text;
   if (options.ariaLabel) {
-    button.setAttribute('aria-label', options.ariaLabel);
+    button.setAttribute("aria-label", options.ariaLabel);
   }
   button.style.width = `${options.width}px`;
   button.style.height = `${options.height}px`;
-  button.style.position = 'absolute';
+  button.style.position = "absolute";
   button.style.top = options.top;
-  button.style.display = 'inline-flex';
-  button.style.alignItems = 'center';
-  button.style.justifyContent = 'center';
-  button.style.padding = '0';
-  button.style.border = '1px solid #d9d9d9';
-  button.style.borderRadius = '3px';
-  button.style.background = '#ffffff';
-  button.style.color = '#333333';
-  button.style.fontSize = '11px';
-  button.style.lineHeight = '1';
-  button.style.cursor = 'pointer';
-  button.style.zIndex = '20';
+  button.style.display = "inline-flex";
+  button.style.alignItems = "center";
+  button.style.justifyContent = "center";
+  button.style.padding = "0";
+  button.style.border = "1px solid #d9d9d9";
+  button.style.borderRadius = "3px";
+  button.style.background = "#ffffff";
+  button.style.color = "#333333";
+  button.style.fontSize = "11px";
+  button.style.lineHeight = "1";
+  button.style.cursor = "pointer";
+  button.style.zIndex = "20";
   if (options.left !== undefined) {
     button.style.left = options.left;
   }
   if (options.right !== undefined) {
     button.style.right = options.right;
   }
-  button.addEventListener('mousedown', (event) => {
+  button.addEventListener("mousedown", (event) => {
     event.preventDefault();
   });
-  button.addEventListener('click', (event) => {
+  button.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
     options.onClick(event);
@@ -99,7 +99,7 @@ const calcResizedHeadWidthPercentages = (arg: {
 
 const setBorder = (
   div: HTMLDivElement,
-  borderPosition: 'Top' | 'Left' | 'Right' | 'Bottom',
+  borderPosition: "Top" | "Left" | "Right" | "Bottom",
   arg: UIRenderProps<TableSchema>,
 ) => {
   div.style[`border${borderPosition}`] = `${String(arg.schema.tableStyles.borderWidth)}mm solid ${
@@ -119,20 +119,20 @@ const drawBorder = (
   const isLastColumn = colIndex === Object.values(row.cells).length - 1;
   const isLastRow = rowIndex === rowsLength - 1;
 
-  if (row.section === 'head') {
-    setBorder(div, 'Top', arg);
-    if (isFirstColumn) setBorder(div, 'Left', arg);
-    if (isLastColumn) setBorder(div, 'Right', arg);
-    if ((JSON.parse(arg.value || '[]') as string[][]).length === 0) {
-      setBorder(div, 'Bottom', arg);
+  if (row.section === "head") {
+    setBorder(div, "Top", arg);
+    if (isFirstColumn) setBorder(div, "Left", arg);
+    if (isLastColumn) setBorder(div, "Right", arg);
+    if ((JSON.parse(arg.value || "[]") as string[][]).length === 0) {
+      setBorder(div, "Bottom", arg);
     }
-  } else if (row.section === 'body') {
+  } else if (row.section === "body") {
     if (!arg.schema.showHead && rowIndex === 0) {
-      setBorder(div, 'Top', arg);
+      setBorder(div, "Top", arg);
     }
-    if (isFirstColumn) setBorder(div, 'Left', arg);
-    if (isLastColumn) setBorder(div, 'Right', arg);
-    if (isLastRow) setBorder(div, 'Bottom', arg);
+    if (isFirstColumn) setBorder(div, "Left", arg);
+    if (isLastColumn) setBorder(div, "Right", arg);
+    if (isLastRow) setBorder(div, "Bottom", arg);
   }
 };
 
@@ -144,44 +144,44 @@ const renderRowUi = (args: {
   offsetY?: number;
 }) => {
   const { rows, arg, onChangeEditingPosition, offsetY = 0, editingPosition } = args;
-  const value = JSON.parse(arg.value || '[]') as string[][];
+  const value = JSON.parse(arg.value || "[]") as string[][];
 
   let rowOffsetY = offsetY;
   rows.forEach((row, rowIndex) => {
     const { cells, height, section } = row;
     let colOffsetX = 0;
     Object.values(cells).forEach((cell, colIndex) => {
-      const div = document.createElement('div');
-      div.style.position = 'absolute';
+      const div = document.createElement("div");
+      div.style.position = "absolute";
       div.style.top = `${rowOffsetY}mm`;
       div.style.left = `${colOffsetX}mm`;
       div.style.width = `${cell.width}mm`;
       div.style.height = `${cell.height}mm`;
-      div.style.boxSizing = 'border-box';
+      div.style.boxSizing = "border-box";
 
       drawBorder(div, row, colIndex, rowIndex, rows.length, arg);
 
       div.style.cursor =
-        arg.mode === 'designer' || (arg.mode === 'form' && section === 'body') ? 'text' : 'default';
+        arg.mode === "designer" || (arg.mode === "form" && section === "body") ? "text" : "default";
 
-      div.addEventListener('click', () => {
-        if (arg.mode === 'viewer') return;
+      div.addEventListener("click", () => {
+        if (arg.mode === "viewer") return;
         onChangeEditingPosition({ rowIndex, colIndex });
       });
       arg.rootElement.appendChild(div);
       const isEditing =
         editingPosition.rowIndex === rowIndex && editingPosition.colIndex === colIndex;
-      let mode: Mode = 'viewer';
-      if (arg.mode === 'form') {
-        mode = section === 'body' && isEditing && !arg.schema.readOnly ? 'designer' : 'viewer';
-      } else if (arg.mode === 'designer') {
-        mode = isEditing ? 'designer' : 'form';
+      let mode: Mode = "viewer";
+      if (arg.mode === "form") {
+        mode = section === "body" && isEditing && !arg.schema.readOnly ? "designer" : "viewer";
+      } else if (arg.mode === "designer") {
+        mode = isEditing ? "designer" : "form";
       }
 
       void cellUiRender({
         ...arg,
         stopEditing: () => {
-          if (arg.mode === 'form') {
+          if (arg.mode === "form") {
             resetEditingPosition();
           }
         },
@@ -189,22 +189,22 @@ const renderRowUi = (args: {
         onChange: (v) => {
           if (!arg.onChange) return;
           const newValue = (Array.isArray(v) ? v[0].value : v.value) as string;
-          if (section === 'body') {
+          if (section === "body") {
             const startRange = getTableBodyRange(arg.schema)?.start ?? 0;
             value[rowIndex + startRange][colIndex] = newValue;
-            arg.onChange({ key: 'content', value: JSON.stringify(value) });
+            arg.onChange({ key: "content", value: JSON.stringify(value) });
           } else {
             const newHead = [...arg.schema.head];
             newHead[colIndex] = newValue;
-            arg.onChange({ key: 'head', value: newHead });
+            arg.onChange({ key: "head", value: newHead });
           }
         },
         value: cell.raw,
-        placeholder: '',
+        placeholder: "",
         rootElement: div,
         schema: {
-          name: '',
-          type: 'cell',
+          name: "",
+          type: "cell",
           content: cell.raw,
           position: { x: colOffsetX, y: rowOffsetY },
           width: cell.width,
@@ -235,7 +235,7 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
   const table = await createSingleTable(bodyWidthRange, arg);
   const showHead = table.settings.showHead;
 
-  rootElement.innerHTML = '';
+  rootElement.innerHTML = "";
 
   const handleChangeEditingPosition = (
     newPosition: { rowIndex: number; colIndex: number },
@@ -273,11 +273,11 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
       height: buttonSize,
       top: `${table.getHeight()}mm`,
       left: `calc(50% - ${buttonSize / 2}px)`,
-      text: '+',
-      ariaLabel: 'Add row',
+      text: "+",
+      ariaLabel: "Add row",
       onClick: () => {
-        const newRow = Array(schema.head.length).fill('') as string[];
-        if (onChange) onChange({ key: 'content', value: JSON.stringify(body.concat([newRow])) });
+        const newRow = Array(schema.head.length).fill("") as string[];
+        if (onChange) onChange({ key: "content", value: JSON.stringify(body.concat([newRow])) });
       },
     });
 
@@ -290,21 +290,21 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
         height: buttonSize,
         top: `${offsetY - px2mm(buttonSize)}mm`,
         right: `-${buttonSize}px`,
-        text: '-',
-        ariaLabel: 'Remove row',
+        text: "-",
+        ariaLabel: "Remove row",
         onClick: () => {
           const newTableBody = body.filter((_, j) => j !== i + (bodyRange?.start ?? 0));
-          if (onChange) onChange({ key: 'content', value: JSON.stringify(newTableBody) });
+          if (onChange) onChange({ key: "content", value: JSON.stringify(newTableBody) });
         },
       });
       return removeRowButton;
     });
   };
 
-  if (mode === 'form' && onChange && !schema.readOnly) {
+  if (mode === "form" && onChange && !schema.readOnly) {
     if (
       bodyRange?.end === undefined ||
-      bodyRange.end >= (JSON.parse(value || '[]') as string[][]).length
+      bodyRange.end >= (JSON.parse(value || "[]") as string[][]).length
     ) {
       rootElement.appendChild(createAddRowButton());
     }
@@ -312,14 +312,14 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
     createRemoveRowButtons().forEach((button) => rootElement.appendChild(button));
   }
 
-  if (mode === 'designer' && onChange) {
+  if (mode === "designer" && onChange) {
     const addColumnButton = createButton({
       width: buttonSize,
       height: buttonSize,
       top: `${(showHead ? table.getHeadHeight() : 0) - px2mm(buttonSize)}mm`,
       right: `-${buttonSize}px`,
-      text: '+',
-      ariaLabel: 'Add column',
+      text: "+",
+      ariaLabel: "Add column",
       onClick: (e) => {
         e.preventDefault();
         const newColumnWidthPercentage = 25;
@@ -330,10 +330,10 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
         const scalingRatio = (100 - newColumnWidthPercentage) / totalCurrentWidth;
         const scaledWidths = schema.headWidthPercentages.map((width) => width * scalingRatio);
         onChange([
-          { key: 'head', value: schema.head.concat(`Head ${schema.head.length + 1}`) },
-          { key: 'headWidthPercentages', value: scaledWidths.concat(newColumnWidthPercentage) },
+          { key: "head", value: schema.head.concat(`Head ${schema.head.length + 1}`) },
+          { key: "headWidthPercentages", value: scaledWidths.concat(newColumnWidthPercentage) },
           {
-            key: 'content',
+            key: "content",
             value: JSON.stringify(bodyWidthRange.map((row, i) => row.concat(`Row ${i + 1}`))),
           },
         ]);
@@ -354,8 +354,8 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
         height: buttonSize,
         top: `${-buttonSize}px`,
         left: `${offsetX - px2mm(buttonSize)}mm`,
-        text: '-',
-        ariaLabel: 'Remove column',
+        text: "-",
+        ariaLabel: "Remove column",
         onClick: () => {
           const totalWidthMinusRemoved = schema.headWidthPercentages.reduce(
             (sum, width, j) => (j !== i ? sum + width : sum),
@@ -364,15 +364,15 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
 
           // TODO Should also remove the deleted columnStyles when deleting
           onChange([
-            { key: 'head', value: schema.head.filter((_, j) => j !== i) },
+            { key: "head", value: schema.head.filter((_, j) => j !== i) },
             {
-              key: 'headWidthPercentages',
+              key: "headWidthPercentages",
               value: schema.headWidthPercentages
                 .filter((_, j) => j !== i)
                 .map((width) => (width / totalWidthMinusRemoved) * 100),
             },
             {
-              key: 'content',
+              key: "content",
               value: JSON.stringify(bodyWidthRange.map((row) => row.filter((_, j) => j !== i))),
             },
           ]);
@@ -382,39 +382,39 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
 
       if (i === table.columns.length - 1) return;
 
-      const dragHandle = document.createElement('div');
+      const dragHandle = document.createElement("div");
       const lineWidth = 5;
       dragHandle.style.width = `${lineWidth}px`;
-      dragHandle.style.height = '100%';
-      dragHandle.style.backgroundColor = '#eee';
-      dragHandle.style.opacity = '0.5';
-      dragHandle.style.cursor = 'col-resize';
-      dragHandle.style.position = 'absolute';
-      dragHandle.style.zIndex = '10';
+      dragHandle.style.height = "100%";
+      dragHandle.style.backgroundColor = "#eee";
+      dragHandle.style.opacity = "0.5";
+      dragHandle.style.cursor = "col-resize";
+      dragHandle.style.position = "absolute";
+      dragHandle.style.zIndex = "10";
       dragHandle.style.left = `${offsetX - px2mm(lineWidth) / 2}mm`;
-      dragHandle.style.top = '0';
+      dragHandle.style.top = "0";
       const setColor = (e: MouseEvent) => {
         const handle = e.target as HTMLDivElement;
-        handle.style.backgroundColor = '#2196f3';
+        handle.style.backgroundColor = "#2196f3";
       };
       const resetColor = (e: MouseEvent) => {
         const handle = e.target as HTMLDivElement;
-        handle.style.backgroundColor = '#eee';
+        handle.style.backgroundColor = "#eee";
       };
-      dragHandle.addEventListener('mouseover', setColor);
-      dragHandle.addEventListener('mouseout', resetColor);
+      dragHandle.addEventListener("mouseover", setColor);
+      dragHandle.addEventListener("mouseout", resetColor);
 
       const prevColumnLeft = offsetX - column.width;
       const nextColumnRight = offsetX - px2mm(lineWidth) + table.columns[i + 1].width;
 
-      dragHandle.addEventListener('mousedown', (e) => {
+      dragHandle.addEventListener("mousedown", (e) => {
         resetEditingPosition();
         const handle = e.target as HTMLDivElement;
-        dragHandle.removeEventListener('mouseover', setColor);
-        dragHandle.removeEventListener('mouseout', resetColor);
+        dragHandle.removeEventListener("mouseover", setColor);
+        dragHandle.removeEventListener("mouseout", resetColor);
 
         const startClientX = e.clientX;
-        const startLeft = Number(handle.style.left.replace('mm', ''));
+        const startLeft = Number(handle.style.left.replace("mm", ""));
 
         let move = 0;
         const mouseMove = (e: MouseEvent) => {
@@ -431,7 +431,7 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
           handle.style.left = `${newLeft}mm`;
           move = newLeft - startLeft;
         };
-        rootElement.addEventListener('mousemove', mouseMove);
+        rootElement.addEventListener("mousemove", mouseMove);
 
         const commitResize = () => {
           if (move !== 0) {
@@ -441,26 +441,26 @@ export const uiRender = async (arg: UIRenderProps<TableSchema>) => {
               changedHeadWidth: table.columns[i].width + move,
               changedHeadIndex: i,
             });
-            onChange({ key: 'headWidthPercentages', value: newHeadWidthPercentages });
+            onChange({ key: "headWidthPercentages", value: newHeadWidthPercentages });
           }
           move = 0;
-          dragHandle.addEventListener('mouseover', setColor);
-          dragHandle.addEventListener('mouseout', resetColor);
-          rootElement.removeEventListener('mousemove', mouseMove);
-          rootElement.removeEventListener('mouseup', commitResize);
+          dragHandle.addEventListener("mouseover", setColor);
+          dragHandle.addEventListener("mouseout", resetColor);
+          rootElement.removeEventListener("mousemove", mouseMove);
+          rootElement.removeEventListener("mouseup", commitResize);
         };
-        rootElement.addEventListener('mouseup', commitResize);
+        rootElement.addEventListener("mouseup", commitResize);
       });
       rootElement.appendChild(dragHandle);
     });
   }
 
-  if (mode === 'viewer') {
+  if (mode === "viewer") {
     resetEditingPosition();
   }
 
   const tableHeight = showHead ? table.getHeight() : table.getBodyHeight();
   if (schema.height !== tableHeight && onChange) {
-    onChange({ key: 'height', value: tableHeight });
+    onChange({ key: "height", value: tableHeight });
   }
 };

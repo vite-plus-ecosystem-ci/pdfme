@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import type { PDFPage, PDFDocument } from '@pdfme/pdf-lib';
+import { z } from "zod";
+import type { PDFPage, PDFDocument } from "@pdfme/pdf-lib";
 import {
   Lang,
   Dict,
@@ -23,9 +23,9 @@ import {
   ColorType,
   LegacySchemaPageArray,
   SchemaPageArray,
-} from './schema.js';
+} from "./schema.js";
 
-export type { PdfBytes } from './schema.js';
+export type { PdfBytes } from "./schema.js";
 
 export interface UIOptionsThemeToken {
   colorPrimary?: string;
@@ -98,7 +98,7 @@ export interface PDFRenderProps<T extends Schema> {
   value: string;
   schema: T;
   basePdf: BasePdf;
-  pdfLib: typeof import('@pdfme/pdf-lib');
+  pdfLib: typeof import("@pdfme/pdf-lib");
   pdfDoc: PDFDocument;
   page: PDFPage;
   options: GeneratorOptions;
@@ -187,7 +187,7 @@ export type PropPanelWidgetProps = PropPanelWidgetRuntimeProps & PropPanelProps;
  */
 export interface PropPanel<T extends Schema> {
   schema:
-    | ((propPanelProps: Omit<PropPanelProps, 'rootElement'>) => Record<string, PropPanelSchema>)
+    | ((propPanelProps: Omit<PropPanelProps, "rootElement">) => Record<string, PropPanelSchema>)
     | Record<string, PropPanelSchema>;
 
   widgets?: Record<string, (props: PropPanelWidgetProps) => void>;
@@ -229,7 +229,7 @@ export type Dict = z.infer<typeof Dict>;
 export type Mode = z.infer<typeof Mode>;
 export type Size = z.infer<typeof Size>;
 export type DynamicLayoutSplitRange = z.infer<typeof DynamicLayoutSplitRange>;
-export type DynamicLayoutRange = Omit<DynamicLayoutSplitRange, 'unit'>;
+export type DynamicLayoutRange = Omit<DynamicLayoutSplitRange, "unit">;
 export type Schema = z.infer<typeof Schema>;
 export type SchemaForUI = z.infer<typeof SchemaForUI>;
 
@@ -248,11 +248,11 @@ export type CustomPdf = z.infer<typeof CustomPdf>;
 export type Template = z.infer<typeof Template>;
 export type CommonOptions = z.infer<typeof CommonOptions>;
 export type GeneratorOptions = z.infer<typeof GeneratorOptions>;
-export type GenerateProps = Omit<z.infer<typeof GenerateProps>, 'plugins'> & { plugins?: Plugins };
+export type GenerateProps = Omit<z.infer<typeof GenerateProps>, "plugins"> & { plugins?: Plugins };
 export type UIOptions = z.infer<typeof UIOptions> & { theme?: UIOptionsTheme };
-export type UIProps = Omit<z.infer<typeof UIProps>, 'plugins'> & { plugins?: Plugins };
-export type PreviewProps = Omit<z.infer<typeof PreviewProps>, 'plugins'> & { plugins?: Plugins };
-export type DesignerProps = Omit<z.infer<typeof DesignerProps>, 'plugins'> & { plugins?: Plugins };
+export type UIProps = Omit<z.infer<typeof UIProps>, "plugins"> & { plugins?: Plugins };
+export type PreviewProps = Omit<z.infer<typeof PreviewProps>, "plugins"> & { plugins?: Plugins };
+export type DesignerProps = Omit<z.infer<typeof DesignerProps>, "plugins"> & { plugins?: Plugins };
 export type SchemaPageArray = z.infer<typeof SchemaPageArray>;
 export type LegacySchemaPageArray = z.infer<typeof LegacySchemaPageArray>;
 

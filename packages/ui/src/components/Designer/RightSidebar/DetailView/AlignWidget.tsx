@@ -1,7 +1,7 @@
-import { Space, Button, Form } from 'antd';
-import React from 'react';
-import type { PropPanelWidgetProps } from '@pdfme/common';
-import { DESIGNER_CLASSNAME } from '../../../../constants.js';
+import { Space, Button, Form } from "antd";
+import React from "react";
+import type { PropPanelWidgetProps } from "@pdfme/common";
+import { DESIGNER_CLASSNAME } from "../../../../constants.js";
 import {
   AlignStartVertical,
   AlignStartHorizontal,
@@ -11,23 +11,23 @@ import {
   AlignEndHorizontal,
   AlignVerticalSpaceAround,
   AlignHorizontalSpaceAround,
-} from 'lucide-react';
-import { round } from '../../../../helper.js';
+} from "lucide-react";
+import { round } from "../../../../helper.js";
 
 const AlignWidget = (props: PropPanelWidgetProps) => {
   const { activeElements, changeSchemas, schemas, pageSize, schema } = props;
-  const align = (type: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => {
+  const align = (type: "left" | "center" | "right" | "top" | "middle" | "bottom") => {
     const ids = activeElements.map((ae) => ae.id);
     const ass = schemas.filter((s) => ids.includes(s.id));
 
-    const isVertical = ['left', 'center', 'right'].includes(type);
-    const tgtPos = isVertical ? 'x' : 'y';
-    const tgtSize = isVertical ? 'width' : 'height';
+    const isVertical = ["left", "center", "right"].includes(type);
+    const tgtPos = isVertical ? "x" : "y";
+    const tgtSize = isVertical ? "width" : "height";
     const isSingle = ass.length === 1;
     // Access pageSize property safely with proper type assertion
     const root =
-      pageSize && typeof pageSize === 'object'
-        ? tgtSize === 'width'
+      pageSize && typeof pageSize === "object"
+        ? tgtSize === "width"
           ? (pageSize as unknown as { width: number }).width
           : (pageSize as unknown as { height: number }).height
         : 0;
@@ -39,10 +39,10 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
           ...ass.map((as) => {
             // Safely access position property with proper type assertion
             const position =
-              as.position && typeof as.position === 'object'
+              as.position && typeof as.position === "object"
                 ? (as.position as unknown as { x: number; y: number })
                 : { x: 0, y: 0 };
-            return tgtPos === 'x' ? position.x : position.y;
+            return tgtPos === "x" ? position.x : position.y;
           }),
         );
     const max = isSingle
@@ -51,14 +51,14 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
           ...ass.map((as) => {
             // Safely access position and size properties with proper type assertion
             const position =
-              as.position && typeof as.position === 'object'
+              as.position && typeof as.position === "object"
                 ? (as.position as unknown as { x: number; y: number })
                 : { x: 0, y: 0 };
-            const posValue = tgtPos === 'x' ? position.x : position.y;
+            const posValue = tgtPos === "x" ? position.x : position.y;
 
             // Safely access width/height with proper type assertion
             const asWithSize = as as unknown as { width?: number; height?: number };
-            const sizeValue = tgtSize === 'width' ? asWithSize.width || 0 : asWithSize.height || 0;
+            const sizeValue = tgtSize === "width" ? asWithSize.width || 0 : asWithSize.height || 0;
 
             return posValue + sizeValue;
           }),
@@ -68,10 +68,10 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
     // Define adjust function with consistent parameter usage
     let adjust: (size: number) => number = () => 0;
 
-    if (['center', 'middle'].includes(type)) {
+    if (["center", "middle"].includes(type)) {
       basePos = (min + max) / 2;
       adjust = (size: number): number => size / 2;
-    } else if (['right', 'bottom'].includes(type)) {
+    } else if (["right", "bottom"].includes(type)) {
       basePos = max;
       adjust = (size: number): number => size;
     }
@@ -80,7 +80,7 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
       ass.map((as) => {
         // Safely access size property with proper type assertion
         const asWithSize = as as unknown as { width?: number; height?: number; id: string };
-        const sizeValue = tgtSize === 'width' ? asWithSize.width || 0 : asWithSize.height || 0;
+        const sizeValue = tgtSize === "width" ? asWithSize.width || 0 : asWithSize.height || 0;
 
         return {
           key: `position.${tgtPos}`,
@@ -91,22 +91,22 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
     );
   };
 
-  const distribute = (type: 'vertical' | 'horizontal') => {
+  const distribute = (type: "vertical" | "horizontal") => {
     const ids = activeElements.map((ae) => ae.id);
     const ass = schemas.filter((s) => ids.includes(s.id));
 
-    const isVertical = type === 'vertical';
-    const tgtPos = isVertical ? 'y' : 'x';
-    const tgtSize = isVertical ? 'height' : 'width';
+    const isVertical = type === "vertical";
+    const tgtPos = isVertical ? "y" : "x";
+    const tgtSize = isVertical ? "height" : "width";
 
     // Safely access position property with proper type assertion
     const min = Math.min(
       ...ass.map((as) => {
         const position =
-          as.position && typeof as.position === 'object'
+          as.position && typeof as.position === "object"
             ? (as.position as unknown as { x: number; y: number })
             : { x: 0, y: 0 };
-        return tgtPos === 'x' ? position.x : position.y;
+        return tgtPos === "x" ? position.x : position.y;
       }),
     );
 
@@ -114,14 +114,14 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
     const max = Math.max(
       ...ass.map((as) => {
         const position =
-          as.position && typeof as.position === 'object'
+          as.position && typeof as.position === "object"
             ? (as.position as unknown as { x: number; y: number })
             : { x: 0, y: 0 };
-        const posValue = tgtPos === 'x' ? position.x : position.y;
+        const posValue = tgtPos === "x" ? position.x : position.y;
 
         // Safely access width/height with proper type assertion
         const asWithSize = as as unknown as { width?: number; height?: number };
-        const sizeValue = tgtSize === 'width' ? asWithSize.width || 0 : asWithSize.height || 0;
+        const sizeValue = tgtSize === "width" ? asWithSize.width || 0 : asWithSize.height || 0;
 
         return posValue + sizeValue;
       }),
@@ -134,7 +134,7 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
     // Safely access size property with proper type assertion
     const sum = ass.reduce((acc, cur) => {
       const curWithSize = cur as unknown as { width?: number; height?: number };
-      const sizeValue = tgtSize === 'width' ? curWithSize.width || 0 : curWithSize.height || 0;
+      const sizeValue = tgtSize === "width" ? curWithSize.width || 0 : curWithSize.height || 0;
       return acc + sizeValue;
     }, 0);
     const remain = boxSize - sum;
@@ -149,7 +149,7 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
             ? 0
             : (() => {
                 const prevAs = ass[index - 1] as unknown as { width?: number; height?: number };
-                return tgtSize === 'width' ? prevAs.width || 0 : prevAs.height || 0;
+                return tgtSize === "width" ? prevAs.width || 0 : prevAs.height || 0;
               })();
 
         prev += index === 0 ? 0 : prevSize + unit;
@@ -167,44 +167,44 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
     onClick: () => void;
   }[] = [
     {
-      id: 'left',
+      id: "left",
       icon: <AlignStartVertical size={15} />,
-      onClick: () => align('left'),
+      onClick: () => align("left"),
     },
     {
-      id: 'center',
+      id: "center",
       icon: <AlignCenterVertical size={15} />,
-      onClick: () => align('center'),
+      onClick: () => align("center"),
     },
     {
-      id: 'right',
+      id: "right",
       icon: <AlignEndVertical size={15} />,
-      onClick: () => align('right'),
+      onClick: () => align("right"),
     },
     {
-      id: 'top',
+      id: "top",
       icon: <AlignStartHorizontal size={15} />,
-      onClick: () => align('top'),
+      onClick: () => align("top"),
     },
     {
-      id: 'middle',
+      id: "middle",
       icon: <AlignCenterHorizontal size={15} />,
-      onClick: () => align('middle'),
+      onClick: () => align("middle"),
     },
     {
-      id: 'bottom',
+      id: "bottom",
       icon: <AlignEndHorizontal size={15} />,
-      onClick: () => align('bottom'),
+      onClick: () => align("bottom"),
     },
     {
-      id: 'vertical',
+      id: "vertical",
       icon: <AlignVerticalSpaceAround size={15} />,
-      onClick: () => distribute('vertical'),
+      onClick: () => distribute("vertical"),
     },
     {
-      id: 'horizontal',
+      id: "horizontal",
       icon: <AlignHorizontalSpaceAround size={15} />,
-      onClick: () => distribute('horizontal'),
+      onClick: () => distribute("horizontal"),
     },
   ];
 
@@ -213,10 +213,10 @@ const AlignWidget = (props: PropPanelWidgetProps) => {
       <Space.Compact>
         {layoutBtns.map((btn) => (
           <Button
-            className={DESIGNER_CLASSNAME + 'align-' + btn.id}
+            className={DESIGNER_CLASSNAME + "align-" + btn.id}
             key={btn.id}
             style={{ padding: 7 }}
-            disabled={activeElements.length <= 2 && ['vertical', 'horizontal'].includes(btn.id)}
+            disabled={activeElements.length <= 2 && ["vertical", "horizontal"].includes(btn.id)}
             {...btn}
           />
         ))}

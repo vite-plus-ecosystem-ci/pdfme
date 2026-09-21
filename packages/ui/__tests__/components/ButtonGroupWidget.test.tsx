@@ -1,12 +1,13 @@
-import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
-import { BLANK_PDF, type PropPanelWidgetProps, type SchemaForUI } from '@pdfme/common';
-import ButtonGroupWidget from '../../src/components/Designer/RightSidebar/DetailView/ButtonGroupWidget';
+import React from "react";
+import { fireEvent, render } from "@testing-library/react";
+import { BLANK_PDF, type PropPanelWidgetProps, type SchemaForUI } from "@pdfme/common";
+import ButtonGroupWidget from "../../src/components/Designer/RightSidebar/DetailView/ButtonGroupWidget";
 
-const icon = '<svg xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" d="M1 1h10" /></svg>';
+const icon =
+  '<svg xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" d="M1 1h10" /></svg>';
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
+  Object.defineProperty(window, "matchMedia", {
     configurable: true,
     value: vi.fn().mockImplementation((query: string) => ({
       addEventListener: vi.fn(),
@@ -22,18 +23,18 @@ beforeAll(() => {
 });
 
 const schema = (id: string, underline: boolean): SchemaForUI => ({
-  content: '',
+  content: "",
   height: 6,
   id,
   name: id,
   position: { x: 10, y: 20 },
-  type: 'text',
+  type: "text",
   underline,
   width: 30,
 });
 
 const element = (id: string) => {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.id = id;
   return div;
 };
@@ -47,33 +48,33 @@ const renderButtonGroup = (schemas: SchemaForUI[]) => {
     changeSchemas,
     i18n: (key: string) => key,
     options: {},
-    rootElement: document.createElement('div'),
+    rootElement: document.createElement("div"),
     schema: {
-      buttons: [{ key: 'underline', icon, type: 'boolean' }],
+      buttons: [{ key: "underline", icon, type: "boolean" }],
     },
     schemas,
     theme: {
-      colorPrimary: '#1677ff',
-      colorPrimaryBg: '#e6f4ff',
-      colorWhite: '#ffffff',
+      colorPrimary: "#1677ff",
+      colorPrimaryBg: "#e6f4ff",
+      colorWhite: "#ffffff",
     },
   } as PropPanelWidgetProps;
 
   return { ...render(<ButtonGroupWidget {...props} />), changeSchemas };
 };
 
-describe('ButtonGroupWidget', () => {
-  it('turns a partial boolean selection on for every same-type schema', () => {
+describe("ButtonGroupWidget", () => {
+  it("turns a partial boolean selection on for every same-type schema", () => {
     const { container, changeSchemas } = renderButtonGroup([
-      schema('field-1', true),
-      schema('field-2', false),
+      schema("field-1", true),
+      schema("field-2", false),
     ]);
 
-    fireEvent.click(container.querySelector('button')!);
+    fireEvent.click(container.querySelector("button")!);
 
     expect(changeSchemas).toHaveBeenCalledWith([
-      { key: 'underline', value: true, schemaId: 'field-1' },
-      { key: 'underline', value: true, schemaId: 'field-2' },
+      { key: "underline", value: true, schemaId: "field-1" },
+      { key: "underline", value: true, schemaId: "field-2" },
     ]);
   });
 });

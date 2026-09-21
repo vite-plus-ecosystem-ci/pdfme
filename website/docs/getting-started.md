@@ -52,13 +52,13 @@ The following type, function and classes are available in pdfme.
 If your environment uses webpack, import the necessary items as shown below.
 
 ```ts
-import type { Template } from '@pdfme/common';
-import { generate } from '@pdfme/generator';
+import type { Template } from "@pdfme/common";
+import { generate } from "@pdfme/generator";
 ```
 
 ```ts
-import type { Template } from '@pdfme/common';
-import { Designer, Form, Viewer } from '@pdfme/ui';
+import type { Template } from "@pdfme/common";
+import { Designer, Form, Viewer } from "@pdfme/ui";
 ```
 
 **All objects use `Template`, which will be briefly explained in the next section.**
@@ -83,7 +83,6 @@ The **basePdf** property accepts PDF data as a `string` (base64 encoded), an `Ar
 basePdf: { "width": 210, "height": 297, "padding": [10, 10, 10, 10] }
 ```
 
-
 **schemas** can only utilize text by default. The default plugin registry used by `generate`, `Designer`, `Form`, and `Viewer` intentionally includes only the `text` schema.  
 For images, signatures, tables, barcodes such as QR codes, or any other schema type, import those plugins explicitly from the `@pdfme/schemas` package and pass them through the `plugins` option.  
 Additionally, you can create your own schemas, allowing you to render types other than the ones mentioned above. Check detail about [Custom Schemas](/docs/custom-schemas) and the [v6 migration guide](/docs/migration-v6#text-only-default-plugin-registry) if you are upgrading existing code.
@@ -94,29 +93,29 @@ Let's take a look at some specific data.
 ### Minimal Template
 
 ```ts
-import { Template, BLANK_PDF } from '@pdfme/common';
+import { Template, BLANK_PDF } from "@pdfme/common";
 
 const template: Template = {
   basePdf: BLANK_PDF,
   schemas: [
     [
       {
-        name: 'a',
-        type: 'text',
+        name: "a",
+        type: "text",
         position: { x: 0, y: 0 },
         width: 10,
         height: 10,
       },
       {
-        name: 'b',
-        type: 'text',
+        name: "b",
+        type: "text",
         position: { x: 10, y: 10 },
         width: 10,
         height: 10,
       },
       {
-        name: 'c',
-        type: 'text',
+        name: "c",
+        type: "text",
         position: { x: 20, y: 20 },
         width: 10,
         height: 10,
@@ -145,31 +144,31 @@ npm install @pdfme/schemas
 Here’s an example of a template using both built-in and custom schema types:
 
 ```ts
-import { Template, BLANK_PDF } from '@pdfme/common';
-import { text, barcodes, image } from '@pdfme/schemas';
-import myCustomPlugin from './custom-plugins';
+import { Template, BLANK_PDF } from "@pdfme/common";
+import { text, barcodes, image } from "@pdfme/schemas";
+import myCustomPlugin from "./custom-plugins";
 
 const template: Template = {
   basePdf: BLANK_PDF,
   schemas: [
     [
       {
-        name: 'example_text',
-        type: 'text',
+        name: "example_text",
+        type: "text",
         position: { x: 0, y: 0 },
         width: 40,
         height: 10,
       },
       {
-        name: 'example_image',
-        type: 'image',
+        name: "example_image",
+        type: "image",
         position: { x: 200, y: 200 },
         width: 60,
         height: 40,
       },
       {
-        name: 'example_qr_code',
-        type: 'qrcode',
+        name: "example_qr_code",
+        type: "qrcode",
         position: { x: 100, y: 100 },
         width: 50,
         height: 50,
@@ -180,16 +179,16 @@ const template: Template = {
 
 const plugins = {
   Text: multiVariableText,
-  'QR Code': barcodes.qrcode,
+  "QR Code": barcodes.qrcode,
   Image: image,
   MyCustomPlugin: myCustomPlugin,
 };
 
 const inputs = [
   {
-    example_text: 'Hello, World!',
-    example_image: 'data:image/png;base64,iVBORw0KG....',
-    example_qr_code: 'https://pdfme.com/',
+    example_text: "Hello, World!",
+    example_image: "data:image/png;base64,iVBORw0KG....",
+    example_qr_code: "https://pdfme.com/",
   },
 ];
 
@@ -213,13 +212,13 @@ The PDF generator function, `generate`, takes 2 arguments of `template` and `inp
 The code to generate a PDF file using the [template created above](/docs/getting-started#minimal-template) is shown below.
 
 ```ts
-import type { Template } from '@pdfme/common';
-import { generate } from '@pdfme/generator';
+import type { Template } from "@pdfme/common";
+import { generate } from "@pdfme/generator";
 
 const template: Template = {
   // skip...　Check the Template section.
 };
-const inputs = [{ a: 'a1', b: 'b1', c: 'c1' }];
+const inputs = [{ a: "a1", b: "b1", c: "c1" }];
 
 generate({ template, inputs }).then((pdf) => {
   console.log(pdf);
@@ -252,19 +251,19 @@ You can design your own template from the [playground Designer](https://playgrou
 Let's integrate the designer using the template created above as the default template.
 
 ```ts
-import type { Template } from '@pdfme/common';
-import { Designer } from '@pdfme/ui';
+import type { Template } from "@pdfme/common";
+import { Designer } from "@pdfme/ui";
 
-const domContainer = document.getElementById('container');
+const domContainer = document.getElementById("container");
 const template: Template = {
   // skip...　Check the Template section.
 };
 
 // configure some or all of the UI state (optional, defaults shown below)
- const options = {
-   zoomLevel: 1,
-   sidebarOpen: true
- };
+const options = {
+  zoomLevel: 1,
+  sidebarOpen: true,
+};
 
 const designer = new Designer({ domContainer, template, options });
 ```
@@ -292,15 +291,15 @@ The Form creates a UI for the user to enter schemas based on the template.
 You can try out the form that uses the invoice template in the [playground Form/Viewer](https://playground.pdfme.com/form-viewer?template=invoice).
 
 ```ts
-import type { Template } from '@pdfme/common';
-import { Form } from '@pdfme/ui';
+import type { Template } from "@pdfme/common";
+import { Form } from "@pdfme/ui";
 
-const domContainer = document.getElementById('container');
+const domContainer = document.getElementById("container");
 const template: Template = {
   // skip...
 };
 // This is initial data.
-const inputs = [{ a: 'a1', b: 'b1', c: 'c1' }];
+const inputs = [{ a: "a1", b: "b1", c: "c1" }];
 
 const form = new Form({ domContainer, template, inputs });
 ```
@@ -313,7 +312,7 @@ You can generate a PDF file based on the user's input by passing the data you ge
 
 ```ts
 generate({ template, inputs: form.getInputs() }).then((pdf) => {
-  const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
+  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
   window.open(URL.createObjectURL(blob));
 });
 ```
@@ -327,14 +326,14 @@ The Viewer is a byproduct of the Form development process, but it allows you to 
 Using the Viewer is basically the same as using the Form, except that user cannot edit it.
 
 ```ts
-import type { Template } from '@pdfme/common';
-import { Viewer } from '@pdfme/ui';
+import type { Template } from "@pdfme/common";
+import { Viewer } from "@pdfme/ui";
 
-const domContainer = document.getElementById('container');
+const domContainer = document.getElementById("container");
 const template: Template = {
   // skip...
 };
-const inputs = [{ a: 'a1', b: 'b1', c: 'c1' }];
+const inputs = [{ a: "a1", b: "b1", c: "c1" }];
 
 const viewer = new Viewer({ domContainer, template, inputs });
 ```

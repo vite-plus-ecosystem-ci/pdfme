@@ -1,11 +1,11 @@
-import { Space, Button, Form, theme } from 'antd';
-import React from 'react';
-import type { PropPanelWidgetProps, SchemaForUI } from '@pdfme/common';
-import { getSameTypeBulkUpdateSchemas } from './schemaChangeHelpers.js';
+import { Space, Button, Form, theme } from "antd";
+import React from "react";
+import type { PropPanelWidgetProps, SchemaForUI } from "@pdfme/common";
+import { getSameTypeBulkUpdateSchemas } from "./schemaChangeHelpers.js";
 interface ButtonConfig {
   key: string;
   icon: string;
-  type: 'boolean' | 'select';
+  type: "boolean" | "select";
   value?: string;
 }
 
@@ -26,7 +26,7 @@ const ButtonGroupWidget = (props: PropPanelWidgetProps) => {
     });
 
   const getButtonValue = (btn: ButtonConfig, targetSchemas: SchemaForUI[]) => {
-    if (btn.type !== 'boolean') return btn.value;
+    if (btn.type !== "boolean") return btn.value;
 
     const isActive = targetSchemas.every((s) =>
       Boolean((s as Record<string, unknown>)[btn.key] ?? false),
@@ -49,7 +49,7 @@ const ButtonGroupWidget = (props: PropPanelWidgetProps) => {
     return targetSchemas.every((s: SchemaForUI) => {
       // Cast schema to Record to safely access dynamic properties
       const schemaRecord = s as Record<string, unknown>;
-      return type === 'boolean'
+      return type === "boolean"
         ? Boolean(schemaRecord[key] ?? false)
         : schemaRecord[key] === btn.value;
     });
@@ -72,7 +72,7 @@ const ButtonGroupWidget = (props: PropPanelWidgetProps) => {
           const active = isActive(btn);
           return (
             <Button
-              type={active ? 'primary' : undefined}
+              type={active ? "primary" : undefined}
               ghost={active}
               onClick={() => apply(btn)}
               style={{

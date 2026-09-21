@@ -1,4 +1,4 @@
-import { createBarCode, resolveBarcodeRenderRuntime } from '../src/barcodes/helper.js';
+import { createBarCode, resolveBarcodeRenderRuntime } from "../src/barcodes/helper.js";
 
 const mocks = vi.hoisted(() => {
   const pngMagic = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
@@ -21,7 +21,7 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('bwip-js', () => ({
+vi.mock("bwip-js", () => ({
   default: mocks.bwipjs,
 }));
 
@@ -41,7 +41,7 @@ class MockOffscreenCanvas {
   }
 
   async convertToBlob() {
-    return new Blob([new Uint8Array(PNG_MAGIC)], { type: 'image/png' });
+    return new Blob([new Uint8Array(PNG_MAGIC)], { type: "image/png" });
   }
 }
 
@@ -50,7 +50,7 @@ const restoreBwipjs = () => {
   mocks.bwipjs.toBuffer = mocks.toBuffer;
 };
 
-describe('createBarCode Worker path', () => {
+describe("createBarCode Worker path", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     mocks.toCanvas.mockClear();
@@ -58,18 +58,18 @@ describe('createBarCode Worker path', () => {
     restoreBwipjs();
   });
 
-  test('renders via OffscreenCanvas and does not call toBuffer', async () => {
-    vi.stubGlobal('OffscreenCanvas', MockOffscreenCanvas);
+  test("renders via OffscreenCanvas and does not call toBuffer", async () => {
+    vi.stubGlobal("OffscreenCanvas", MockOffscreenCanvas);
 
     const buffer = await createBarCode({
-      type: 'qrcode',
-      input: 'https://pdfme.com/worker',
+      type: "qrcode",
+      input: "https://pdfme.com/worker",
       width: 10,
       height: 10,
-      backgroundColor: 'ffffff',
+      backgroundColor: "ffffff",
     });
 
-    expect(resolveBarcodeRenderRuntime()).toBe('offscreencanvas');
+    expect(resolveBarcodeRenderRuntime()).toBe("offscreencanvas");
     expect(mocks.toBuffer).not.toHaveBeenCalled();
     expect(mocks.toCanvas).toHaveBeenCalledTimes(1);
     expect(mocks.toCanvas.mock.calls[0][0]).toBeInstanceOf(MockOffscreenCanvas);
@@ -77,7 +77,7 @@ describe('createBarCode Worker path', () => {
   });
 });
 
-describe('createBarCode Node export with OffscreenCanvas', () => {
+describe("createBarCode Node export with OffscreenCanvas", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     mocks.toCanvas.mockClear();
@@ -85,15 +85,15 @@ describe('createBarCode Node export with OffscreenCanvas', () => {
     restoreBwipjs();
   });
 
-  test('falls back to toBuffer when OffscreenCanvas exists but toCanvas does not', async () => {
-    vi.stubGlobal('OffscreenCanvas', MockOffscreenCanvas);
+  test("falls back to toBuffer when OffscreenCanvas exists but toCanvas does not", async () => {
+    vi.stubGlobal("OffscreenCanvas", MockOffscreenCanvas);
     delete mocks.bwipjs.toCanvas;
 
-    expect(resolveBarcodeRenderRuntime()).toBe('node-buffer');
+    expect(resolveBarcodeRenderRuntime()).toBe("node-buffer");
 
     const buffer = await createBarCode({
-      type: 'qrcode',
-      input: 'https://pdfme.com/node-export',
+      type: "qrcode",
+      input: "https://pdfme.com/node-export",
       width: 10,
       height: 10,
     });
@@ -104,7 +104,7 @@ describe('createBarCode Node export with OffscreenCanvas', () => {
   });
 });
 
-describe('createBarCode missing capabilities', () => {
+describe("createBarCode missing capabilities", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     mocks.toCanvas.mockClear();
@@ -112,18 +112,18 @@ describe('createBarCode missing capabilities', () => {
     restoreBwipjs();
   });
 
-  test('throws a capability error instead of toBuffer is not a function', async () => {
+  test("throws a capability error instead of toBuffer is not a function", async () => {
     delete mocks.bwipjs.toBuffer;
 
     await expect(
       createBarCode({
-        type: 'qrcode',
-        input: 'https://pdfme.com/worker',
+        type: "qrcode",
+        input: "https://pdfme.com/worker",
         width: 10,
         height: 10,
       }),
     ).rejects.toThrow(
-      '[@pdfme/schemas] Barcode rendering requires a document canvas, OffscreenCanvas, or bwip-js toBuffer().',
+      "[@pdfme/schemas] Barcode rendering requires a document canvas, OffscreenCanvas, or bwip-js toBuffer().",
     );
     expect(mocks.toBuffer).not.toHaveBeenCalled();
   });

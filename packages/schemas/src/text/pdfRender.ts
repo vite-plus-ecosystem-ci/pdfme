@@ -1,12 +1,12 @@
-import type { Font as FontKitFont } from 'fontkit';
-import type { TextSchema } from './types.js';
+import type { Font as FontKitFont } from "fontkit";
+import type { TextSchema } from "./types.js";
 import {
   PDFRenderProps,
   ColorType,
   getDefaultFont,
   getFallbackFontName,
   mm2pt,
-} from '@pdfme/common';
+} from "@pdfme/common";
 import {
   VERTICAL_ALIGN_TOP,
   VERTICAL_ALIGN_MIDDLE,
@@ -17,7 +17,7 @@ import {
   DEFAULT_LINE_HEIGHT,
   DEFAULT_CHARACTER_SPACING,
   DEFAULT_FONT_COLOR,
-} from './constants.js';
+} from "./constants.js";
 import {
   calculateDynamicFontSize,
   heightOfFontAtSize,
@@ -25,17 +25,17 @@ import {
   getFontKitFont,
   widthOfTextAtSize,
   wrapTextToSize,
-} from './helper.js';
-import { getLineAlignment } from './wrap.js';
-import { stripInlineMarkdown } from './inlineMarkdown.js';
-import { applyTextLineRange } from './measure.js';
-import { calculateDynamicRichTextFontSize, isInlineMarkdownTextSchema } from './richText.js';
-import { renderInlineMarkdownText } from './richTextPdfRender.js';
-import { shouldUseDynamicFontSize } from './overflow.js';
-import { convertForPdfLayoutProps, rotatePoint, hex2PrintingColor } from '../utils.js';
-import { getTextLineRange } from '../splitRange.js';
-import { getBoxContentArea, getBoxInsets, hasBoxDimension } from '../box.js';
-import { embedAndGetFont } from '../pdfFont.js';
+} from "./helper.js";
+import { getLineAlignment } from "./wrap.js";
+import { stripInlineMarkdown } from "./inlineMarkdown.js";
+import { applyTextLineRange } from "./measure.js";
+import { calculateDynamicRichTextFontSize, isInlineMarkdownTextSchema } from "./richText.js";
+import { renderInlineMarkdownText } from "./richTextPdfRender.js";
+import { shouldUseDynamicFontSize } from "./overflow.js";
+import { convertForPdfLayoutProps, rotatePoint, hex2PrintingColor } from "../utils.js";
+import { getTextLineRange } from "../splitRange.js";
+import { getBoxContentArea, getBoxInsets, hasBoxDimension } from "../box.js";
+import { embedAndGetFont } from "../pdfFont.js";
 
 const getFontProp = ({
   value,
@@ -49,7 +49,7 @@ const getFontProp = ({
   fontKitFont: FontKitFont;
   colorType?: ColorType;
   schema: TextSchema;
-  basePdf: PDFRenderProps<TextSchema>['basePdf'];
+  basePdf: PDFRenderProps<TextSchema>["basePdf"];
   fontSize?: number;
 }) => {
   const fontSize =
@@ -153,7 +153,7 @@ export const pdfRender = async (arg: PDFRenderProps<TextSchema>) => {
     return;
   }
   if (!pdfFontValuePromise) {
-    throw new Error('[@pdfme/schemas] Failed to prepare PDF font for text rendering.');
+    throw new Error("[@pdfme/schemas] Failed to prepare PDF font for text rendering.");
   }
   const pdfFontValue = await pdfFontValuePromise;
 
@@ -171,7 +171,7 @@ export const pdfRender = async (arg: PDFRenderProps<TextSchema>) => {
     }),
     getTextLineRange(schema),
   );
-  const needsTextWidth = alignment !== 'left' || Boolean(schema.strikethrough || schema.underline);
+  const needsTextWidth = alignment !== "left" || Boolean(schema.strikethrough || schema.underline);
   const needsTextHeight = Boolean(schema.strikethrough || schema.underline);
 
   // Text lines are rendered from the bottom upwards, we need to adjust the position down
@@ -204,7 +204,7 @@ export const pdfRender = async (arg: PDFRenderProps<TextSchema>) => {
     );
 
     // Adobe Acrobat Reader shows an error if `drawText` is called with an empty text
-    const drawText = trimmed === '' ? '\r\n' : trimmed;
+    const drawText = trimmed === "" ? "\r\n" : trimmed;
 
     let xLine = contentX + alignmentMetrics.x;
     let yLine = contentY + contentHeight - yOffset - rowYOffset;
@@ -261,14 +261,14 @@ export const pdfRender = async (arg: PDFRenderProps<TextSchema>) => {
 };
 
 const drawTextBoxDecoration = (arg: {
-  page: PDFRenderProps<TextSchema>['page'];
+  page: PDFRenderProps<TextSchema>["page"];
   schema: TextSchema;
   colorType?: ColorType;
   x: number;
   y: number;
   width: number;
   height: number;
-  rotate: ReturnType<typeof convertForPdfLayoutProps>['rotate'];
+  rotate: ReturnType<typeof convertForPdfLayoutProps>["rotate"];
   pivotPoint: { x: number; y: number };
 }) => {
   const { page, schema, colorType, x, y, width, height, rotate, pivotPoint } = arg;

@@ -1,9 +1,9 @@
-import PDFFont from '../PDFFont.js';
-import { CombedTextLayoutError } from '../errors.js';
-import { TextAlignment } from './alignment.js';
+import PDFFont from "../PDFFont.js";
+import { CombedTextLayoutError } from "../errors.js";
+import { TextAlignment } from "./alignment.js";
 
-import { PDFHexString } from '../../core/index.js';
-import { cleanText, lineSplit, mergeLines, charAtIndex, charSplit } from '../../utils/index.js';
+import { PDFHexString } from "../../core/index.js";
+import { cleanText, lineSplit, mergeLines, charAtIndex, charSplit } from "../../utils/index.js";
 
 export interface TextPosition {
   text: string;
@@ -39,14 +39,14 @@ const computeFontSize = (
       linesUsed += 1;
 
       const line = lines[lineIdx];
-      const words = line.split(' ');
+      const words = line.split(" ");
 
       // Layout the words using the current `fontSize`, line wrapping
       // whenever we reach the end of the current line.
       let spaceInLineRemaining = bounds.width;
       for (let idx = 0, len = words.length; idx < len; idx++) {
         const isLastWord = idx === len - 1;
-        const word = isLastWord ? words[idx] : words[idx] + ' ';
+        const word = isLastWord ? words[idx] : words[idx] + " ";
         const widthOfWord = font.widthOfTextAtSize(word, fontSize);
         spaceInLineRemaining -= widthOfWord;
         if (spaceInLineRemaining <= 0) {

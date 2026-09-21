@@ -1,5 +1,5 @@
-import { Font, Plugin, Schema } from '@pdfme/common';
-import type { SvgColorMapper } from '@pdfme/pdf-lib';
+import { Font, Plugin, Schema } from "@pdfme/common";
+import type { SvgColorMapper } from "@pdfme/pdf-lib";
 import {
   convertForPdfLayoutProps,
   isEditable,
@@ -7,28 +7,28 @@ import {
   createErrorElm,
   createSvgStr,
   rgbColorToCmykColor,
-} from '../utils.js';
-import { sanitizeSVG } from '../sanitize.js';
-import { Route } from 'lucide';
-import { embedAndGetFont } from '../pdfFont.js';
+} from "../utils.js";
+import { sanitizeSVG } from "../sanitize.js";
+import { Route } from "lucide";
+import { embedAndGetFont } from "../pdfFont.js";
 
 const isValidSVG = (svgString: string): boolean => {
   try {
     // Basic validation checks that work in both Node.js and browser
-    if (!svgString || typeof svgString !== 'string') {
+    if (!svgString || typeof svgString !== "string") {
       return false;
     }
 
     // Check for basic SVG structure
-    if (!svgString.includes('<svg') || !svgString.includes('</svg>')) {
+    if (!svgString.includes("<svg") || !svgString.includes("</svg>")) {
       return false;
     }
 
     // Additional browser-specific validation if DOMParser is available
-    if (typeof DOMParser !== 'undefined') {
+    if (typeof DOMParser !== "undefined") {
       const parser = new DOMParser();
-      const doc = parser.parseFromString(svgString, 'image/svg+xml');
-      const parserError = doc.querySelector('parsererror');
+      const doc = parser.parseFromString(svgString, "image/svg+xml");
+      const parserError = doc.querySelector("parsererror");
       if (parserError !== null) {
         return false;
       }
@@ -47,21 +47,21 @@ type SvgFontStyle = {
 };
 
 const isWhitespace = (char: string | undefined) =>
-  char === ' ' || char === '\n' || char === '\r' || char === '\t' || char === '\f';
+  char === " " || char === "\n" || char === "\r" || char === "\t" || char === "\f";
 
 const isAsciiAlpha = (char: string | undefined) =>
-  typeof char === 'string' && ((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z'));
+  typeof char === "string" && ((char >= "A" && char <= "Z") || (char >= "a" && char <= "z"));
 
 const isAttributeNameChar = (char: string | undefined) =>
-  typeof char === 'string' &&
+  typeof char === "string" &&
   (isAsciiAlpha(char) ||
-    (char >= '0' && char <= '9') ||
-    char === '_' ||
-    char === ':' ||
-    char === '-');
+    (char >= "0" && char <= "9") ||
+    char === "_" ||
+    char === ":" ||
+    char === "-");
 
 const stripImportantSuffix = (value: string): string => {
-  const suffix = '!important';
+  const suffix = "!important";
   const trimmed = value.trim();
   return trimmed.toLowerCase().endsWith(suffix)
     ? trimmed.slice(0, -suffix.length).trimEnd()
@@ -71,9 +71,9 @@ const stripImportantSuffix = (value: string): string => {
 const parseStyleAttribute = (style: string | undefined): Record<string, string> => {
   if (!style) return {};
 
-  return style.split(';').reduce<Record<string, string>>((acc, declaration) => {
-    const [key, ...valueParts] = declaration.split(':');
-    const value = valueParts.join(':').trim();
+  return style.split(";").reduce<Record<string, string>>((acc, declaration) => {
+    const [key, ...valueParts] = declaration.split(":");
+    const value = valueParts.join(":").trim();
     if (key && value) acc[key.trim()] = value;
     return acc;
   }, {});
@@ -84,14 +84,14 @@ const parseAttributes = (tag: string): Record<string, string> => {
   let index = 0;
 
   while (index < tag.length) {
-    while (index < tag.length && !isAsciiAlpha(tag[index]) && tag[index] !== '_') index += 1;
+    while (index < tag.length && !isAsciiAlpha(tag[index]) && tag[index] !== "_") index += 1;
     if (index >= tag.length) break;
     const nameStart = index;
     while (isAttributeNameChar(tag[index])) index += 1;
     const name = tag.slice(nameStart, index);
 
     while (isWhitespace(tag[index])) index += 1;
-    if (tag[index] !== '=') continue;
+    if (tag[index] !== "=") continue;
     index += 1;
     while (isWhitespace(tag[index])) index += 1;
 
@@ -114,7 +114,7 @@ const splitFontFamilies = (fontFamily: string | undefined): string[] => {
   if (!fontFamily) return [];
 
   const families: string[] = [];
-  let current = '';
+  let current = "";
   let quote: '"' | "'" | undefined;
 
   for (const char of fontFamily) {
@@ -122,9 +122,9 @@ const splitFontFamilies = (fontFamily: string | undefined): string[] => {
       quote = quote ? undefined : char;
       continue;
     }
-    if (char === ',' && !quote) {
+    if (char === "," && !quote) {
       if (current.trim()) families.push(current.trim());
-      current = '';
+      current = "";
       continue;
     }
     current += char;
@@ -142,7 +142,7 @@ const findTagEnd = (svgString: string, startIndex: number): number => {
     const char = svgString[index];
     if ((char === '"' || char === "'") && (!quote || quote === char)) {
       quote = quote ? undefined : char;
-    } else if (char === '>' && !quote) {
+    } else if (char === ">" && !quote) {
       return index;
     }
     index += 1;
@@ -154,26 +154,26 @@ const findTagEnd = (svgString: string, startIndex: number): number => {
 const isSelfClosingTag = (tag: string): boolean => {
   let index = tag.length - 2;
   while (index >= 0 && isWhitespace(tag[index])) index -= 1;
-  return tag[index] === '/';
+  return tag[index] === "/";
 };
 
 const mergeFontStyle = (base: SvgFontStyle, attributes: Record<string, string>): SvgFontStyle => {
   const style = parseStyleAttribute(attributes.style);
   return {
-    fontFamily: style['font-family'] || attributes['font-family'] || base.fontFamily,
-    fontStyle: style['font-style'] || attributes['font-style'] || base.fontStyle,
-    fontWeight: style['font-weight'] || attributes['font-weight'] || base.fontWeight,
+    fontFamily: style["font-family"] || attributes["font-family"] || base.fontFamily,
+    fontStyle: style["font-style"] || attributes["font-style"] || base.fontStyle,
+    fontWeight: style["font-weight"] || attributes["font-weight"] || base.fontWeight,
   };
 };
 
 const getFontCandidates = (fontFamily: string, { fontStyle, fontWeight }: SvgFontStyle) => {
-  const isBold = fontWeight === 'bold' || Number(fontWeight) >= 700;
-  const isItalic = fontStyle === 'italic';
+  const isBold = fontWeight === "bold" || Number(fontWeight) >= 700;
+  const isItalic = fontStyle === "italic";
   return Array.from(
     new Set([
-      `${fontFamily}${isBold ? '_bold' : ''}${isItalic ? '_italic' : ''}`,
-      `${fontFamily}${isBold ? '_bold' : ''}`,
-      `${fontFamily}${isItalic ? '_italic' : ''}`,
+      `${fontFamily}${isBold ? "_bold" : ""}${isItalic ? "_italic" : ""}`,
+      `${fontFamily}${isBold ? "_bold" : ""}`,
+      `${fontFamily}${isItalic ? "_italic" : ""}`,
       fontFamily,
     ]),
   );
@@ -186,13 +186,13 @@ const selectSvgFontNames = (svgString: string, font: Font): string[] => {
   let index = 0;
 
   while (index < svgString.length) {
-    if (svgString[index] !== '<') {
+    if (svgString[index] !== "<") {
       index += 1;
       continue;
     }
 
     let cursor = index + 1;
-    const isClosingTag = svgString[cursor] === '/';
+    const isClosingTag = svgString[cursor] === "/";
     if (isClosingTag) cursor += 1;
 
     if (!isAsciiAlpha(svgString[cursor])) {
@@ -215,7 +215,7 @@ const selectSvgFontNames = (svgString: string, font: Font): string[] => {
 
     const currentStyle = mergeFontStyle(styleStack[styleStack.length - 1], parseAttributes(tag));
 
-    if (tagName === 'text') {
+    if (tagName === "text") {
       let selectedFontName: string | undefined;
       for (const family of splitFontFamilies(currentStyle.fontFamily)) {
         selectedFontName =
@@ -244,35 +244,35 @@ export type SVGSchema = Schema;
 const svgSchema: Plugin<SVGSchema> = {
   ui: (arg) => {
     const { rootElement, value, mode, onChange, theme, schema } = arg;
-    const container = document.createElement(isEditable(mode, schema) ? 'textarea' : 'div');
-    container.style.width = '100%';
-    container.style.height = '100%';
-    container.style.boxSizing = 'border-box';
+    const container = document.createElement(isEditable(mode, schema) ? "textarea" : "div");
+    container.style.width = "100%";
+    container.style.height = "100%";
+    container.style.boxSizing = "border-box";
     if (isEditable(mode, schema)) {
       const textarea = container as HTMLTextAreaElement;
       textarea.value = value;
-      textarea.style.position = 'absolute';
+      textarea.style.position = "absolute";
       textarea.style.backgroundColor = addAlphaToHex(theme.colorPrimaryBg, 30);
 
       if (isValidSVG(value)) {
         const sanitizedValue = sanitizeSVG(value);
-        const svgElement = new DOMParser().parseFromString(sanitizedValue, 'image/svg+xml')
+        const svgElement = new DOMParser().parseFromString(sanitizedValue, "image/svg+xml")
           .childNodes[0];
         if (svgElement instanceof SVGElement) {
-          svgElement.setAttribute('width', '100%');
-          svgElement.setAttribute('height', '100%');
-          svgElement.style.position = 'absolute';
+          svgElement.setAttribute("width", "100%");
+          svgElement.setAttribute("height", "100%");
+          svgElement.style.position = "absolute";
           rootElement.appendChild(svgElement);
         }
       } else if (value) {
         const errorElm = createErrorElm();
-        errorElm.style.position = 'absolute';
+        errorElm.style.position = "absolute";
         rootElement.appendChild(errorElm);
       }
 
-      textarea.addEventListener('change', (e: Event) => {
+      textarea.addEventListener("change", (e: Event) => {
         const newValue = (e.target as HTMLTextAreaElement).value;
-        if (onChange) onChange({ key: 'content', value: newValue });
+        if (onChange) onChange({ key: "content", value: newValue });
       });
       rootElement.appendChild(container);
       textarea.setSelectionRange(value.length, value.length);
@@ -286,8 +286,8 @@ const svgSchema: Plugin<SVGSchema> = {
       container.innerHTML = sanitizeSVG(value);
       const svgElement = container.childNodes[0];
       if (svgElement instanceof SVGElement) {
-        svgElement.setAttribute('width', '100%');
-        svgElement.setAttribute('height', '100%');
+        svgElement.setAttribute("width", "100%");
+        svgElement.setAttribute("height", "100%");
         rootElement.appendChild(container);
       }
     }
@@ -313,7 +313,7 @@ const svgSchema: Plugin<SVGSchema> = {
       : [];
     const fonts = fontEntries.length > 0 ? Object.fromEntries(fontEntries) : undefined;
     const mapColor: SvgColorMapper | undefined =
-      options.colorType?.toLowerCase() === 'cmyk'
+      options.colorType?.toLowerCase() === "cmyk"
         ? ({ parsed }) => ({
             color: rgbColorToCmykColor(parsed.rgb),
             alpha: parsed.alpha,
@@ -341,8 +341,8 @@ const svgSchema: Plugin<SVGSchema> = {
   propPanel: {
     schema: {},
     defaultSchema: {
-      name: '',
-      type: 'svg',
+      name: "",
+      type: "svg",
       content: defaultValue,
       position: { x: 0, y: 0 },
       width: 40,

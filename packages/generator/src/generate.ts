@@ -1,4 +1,4 @@
-import * as pdfLib from '@pdfme/pdf-lib';
+import * as pdfLib from "@pdfme/pdf-lib";
 import type {
   GenerateProps,
   GeneratorOptions,
@@ -6,7 +6,7 @@ import type {
   PDFRenderProps,
   Template,
   PdfBytes,
-} from '@pdfme/common';
+} from "@pdfme/common";
 import {
   checkGenerateProps,
   applyInternalLinkAnnotations,
@@ -19,15 +19,15 @@ import {
   mm2pt,
   registerInternalLinkAnchor,
   resetInternalLinkAnnotations,
-} from '@pdfme/common';
-import { getDynamicLayoutForSchema, isDynamicLayoutSchema } from '@pdfme/schemas/dynamicLayout';
+} from "@pdfme/common";
+import { getDynamicLayoutForSchema, isDynamicLayoutSchema } from "@pdfme/schemas/dynamicLayout";
 import {
   insertPage,
   preprocessing,
   postProcessing,
   getEmbedPdfPages,
   validateRequiredFields,
-} from './helper.js';
+} from "./helper.js";
 
 const hasDynamicLayoutSchema = (schemas: Schema[][]) => {
   for (let i = 0; i < schemas.length; i += 1) {
@@ -94,7 +94,7 @@ const generate = async (props: GenerateProps): Promise<PdfBytes> => {
 
   if (inputs.length === 0) {
     throw new Error(
-      '[@pdfme/generator] inputs should not be empty, pass at least an empty object in the array',
+      "[@pdfme/generator] inputs should not be empty, pass at least an empty object in the array",
     );
   }
 
@@ -155,7 +155,7 @@ const generate = async (props: GenerateProps): Promise<PdfBytes> => {
             continue;
           }
           const value =
-            staticSchema.readOnly && staticSchema.type === 'table'
+            staticSchema.readOnly && staticSchema.type === "table"
               ? getReadOnlyTableValue(staticSchema, input)
               : staticSchema.readOnly
                 ? resolveReadOnlyContent({
@@ -163,7 +163,7 @@ const generate = async (props: GenerateProps): Promise<PdfBytes> => {
                     variables,
                     schemas,
                   })
-                : staticSchema.content || '';
+                : staticSchema.content || "";
 
           const adjustedStaticSchema = getAdjustedSchema(
             staticSchema,
@@ -198,7 +198,7 @@ const generate = async (props: GenerateProps): Promise<PdfBytes> => {
           continue;
         }
         const value: string =
-          schema.readOnly && schema.type === 'table'
+          schema.readOnly && schema.type === "table"
             ? getReadOnlyTableValue(schema, input)
             : schema.readOnly
               ? resolveReadOnlyContent({
@@ -206,7 +206,7 @@ const generate = async (props: GenerateProps): Promise<PdfBytes> => {
                   variables,
                   schemas,
                 })
-              : ((input[schema.name] || '') as string);
+              : ((input[schema.name] || "") as string);
 
         const adjustedSchema = getAdjustedSchema(schema, boundingBoxLeft, boundingBoxBottom);
         registerSchemaAnchor(_cache, adjustedSchema, page);

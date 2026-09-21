@@ -1,4 +1,4 @@
-import { PAGE_SIZE_PRESETS } from '@pdfme/common';
+import { PAGE_SIZE_PRESETS } from "@pdfme/common";
 
 export const pdf2size = async () => [PAGE_SIZE_PRESETS.A4];
 

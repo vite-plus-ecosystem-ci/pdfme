@@ -1,19 +1,19 @@
-import { cmyk, PDFContentStream, PDFDocument } from '../../src/index';
-import type { PDFPage } from '../../src/index';
+import { cmyk, PDFContentStream, PDFDocument } from "../../src/index";
+import type { PDFPage } from "../../src/index";
 
 const getPageContent = (page: PDFPage) => {
   const contents = page.node.normalizedEntries().Contents;
-  if (!contents) return '';
+  if (!contents) return "";
 
   const streams = [];
   for (let idx = 0; idx < contents.size(); idx++) {
     streams.push(contents.lookup(idx, PDFContentStream).getContentsString());
   }
-  return streams.join('\n');
+  return streams.join("\n");
 };
 
-describe('PDFPage.drawSvg', () => {
-  it('uses mapped CMYK colors for SVG fills, strokes, and text fills', async () => {
+describe("PDFPage.drawSvg", () => {
+  it("uses mapped CMYK colors for SVG fills, strokes, and text fills", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([100, 100]);
     const mapColor = vi.fn(() => ({ color: cmyk(0, 0, 0, 1) }));
@@ -29,31 +29,31 @@ describe('PDFPage.drawSvg', () => {
 
     const content = getPageContent(page);
 
-    expect(content).toContain('0 0 0 1 k');
-    expect(content).toContain('0 0 0 1 K');
+    expect(content).toContain("0 0 0 1 k");
+    expect(content).toContain("0 0 0 1 K");
     expect(content).not.toMatch(/\srg\n/);
     expect(content).not.toMatch(/\sRG\n/);
     expect(mapColor).toHaveBeenCalledWith(
       expect.objectContaining({
-        color: '#000000',
-        kind: 'fill',
+        color: "#000000",
+        kind: "fill",
       }),
     );
     expect(mapColor).toHaveBeenCalledWith(
       expect.objectContaining({
-        color: '#000000',
-        kind: 'stroke',
+        color: "#000000",
+        kind: "stroke",
       }),
     );
     expect(mapColor).toHaveBeenCalledWith(
       expect.objectContaining({
-        color: '#112233',
-        kind: 'fill',
+        color: "#112233",
+        kind: "fill",
       }),
     );
   });
 
-  it('keeps the default SVG color path as RGB when no mapper is supplied', async () => {
+  it("keeps the default SVG color path as RGB when no mapper is supplied", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([100, 100]);
 
@@ -65,13 +65,13 @@ describe('PDFPage.drawSvg', () => {
 
     const content = getPageContent(page);
 
-    expect(content).toContain('0.06666666666666667 0.13333333333333333 0.2 rg');
-    expect(content).toContain('0.26666666666666666 0.3333333333333333 0.4 RG');
+    expect(content).toContain("0.06666666666666667 0.13333333333333333 0.2 rg");
+    expect(content).toContain("0.26666666666666666 0.3333333333333333 0.4 RG");
     expect(content).not.toMatch(/\sk\n/);
     expect(content).not.toMatch(/\sK\n/);
   });
 
-  it('passes parsed CSS color values and alpha to the color mapper', async () => {
+  it("passes parsed CSS color values and alpha to the color mapper", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([100, 100]);
     const mapColor = vi.fn(({ parsed }) => ({ color: cmyk(0, 0, 0, 1), alpha: parsed.alpha }));
@@ -110,7 +110,7 @@ describe('PDFPage.drawSvg', () => {
     expect(namedCall.parsed.alpha).toBeUndefined();
   });
 
-  it('keeps mapped CMYK components separate from SVG alpha', async () => {
+  it("keeps mapped CMYK components separate from SVG alpha", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([100, 100]);
 
@@ -126,12 +126,12 @@ describe('PDFPage.drawSvg', () => {
 
     const content = getPageContent(page);
 
-    expect(content).toContain('1 0 0 0 k');
+    expect(content).toContain("1 0 0 0 k");
     expect(content).toMatch(/\/GS-\d+ gs/);
-    expect(content).not.toContain('0.5 0 0 0 k');
+    expect(content).not.toContain("0.5 0 0 0 k");
   });
 
-  it('does not map none or transparent paints but maps currentColor fallback', async () => {
+  it("does not map none or transparent paints but maps currentColor fallback", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([100, 100]);
     const mapColor = vi.fn(() => ({ color: cmyk(0, 0, 0, 1) }));
@@ -146,12 +146,12 @@ describe('PDFPage.drawSvg', () => {
 
     const content = getPageContent(page);
 
-    expect(content).toContain('0 0 0 1 K');
+    expect(content).toContain("0 0 0 1 K");
     expect(mapColor).toHaveBeenCalledTimes(1);
     expect(mapColor).toHaveBeenCalledWith(
       expect.objectContaining({
-        color: '#000000',
-        kind: 'stroke',
+        color: "#000000",
+        kind: "stroke",
       }),
     );
   });

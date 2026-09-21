@@ -1,15 +1,15 @@
-import PDFArray from '../objects/PDFArray.js';
-import PDFDict, { DictMap } from '../objects/PDFDict.js';
-import PDFName from '../objects/PDFName.js';
-import PDFNumber from '../objects/PDFNumber.js';
-import PDFObject from '../objects/PDFObject.js';
-import PDFRef from '../objects/PDFRef.js';
-import PDFStream from '../objects/PDFStream.js';
-import PDFContext from '../PDFContext.js';
-import PDFPageTree from './PDFPageTree.js';
+import PDFArray from "../objects/PDFArray.js";
+import PDFDict, { DictMap } from "../objects/PDFDict.js";
+import PDFName from "../objects/PDFName.js";
+import PDFNumber from "../objects/PDFNumber.js";
+import PDFObject from "../objects/PDFObject.js";
+import PDFRef from "../objects/PDFRef.js";
+import PDFStream from "../objects/PDFStream.js";
+import PDFContext from "../PDFContext.js";
+import PDFPageTree from "./PDFPageTree.js";
 
 class PDFPageLeaf extends PDFDict {
-  static readonly InheritableEntries = ['Resources', 'MediaBox', 'CropBox', 'Rotate'];
+  static readonly InheritableEntries = ["Resources", "MediaBox", "CropBox", "Rotate"];
 
   static withContextAndParent = (context: PDFContext, parent: PDFRef) => {
     const dict = new Map();
@@ -50,7 +50,7 @@ class PDFPageLeaf extends PDFDict {
   }
 
   Contents(): PDFStream | PDFArray | undefined {
-    return this.lookup(PDFName.of('Contents')) as PDFStream | PDFArray | undefined;
+    return this.lookup(PDFName.of("Contents")) as PDFStream | PDFArray | undefined;
   }
 
   Annots(): PDFArray | undefined {

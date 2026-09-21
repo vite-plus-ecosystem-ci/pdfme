@@ -1,6 +1,6 @@
-import { MultiVariableTextSchema } from './types.js';
-import { escapeInlineMarkdown } from '../text/inlineMarkdown.js';
-import { isInlineMarkdownTextSchema } from '../text/richText.js';
+import { MultiVariableTextSchema } from "./types.js";
+import { escapeInlineMarkdown } from "../text/inlineMarkdown.js";
+import { isInlineMarkdownTextSchema } from "../text/richText.js";
 
 export const tryParseVariableMap = (
   variablesIn: string | Record<string, string> | undefined,
@@ -8,15 +8,15 @@ export const tryParseVariableMap = (
   if (!variablesIn) {
     return undefined;
   }
-  if (typeof variablesIn === 'object' && !Array.isArray(variablesIn)) {
+  if (typeof variablesIn === "object" && !Array.isArray(variablesIn)) {
     return variablesIn;
   }
-  if (typeof variablesIn !== 'string') {
+  if (typeof variablesIn !== "string") {
     return undefined;
   }
   try {
     const parsed: unknown = JSON.parse(variablesIn);
-    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
       return parsed as Record<string, string>;
     }
   } catch {
@@ -31,7 +31,7 @@ export const substituteVariables = (
   valueMapper: (value: string, variableName: string) => string = (value) => value,
 ): string => {
   if (!text) {
-    return '';
+    return "";
   }
 
   let substitutedText = text;
@@ -40,8 +40,8 @@ export const substituteVariables = (
     let variables: Record<string, string>;
     try {
       variables =
-        typeof variablesIn === 'string'
-          ? (JSON.parse(variablesIn || '{}') as Record<string, string>)
+        typeof variablesIn === "string"
+          ? (JSON.parse(variablesIn || "{}") as Record<string, string>)
           : variablesIn;
     } catch {
       throw new SyntaxError(`[@pdfme/schemas] MVT: invalid JSON string '${variablesIn as string}'`);
@@ -49,8 +49,8 @@ export const substituteVariables = (
 
     Object.keys(variables).forEach((variableName) => {
       // handle special characters in variable name
-      const variableForRegex = variableName.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
-      const regex = new RegExp('\\{' + variableForRegex + '\\}', 'g');
+      const variableForRegex = variableName.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
+      const regex = new RegExp("\\{" + variableForRegex + "\\}", "g");
       substitutedText = substitutedText.replace(
         regex,
         valueMapper(variables[variableName], variableName),
@@ -59,7 +59,7 @@ export const substituteVariables = (
   }
 
   // Remove any variables that were not substituted from inputs
-  substitutedText = substitutedText.replace(/{[^{}]+}/g, '');
+  substitutedText = substitutedText.replace(/{[^{}]+}/g, "");
 
   return substitutedText;
 };
@@ -80,24 +80,24 @@ export const resolveReadOnlyMultiVariableText = (
   value?: string,
 ): string => {
   if (schema.contentSnapshot) {
-    return schema.content ?? value ?? schema.text ?? '';
+    return schema.content ?? value ?? schema.text ?? "";
   }
 
   if (!schema.variables?.length) {
-    return schema.text || '';
+    return schema.text || "";
   }
 
   const variableMap = tryParseVariableMap(schema.content) ?? tryParseVariableMap(value);
   if (variableMap) {
     return isInlineMarkdownTextSchema(schema)
-      ? substituteVariablesAsInlineMarkdownLiterals(schema.text || '', variableMap)
-      : substituteVariables(schema.text || '', variableMap);
+      ? substituteVariablesAsInlineMarkdownLiterals(schema.text || "", variableMap)
+      : substituteVariables(schema.text || "", variableMap);
   }
 
-  if (typeof value === 'string' && value.length > 0) {
+  if (typeof value === "string" && value.length > 0) {
     return value;
   }
-  return schema.content || schema.text || '';
+  return schema.content || schema.text || "";
 };
 
 export const validateVariables = (value: string, schema: MultiVariableTextSchema): boolean => {

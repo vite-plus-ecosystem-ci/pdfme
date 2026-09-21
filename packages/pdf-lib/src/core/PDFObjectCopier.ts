@@ -1,11 +1,11 @@
-import PDFArray from './objects/PDFArray.js';
-import PDFDict from './objects/PDFDict.js';
-import PDFName from './objects/PDFName.js';
-import PDFObject from './objects/PDFObject.js';
-import PDFRef from './objects/PDFRef.js';
-import PDFStream from './objects/PDFStream.js';
-import PDFContext from './PDFContext.js';
-import PDFPageLeaf from './structures/PDFPageLeaf.js';
+import PDFArray from "./objects/PDFArray.js";
+import PDFDict from "./objects/PDFDict.js";
+import PDFName from "./objects/PDFName.js";
+import PDFObject from "./objects/PDFObject.js";
+import PDFRef from "./objects/PDFRef.js";
+import PDFStream from "./objects/PDFStream.js";
+import PDFContext from "./PDFContext.js";
+import PDFPageLeaf from "./structures/PDFPageLeaf.js";
 
 /**
  * PDFObjectCopier copies PDFObjects from a src context to a dest context.
@@ -65,7 +65,7 @@ class PDFObjectCopier {
 
     // Remove the parent reference to prevent the whole donor document's page
     // tree from being copied when we only need a single page.
-    clonedPage.delete(PDFName.of('Parent'));
+    clonedPage.delete(PDFName.of("Parent"));
 
     return this.copyPDFDict(clonedPage) as PDFPageLeaf;
   };

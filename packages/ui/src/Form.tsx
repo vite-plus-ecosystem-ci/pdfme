@@ -1,9 +1,9 @@
-import React from 'react';
-import { PreviewProps } from '@pdfme/common';
-import { PreviewUI } from './class.js';
-import { DESTROYED_ERR_MSG } from './constants.js';
-import AppContextProvider from './components/AppContextProvider.js';
-import Preview from './components/Preview.js';
+import React from "react";
+import { PreviewProps } from "@pdfme/common";
+import { PreviewUI } from "./class.js";
+import { DESTROYED_ERR_MSG } from "./constants.js";
+import AppContextProvider from "./components/AppContextProvider.js";
+import Preview from "./components/Preview.js";
 
 class Form extends PreviewUI {
   private onChangeInputCallback?: (arg: { index: number; value: string; name: string }) => void;

@@ -1,10 +1,10 @@
-import { rotate } from '../../src/index';
-import { pdfToImages, loadTestPDF } from '../test-helpers';
+import { rotate } from "../../src/index";
+import { pdfToImages, loadTestPDF } from "../test-helpers";
 
-describe('E2E: rotate', () => {
-  const fiveP = loadTestPDF('5p.pdf');
+describe("E2E: rotate", () => {
+  const fiveP = loadTestPDF("5p.pdf");
 
-  test('rotate: rotate all pages of 5p.pdf by 90 degrees', async () => {
+  test("rotate: rotate all pages of 5p.pdf by 90 degrees", async () => {
     const rotated = await rotate(fiveP, 90);
 
     const images = await pdfToImages(rotated);
@@ -13,7 +13,7 @@ describe('E2E: rotate', () => {
     }
   });
 
-  test('rotate: rotate only the 2nd page of 5p.pdf by 180 degrees', async () => {
+  test("rotate: rotate only the 2nd page of 5p.pdf by 180 degrees", async () => {
     // pageNumbers=[1] -> only the 2nd page is rotated by 180 degrees
     const rotated = await rotate(fiveP, 180, [1]);
 
@@ -23,7 +23,7 @@ describe('E2E: rotate', () => {
     }
   });
 
-  test('rotate: rotate pages 2 and 4 of 5p.pdf by 270 degrees', async () => {
+  test("rotate: rotate pages 2 and 4 of 5p.pdf by 270 degrees", async () => {
     // Rotate the 2nd and 4th pages by 270 degrees
     const rotated = await rotate(fiveP, 270, [1, 3]);
 

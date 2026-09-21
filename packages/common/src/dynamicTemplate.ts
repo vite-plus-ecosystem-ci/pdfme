@@ -6,9 +6,9 @@ import {
   CommonOptions,
   DynamicLayoutCallbackResult,
   DynamicLayoutResult,
-} from './types.js';
-import { cloneDeep, isBlankPdf } from './helper.js';
-import { replacePlaceholders } from './expression.js';
+} from "./types.js";
+import { cloneDeep, isBlankPdf } from "./helper.js";
+import { replacePlaceholders } from "./expression.js";
 
 /** Floating point tolerance for comparisons */
 const EPSILON = 0.01;
@@ -49,10 +49,10 @@ export const getReadOnlyTableValue = (schema: Schema, input?: Record<string, unk
   if (input && Object.prototype.hasOwnProperty.call(input, schema.name)) {
     const value = input[schema.name];
     if (value !== undefined && value !== null) {
-      return typeof value === 'string' ? value : JSON.stringify(value);
+      return typeof value === "string" ? value : JSON.stringify(value);
     }
   }
-  return schema.content || '';
+  return schema.content || "";
 };
 
 /** Get the input value for a schema */
@@ -62,21 +62,21 @@ export const getSchemaValue = (
   schemas: Schema[][],
 ): string => {
   if (!schema.readOnly) {
-    return input?.[schema.name] || '';
+    return input?.[schema.name] || "";
   }
 
-  if (schema.type === 'table') {
+  if (schema.type === "table") {
     return getReadOnlyTableValue(schema, input);
   }
 
   // Expressions are only for text. MVT `content` is variable JSON; other
   // types keep their raw content (see #1299 / #1345).
-  if (schema.type !== 'text') {
-    return schema.content || '';
+  if (schema.type !== "text") {
+    return schema.content || "";
   }
 
   return replacePlaceholders({
-    content: schema.content || '',
+    content: schema.content || "",
     variables: input,
     schemas,
   });

@@ -1,6 +1,6 @@
-import type { TextSchema } from '../text/types.js';
+import type { TextSchema } from "../text/types.js";
 
-export type LIST_STYLE = 'bullet' | 'ordered';
+export type LIST_STYLE = "bullet" | "ordered";
 
 export type ListSchema = TextSchema & {
   listStyle: LIST_STYLE;

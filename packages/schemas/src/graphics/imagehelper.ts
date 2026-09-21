@@ -1,6 +1,6 @@
 // ref: https://github.com/image-size/image-size ----------------------------
 // The following code is adapted from the image-size code. Unnecessary formats and dependencies on Node have been removed.
-import { Buffer } from 'buffer';
+import { Buffer } from "buffer";
 
 type IImage = {
   validate: (input: Uint8Array) => boolean;
@@ -12,7 +12,7 @@ const toUTF8String = (input: Uint8Array, start = 0, end = input.length) =>
   decoder.decode(input.slice(start, end));
 
 const toHexString = (input: Uint8Array, start = 0, end = input.length) =>
-  input.slice(start, end).reduce((memo, i) => memo + ('0' + i.toString(16)).slice(-2), '');
+  input.slice(start, end).reduce((memo, i) => memo + ("0" + i.toString(16)).slice(-2), "");
 
 const readUInt16BE = (input: Uint8Array, offset = 0) => input[offset] * 2 ** 8 + input[offset + 1];
 
@@ -32,16 +32,16 @@ const extractSize = (input: Uint8Array, index: number) => {
 const validateInput = (input: Uint8Array, index: number): void => {
   // index should be within buffer limits
   if (index > input.length) {
-    throw new TypeError('Corrupt JPG, exceeded buffer limits');
+    throw new TypeError("Corrupt JPG, exceeded buffer limits");
   }
   // Every JPEG block must begin with a 0xFF
   if (input[index] !== 0xff) {
-    throw new TypeError('Invalid JPG, marker table corrupted');
+    throw new TypeError("Invalid JPG, marker table corrupted");
   }
 };
 
 const JPG: IImage = {
-  validate: (input) => toHexString(input, 0, 2) === 'ffd8',
+  validate: (input) => toHexString(input, 0, 2) === "ffd8",
 
   calculate(input) {
     // Skip 4 chars, they are for signature
@@ -69,15 +69,15 @@ const JPG: IImage = {
       input = input.slice(i + 2);
     }
 
-    throw new TypeError('Invalid JPG, no size found');
+    throw new TypeError("Invalid JPG, no size found");
   },
 };
 
-const pngSignature = 'PNG\r\n\x1a\n';
-const pngImageHeaderChunkName = 'IHDR';
+const pngSignature = "PNG\r\n\x1a\n";
+const pngImageHeaderChunkName = "IHDR";
 
 // Used to detect "fried" png's: http://www.jongware.com/pngdefry.html
-const pngFriedChunkName = 'CgBI';
+const pngFriedChunkName = "CgBI";
 
 const PNG: IImage = {
   validate(input) {
@@ -87,7 +87,7 @@ const PNG: IImage = {
         chunkName = toUTF8String(input, 28, 32);
       }
       if (chunkName !== pngImageHeaderChunkName) {
-        throw new TypeError('Invalid PNG');
+        throw new TypeError("Invalid PNG");
       }
       return true;
     }
@@ -117,8 +117,8 @@ type ImageKind = keyof typeof typeHandlers;
 
 function detector(input: Uint8Array): ImageKind | undefined {
   const firstBytes: { [byte: number]: ImageKind } = {
-    0x89: 'png',
-    0xff: 'jpg',
+    0x89: "png",
+    0xff: "jpg",
   };
   const byte = input[0];
   if (byte in firstBytes) {
@@ -133,16 +133,16 @@ function detector(input: Uint8Array): ImageKind | undefined {
 }
 
 export const getImageDimension = (value: string): { height: number; width: number } => {
-  const dataUriPrefix = ';base64,';
+  const dataUriPrefix = ";base64,";
   const idx = value.indexOf(dataUriPrefix);
   const imgBase64 = value.substring(idx + dataUriPrefix.length, value.length);
-  return imageSize(Buffer.from(imgBase64, 'base64'));
+  return imageSize(Buffer.from(imgBase64, "base64"));
 };
 
 const imageSize = (imgBuffer: Buffer): { height: number; width: number } => {
   const type = detector(imgBuffer);
 
-  if (typeof type !== 'undefined' && type in typeHandlers) {
+  if (typeof type !== "undefined" && type in typeHandlers) {
     const size = typeHandlers[type].calculate(imgBuffer);
     if (size !== undefined) {
       return size;
@@ -150,7 +150,7 @@ const imageSize = (imgBuffer: Buffer): { height: number; width: number } => {
   }
 
   throw new TypeError(
-    '[@pdfme/schemas/images] Unsupported file type: ' + (type === undefined ? 'undefined' : type),
+    "[@pdfme/schemas/images] Unsupported file type: " + (type === undefined ? "undefined" : type),
   );
 };
 // ----------------------------

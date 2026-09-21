@@ -1,8 +1,8 @@
-import { PDFDocument, RotationTypes } from '@pdfme/pdf-lib';
+import { PDFDocument, RotationTypes } from "@pdfme/pdf-lib";
 
 const merge = async (pdfs: (ArrayBuffer | Uint8Array)[]): Promise<Uint8Array> => {
   if (!pdfs.length) {
-    throw new Error('[@pdfme/manipulator] At least one PDF is required for merging');
+    throw new Error("[@pdfme/manipulator] At least one PDF is required for merging");
   }
 
   const mergedPdf = await PDFDocument.create();
@@ -19,7 +19,7 @@ const split = async (
   ranges: { start?: number; end?: number }[],
 ): Promise<Uint8Array[]> => {
   if (!ranges.length) {
-    throw new Error('[@pdfme/manipulator] At least one range is required for splitting');
+    throw new Error("[@pdfme/manipulator] At least one range is required for splitting");
   }
 
   const originalPdf = await PDFDocument.load(pdf);
@@ -46,7 +46,7 @@ const split = async (
 
 const remove = async (pdf: ArrayBuffer | Uint8Array, pages: number[]): Promise<Uint8Array> => {
   if (!pages.length) {
-    throw new Error('[@pdfme/manipulator] At least one page number is required for removal');
+    throw new Error("[@pdfme/manipulator] At least one page number is required for removal");
   }
 
   const pdfDoc = await PDFDocument.load(pdf);
@@ -119,20 +119,20 @@ const rotate = async (
   pageNumbers?: number[],
 ): Promise<Uint8Array> => {
   if (!Number.isInteger(degrees) || degrees % 90 !== 0) {
-    throw new Error('[@pdfme/manipulator] Rotation degrees must be a multiple of 90');
+    throw new Error("[@pdfme/manipulator] Rotation degrees must be a multiple of 90");
   }
 
   const pdfDoc = await PDFDocument.load(pdf);
   const pages = pdfDoc.getPages();
 
   if (!pages.length) {
-    throw new Error('[@pdfme/manipulator] PDF has no pages to rotate');
+    throw new Error("[@pdfme/manipulator] PDF has no pages to rotate");
   }
 
   const normalizedDegrees = ((degrees % 360) + 360) % 360;
 
   if (normalizedDegrees % 90 !== 0) {
-    throw new Error('[@pdfme/manipulator] Rotation degrees must be a multiple of 90');
+    throw new Error("[@pdfme/manipulator] Rotation degrees must be a multiple of 90");
   }
 
   if (pageNumbers) {
@@ -186,15 +186,15 @@ const move = async (
 const organize = async (
   pdf: ArrayBuffer | Uint8Array,
   actions: Array<
-    | { type: 'remove'; data: { position: number } }
-    | { type: 'insert'; data: { pdf: ArrayBuffer | Uint8Array; position: number } }
-    | { type: 'replace'; data: { pdf: ArrayBuffer | Uint8Array; position: number } }
-    | { type: 'rotate'; data: { position: number; degrees: 0 | 90 | 180 | 270 | 360 } }
-    | { type: 'move'; data: { from: number; to: number } }
+    | { type: "remove"; data: { position: number } }
+    | { type: "insert"; data: { pdf: ArrayBuffer | Uint8Array; position: number } }
+    | { type: "replace"; data: { pdf: ArrayBuffer | Uint8Array; position: number } }
+    | { type: "rotate"; data: { position: number; degrees: 0 | 90 | 180 | 270 | 360 } }
+    | { type: "move"; data: { from: number; to: number } }
   >,
 ): Promise<Uint8Array> => {
   if (!actions.length) {
-    throw new Error('[@pdfme/manipulator] At least one action is required');
+    throw new Error("[@pdfme/manipulator] At least one action is required");
   }
 
   let currentPdf = await PDFDocument.load(pdf);
@@ -203,27 +203,27 @@ const organize = async (
     const currentBuffer = await currentPdf.save();
 
     switch (action.type) {
-      case 'remove':
+      case "remove":
         currentPdf = await PDFDocument.load(await remove(currentBuffer, [action.data.position]));
         break;
 
-      case 'insert':
+      case "insert":
         currentPdf = await PDFDocument.load(await insert(currentBuffer, [action.data]));
         break;
 
-      case 'replace': {
+      case "replace": {
         const withoutTarget = await remove(currentBuffer, [action.data.position]);
         currentPdf = await PDFDocument.load(await insert(withoutTarget, [action.data]));
         break;
       }
 
-      case 'rotate':
+      case "rotate":
         currentPdf = await PDFDocument.load(
           await rotate(currentBuffer, action.data.degrees, [action.data.position]),
         );
         break;
 
-      case 'move':
+      case "move":
         currentPdf = await PDFDocument.load(await move(currentBuffer, action.data));
         break;
 

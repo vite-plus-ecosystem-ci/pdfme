@@ -1,8 +1,8 @@
-import type { ThemeConfig } from 'antd';
+import type { ThemeConfig } from "antd";
 
 export const defaultTheme: ThemeConfig = {
   token: {
-    colorPrimary: '#38a0ff',
+    colorPrimary: "#38a0ff",
   },
   components: {
     Form: {
@@ -14,7 +14,7 @@ export const defaultTheme: ThemeConfig = {
       paddingLG: 12,
       paddingXS: 4,
       itemMarginBottom: 4,
-      verticalLabelPadding: '0 0 2px',
+      verticalLabelPadding: "0 0 2px",
     },
   },
 };

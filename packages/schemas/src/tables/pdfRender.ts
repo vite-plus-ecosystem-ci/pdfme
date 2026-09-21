@@ -1,10 +1,10 @@
-import type { TableSchema } from './types.js';
-import type { PDFRenderProps, Schema, BasePdf, CommonOptions } from '@pdfme/common';
-import { Cell, Table, Row, Column } from './classes.js';
-import { rectangle } from '../shapes/rectAndEllipse.js';
-import cell from './cell.js';
-import { getBodyWithSchemaRange } from './helper.js';
-import { createSingleTable } from './tableHelper.js';
+import type { TableSchema } from "./types.js";
+import type { PDFRenderProps, Schema, BasePdf, CommonOptions } from "@pdfme/common";
+import { Cell, Table, Row, Column } from "./classes.js";
+import { rectangle } from "../shapes/rectAndEllipse.js";
+import cell from "./cell.js";
+import { getBodyWithSchemaRange } from "./helper.js";
+import { createSingleTable } from "./tableHelper.js";
 
 // Define the CreateTableArgs interface locally since it's not exported from tableHelper.js
 interface CreateTableArgs {
@@ -24,8 +24,8 @@ async function drawCell(arg: PDFRenderProps<TableSchema>, cell: Cell) {
     ...arg,
     value: cell.raw,
     schema: {
-      name: '',
-      type: 'cell',
+      name: "",
+      type: "cell",
       position: { x: cell.x, y: cell.y },
       width: cell.width,
       height: cell.height,
@@ -81,11 +81,11 @@ async function drawTableBorder(
   await rectanglePdfRender({
     ...arg,
     schema: {
-      name: '',
-      type: 'rectangle',
+      name: "",
+      type: "rectangle",
       borderWidth: lineWidth,
       borderColor: lineColor,
-      color: '',
+      color: "",
       position: { x: startPos.x, y: startPos.y },
       width: table.getWidth(),
       height: cursor.y - startPos.y,
@@ -119,7 +119,7 @@ export const pdfRender = async (arg: PDFRenderProps<TableSchema>) => {
   const { value, schema, basePdf, options, _cache } = arg;
 
   const body = getBodyWithSchemaRange(
-    typeof value !== 'string' ? JSON.stringify(value || '[]') : value,
+    typeof value !== "string" ? JSON.stringify(value || "[]") : value,
     schema,
   );
 

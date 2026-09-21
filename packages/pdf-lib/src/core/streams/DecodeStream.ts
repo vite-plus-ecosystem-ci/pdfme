@@ -1,5 +1,5 @@
-import { MethodNotImplementedError, DecompressionBombError } from '../errors.js';
-import Stream, { StreamType } from './Stream.js';
+import { MethodNotImplementedError, DecompressionBombError } from "../errors.js";
+import Stream, { StreamType } from "./Stream.js";
 
 /*
  * Copyright 2012 Mozilla Foundation
@@ -151,7 +151,7 @@ class DecodeStream implements StreamType {
   }
 
   protected readBlock(): void {
-    throw new MethodNotImplementedError(this.constructor.name, 'readBlock');
+    throw new MethodNotImplementedError(this.constructor.name, "readBlock");
   }
 
   protected ensureBuffer(requested: number) {

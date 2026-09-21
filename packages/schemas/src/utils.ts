@@ -1,11 +1,11 @@
-import type * as CSS from 'csstype';
-import { cmyk, degrees, degreesToRadians, rgb, type Color, type RGB } from '@pdfme/pdf-lib';
-import { Schema, mm2pt, Mode, isHexValid, ColorType } from '@pdfme/common';
-import { IconNode } from 'lucide';
-import { getDynamicHeightsForTable as _getDynamicHeightsForTable } from './tables/dynamicTemplate.js';
-export { measureTextHeight } from './text/measure.js';
-export { escapeInlineMarkdown } from './text/inlineMarkdown.js';
-export { getVariableNames, visitVariables } from './multiVariableText/variables.js';
+import type * as CSS from "csstype";
+import { cmyk, degrees, degreesToRadians, rgb, type Color, type RGB } from "@pdfme/pdf-lib";
+import { Schema, mm2pt, Mode, isHexValid, ColorType } from "@pdfme/common";
+import { IconNode } from "lucide";
+import { getDynamicHeightsForTable as _getDynamicHeightsForTable } from "./tables/dynamicTemplate.js";
+export { measureTextHeight } from "./text/measure.js";
+export { escapeInlineMarkdown } from "./text/inlineMarkdown.js";
+export { getVariableNames, visitVariables } from "./multiVariableText/variables.js";
 export const convertForPdfLayoutProps = ({
   schema,
   pageHeight,
@@ -70,19 +70,19 @@ export const getDynamicHeightsForTable = _getDynamicHeightsForTable;
 
 export const addAlphaToHex = (hex: string, alphaPercentage: number) => {
   if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/i.test(hex)) {
-    throw new Error('Invalid HEX color code');
+    throw new Error("Invalid HEX color code");
   }
   const alphaValue = Math.round((alphaPercentage / 100) * 255);
   let alphaHex = alphaValue.toString(16);
-  if (alphaHex.length === 1) alphaHex = '0' + alphaHex;
+  if (alphaHex.length === 1) alphaHex = "0" + alphaHex;
   return hex + alphaHex;
 };
 
 export const isEditable = (mode: Mode, schema: Schema) =>
-  mode === 'designer' || (mode === 'form' && schema.readOnly !== true);
+  mode === "designer" || (mode === "form" && schema.readOnly !== true);
 
 const hex2rgb = (hex: string) => {
-  if (hex.slice(0, 1) === '#') hex = hex.slice(1);
+  if (hex.slice(0, 1) === "#") hex = hex.slice(1);
   if (hex.length === 3)
     hex =
       hex.slice(0, 1) +
@@ -96,13 +96,13 @@ const hex2rgb = (hex: string) => {
 };
 
 const getHexOpacity = (hex: string) => {
-  const normalized = hex.startsWith('#') ? hex.slice(1) : hex;
+  const normalized = hex.startsWith("#") ? hex.slice(1) : hex;
   const opacityHex =
     normalized.length === 4
       ? normalized.slice(3, 4).repeat(2)
       : normalized.length === 8
         ? normalized.slice(6, 8)
-        : '';
+        : "";
   return opacityHex ? parseInt(opacityHex, 16) / 255 : 1;
 };
 
@@ -155,8 +155,8 @@ const hex2CmykColor = (hexString: string | undefined) => {
 
 export const hex2PrintingColor = (color?: string | Color, colorType?: ColorType) => {
   // if color is already CMYK, RGB or Grayscale, does not required to convert
-  if (typeof color === 'object') return color;
-  return colorType?.toLowerCase() == 'cmyk' ? hex2CmykColor(color) : hex2RgbColor(color);
+  if (typeof color === "object") return color;
+  return colorType?.toLowerCase() == "cmyk" ? hex2CmykColor(color) : hex2RgbColor(color);
 };
 
 export const readFile = (input: File | FileList | null): Promise<string | ArrayBuffer> =>
@@ -170,7 +170,7 @@ export const readFile = (input: File | FileList | null): Promise<string | ArrayB
     };
 
     fileReader.onerror = () => {
-      reject(new Error('[@pdfme/schemas] File reading failed'));
+      reject(new Error("[@pdfme/schemas] File reading failed"));
     };
 
     let file: File | null = null;
@@ -183,34 +183,34 @@ export const readFile = (input: File | FileList | null): Promise<string | ArrayB
     if (file) {
       fileReader.readAsDataURL(file);
     } else {
-      reject(new Error('[@pdfme/schemas] No files provided'));
+      reject(new Error("[@pdfme/schemas] No files provided"));
     }
   });
 
 export const createErrorElm = () => {
-  const container = document.createElement('div');
+  const container = document.createElement("div");
   const containerStyle: CSS.Properties = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: '100%',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
   };
   Object.assign(container.style, containerStyle);
 
-  const span = document.createElement('span');
+  const span = document.createElement("span");
   const spanStyle: CSS.Properties = {
-    color: 'white',
-    background: 'red',
-    padding: '0.25rem',
-    fontSize: '12pt',
-    fontWeight: 'bold',
-    borderRadius: '2px',
+    color: "white",
+    background: "red",
+    padding: "0.25rem",
+    fontSize: "12pt",
+    fontWeight: "bold",
+    borderRadius: "2px",
     fontFamily: "'Open Sans', sans-serif",
   };
   Object.assign(span.style, spanStyle);
 
-  span.textContent = 'ERROR';
+  span.textContent = "ERROR";
   container.appendChild(span);
 
   return container;
@@ -221,67 +221,67 @@ export const createSvgStr = (icon: IconNode, attrs?: Record<string, string>): st
   // We need to create an SVG wrapper and add the elements as children
 
   const safeTagNames = new Set([
-    'svg',
-    'circle',
-    'ellipse',
-    'g',
-    'line',
-    'path',
-    'polygon',
-    'polyline',
-    'rect',
+    "svg",
+    "circle",
+    "ellipse",
+    "g",
+    "line",
+    "path",
+    "polygon",
+    "polyline",
+    "rect",
   ]);
   const safeAttributeNames = new Set([
-    'aria-hidden',
-    'aria-label',
-    'class',
-    'clip-rule',
-    'cx',
-    'cy',
-    'd',
-    'fill',
-    'fill-opacity',
-    'fill-rule',
-    'focusable',
-    'height',
-    'id',
-    'opacity',
-    'points',
-    'preserveAspectRatio',
-    'r',
-    'role',
-    'rx',
-    'ry',
-    'stroke',
-    'stroke-dasharray',
-    'stroke-dashoffset',
-    'stroke-linecap',
-    'stroke-linejoin',
-    'stroke-miterlimit',
-    'stroke-opacity',
-    'stroke-width',
-    'transform',
-    'vector-effect',
-    'viewBox',
-    'width',
-    'x',
-    'x1',
-    'x2',
-    'xmlns',
-    'xmlns:xlink',
-    'y',
-    'y1',
-    'y2',
+    "aria-hidden",
+    "aria-label",
+    "class",
+    "clip-rule",
+    "cx",
+    "cy",
+    "d",
+    "fill",
+    "fill-opacity",
+    "fill-rule",
+    "focusable",
+    "height",
+    "id",
+    "opacity",
+    "points",
+    "preserveAspectRatio",
+    "r",
+    "role",
+    "rx",
+    "ry",
+    "stroke",
+    "stroke-dasharray",
+    "stroke-dashoffset",
+    "stroke-linecap",
+    "stroke-linejoin",
+    "stroke-miterlimit",
+    "stroke-opacity",
+    "stroke-width",
+    "transform",
+    "vector-effect",
+    "viewBox",
+    "width",
+    "x",
+    "x1",
+    "x2",
+    "xmlns",
+    "xmlns:xlink",
+    "y",
+    "y1",
+    "y2",
   ]);
   const escapeHtmlAttribute = (value: string): string =>
     value
-      .replaceAll('&', '&amp;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#39;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;');
+      .replaceAll("&", "&amp;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
   const escapeHtmlText = (value: string): string =>
-    value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+    value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
   const toSafeAttributeString = (attributes: Record<string, string>): string =>
     Object.entries(attributes)
       .filter(
@@ -289,10 +289,10 @@ export const createSvgStr = (icon: IconNode, attrs?: Record<string, string>): st
           safeAttributeNames.has(key) &&
           value !== undefined &&
           value !== null &&
-          !key.toLowerCase().startsWith('on'),
+          !key.toLowerCase().startsWith("on"),
       )
       .map(([key, value]) => `${key}="${escapeHtmlAttribute(String(value))}"`)
-      .join(' ');
+      .join(" ");
   const toSafeTagName = (tag: unknown): string => {
     const tagName = String(tag);
     if (!safeTagNames.has(tagName)) {
@@ -308,15 +308,15 @@ export const createSvgStr = (icon: IconNode, attrs?: Record<string, string>): st
 
   // Create default SVG attributes
   const svgAttrs = {
-    xmlns: 'http://www.w3.org/2000/svg',
-    width: '24',
-    height: '24',
-    viewBox: '0 0 24 24',
-    fill: 'none',
-    stroke: 'currentColor',
-    'stroke-width': '2',
-    'stroke-linecap': 'round',
-    'stroke-linejoin': 'round',
+    xmlns: "http://www.w3.org/2000/svg",
+    width: "24",
+    height: "24",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    "stroke-width": "2",
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round",
     ...attrs,
   };
   const svgAttrString = toSafeAttributeString(svgAttrs);
@@ -336,24 +336,24 @@ export const createSvgStr = (icon: IconNode, attrs?: Record<string, string>): st
     const attrString = toSafeAttributeString(attributes);
 
     // Process children recursively
-    let childrenString = '';
+    let childrenString = "";
 
     if (Array.isArray(children) && children.length > 0) {
-      childrenString = children.map((child) => processElement(child)).join('');
+      childrenString = children.map((child) => processElement(child)).join("");
     }
 
     // Return properly formatted element string
     if (childrenString) {
-      return `<${String(tagName)}${attrString ? ' ' + String(attrString) : ''}>${childrenString}</${String(tagName)}>`;
+      return `<${String(tagName)}${attrString ? " " + String(attrString) : ""}>${childrenString}</${String(tagName)}>`;
     } else {
       // Self-closing tag for empty children
-      return `<${String(tagName)}${attrString ? ' ' + String(attrString) : ''}/>`;
+      return `<${String(tagName)}${attrString ? " " + String(attrString) : ""}/>`;
     }
   };
 
   // Process all elements and join them
   const elementsString = Array.isArray(icon)
-    ? icon.map((element) => processElement(element)).join('')
+    ? icon.map((element) => processElement(element)).join("")
     : processElement(icon);
 
   // Return the complete SVG string

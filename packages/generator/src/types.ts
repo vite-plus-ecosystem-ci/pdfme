@@ -1,4 +1,4 @@
-import type { PDFPage } from '@pdfme/pdf-lib';
+import type { PDFPage } from "@pdfme/pdf-lib";
 
 export type PdfBox = { x: number; y: number; width: number; height: number };
 

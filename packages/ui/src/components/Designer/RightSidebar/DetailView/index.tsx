@@ -1,6 +1,6 @@
-import { useForm } from 'form-render';
-import type { Schema as FormRenderSchema } from 'form-render';
-import React, { useRef, useContext, useEffect, useCallback, useMemo } from 'react';
+import { useForm } from "form-render";
+import type { Schema as FormRenderSchema } from "form-render";
+import React, { useRef, useContext, useEffect, useCallback, useMemo } from "react";
 import type {
   Dict,
   ChangeSchemaItem,
@@ -8,41 +8,41 @@ import type {
   PropPanelWidgetProps,
   PropPanelSchema,
   Schema,
-} from '@pdfme/common';
-import { isBlankPdf } from '@pdfme/common';
-import { TEXT_OVERFLOW_EXPAND, TEXT_OVERFLOW_VISIBLE } from '@pdfme/schemas/texts';
-import type { SidebarProps } from '../../../../types.js';
-import { Menu } from 'lucide-react';
-import { I18nContext, PluginsRegistry, OptionsContext } from '../../../../contexts.js';
-import { debounce } from '../../../../helper.js';
-import { DESIGNER_CLASSNAME } from '../../../../constants.js';
-import { theme, Typography, Button, Divider } from 'antd';
-import AlignWidget from './AlignWidget.js';
-import WidgetRenderer from './WidgetRenderer.js';
-import ButtonGroupWidget from './ButtonGroupWidget.js';
-import ColorWidget from './ColorWidget.js';
-import type { ColorWidgetProps } from './ColorWidget.js';
-import { expandSameTypeBulkUpdateChanges } from './schemaChangeHelpers.js';
-import { InternalNamePath, ValidateErrorEntity } from 'rc-field-form/es/interface.js';
-import { SidebarBody, SidebarFrame, SidebarHeader, SIDEBAR_H_PADDING_PX } from '../layout.js';
+} from "@pdfme/common";
+import { isBlankPdf } from "@pdfme/common";
+import { TEXT_OVERFLOW_EXPAND, TEXT_OVERFLOW_VISIBLE } from "@pdfme/schemas/texts";
+import type { SidebarProps } from "../../../../types.js";
+import { Menu } from "lucide-react";
+import { I18nContext, PluginsRegistry, OptionsContext } from "../../../../contexts.js";
+import { debounce } from "../../../../helper.js";
+import { DESIGNER_CLASSNAME } from "../../../../constants.js";
+import { theme, Typography, Button, Divider } from "antd";
+import AlignWidget from "./AlignWidget.js";
+import WidgetRenderer from "./WidgetRenderer.js";
+import ButtonGroupWidget from "./ButtonGroupWidget.js";
+import ColorWidget from "./ColorWidget.js";
+import type { ColorWidgetProps } from "./ColorWidget.js";
+import { expandSameTypeBulkUpdateChanges } from "./schemaChangeHelpers.js";
+import { InternalNamePath, ValidateErrorEntity } from "rc-field-form/es/interface.js";
+import { SidebarBody, SidebarFrame, SidebarHeader, SIDEBAR_H_PADDING_PX } from "../layout.js";
 
 // Import FormRender as a default import
-import FormRenderComponent from 'form-render';
+import FormRenderComponent from "form-render";
 
 const { Text } = Typography;
 
-const TEXT_OVERFLOW_EXPAND_SCHEMA_TYPES = new Set(['text', 'multiVariableText']);
+const TEXT_OVERFLOW_EXPAND_SCHEMA_TYPES = new Set(["text", "multiVariableText"]);
 
 type DetailViewProps = Pick<
   SidebarProps,
-  | 'size'
-  | 'schemas'
-  | 'schemasList'
-  | 'pageSize'
-  | 'basePdf'
-  | 'changeSchemas'
-  | 'activeElements'
-  | 'deselectSchema'
+  | "size"
+  | "schemas"
+  | "schemasList"
+  | "pageSize"
+  | "basePdf"
+  | "changeSchemas"
+  | "activeElements"
+  | "deselectSchema"
 > & {
   activeSchema: SchemaForUI;
 };
@@ -84,7 +84,7 @@ const DetailView = (props: DetailViewProps) => {
   const typedI18n = useCallback(
     (key: string): string => {
       // Use a type assertion to handle the union type constraint
-      return typeof i18n === 'function' ? i18n(key as keyof Dict) : key;
+      return typeof i18n === "function" ? i18n(key as keyof Dict) : key;
     },
     [i18n],
   );
@@ -141,7 +141,7 @@ const DetailView = (props: DetailViewProps) => {
     // Create a type-safe copy of the schema with editable property
     const values: Record<string, unknown> = { ...activeSchema };
     // Safely access and set properties
-    const readOnly = typeof values.readOnly === 'boolean' ? values.readOnly : false;
+    const readOnly = typeof values.readOnly === "boolean" ? values.readOnly : false;
     values.editable = !readOnly;
     form.setValues(values);
   }, [activeSchema, form]);
@@ -150,7 +150,7 @@ const DetailView = (props: DetailViewProps) => {
     if (isBlankPdf(basePdf) || !TEXT_OVERFLOW_EXPAND_SCHEMA_TYPES.has(activeSchema.type)) return;
     if ((activeSchema as Record<string, unknown>).overflow !== TEXT_OVERFLOW_EXPAND) return;
 
-    changeSchemas([{ key: 'overflow', value: TEXT_OVERFLOW_VISIBLE, schemaId: activeSchema.id }]);
+    changeSchemas([{ key: "overflow", value: TEXT_OVERFLOW_VISIBLE, schemaId: activeSchema.id }]);
   }, [activeSchema, basePdf, changeSchemas]);
 
   useEffect(() => {
@@ -187,16 +187,16 @@ const DetailView = (props: DetailViewProps) => {
 
     if (!position || width === undefined || height === undefined) return true;
 
-    if (fieldName === 'x') {
+    if (fieldName === "x") {
       if (value < paddingLeft || value > pageSize.width - paddingRight) return true;
       if (width > 0 && value + width > pageSize.width - paddingRight) return false;
-    } else if (fieldName === 'y') {
+    } else if (fieldName === "y") {
       if (value < paddingTop || value > pageSize.height - paddingBottom) return true;
       if (height > 0 && value + height > pageSize.height - paddingBottom) return false;
-    } else if (fieldName === 'width') {
+    } else if (fieldName === "width") {
       if (position.x < paddingLeft || position.x > pageSize.width - paddingRight) return true;
       if (value > 0 && position.x + value > pageSize.width - paddingRight) return false;
-    } else if (fieldName === 'height') {
+    } else if (fieldName === "height") {
       if (position.y < paddingTop || position.y > pageSize.height - paddingBottom) return true;
       if (value > 0 && position.y + value > pageSize.height - paddingBottom) return false;
     }
@@ -208,7 +208,7 @@ const DetailView = (props: DetailViewProps) => {
   const handleWatch = debounce(function (...args: unknown[]) {
     const formSchema = args[0] as Record<string, unknown>;
     const formAndSchemaValuesDiffer = (formValue: unknown, schemaValue: unknown): boolean => {
-      if (typeof formValue === 'object' && formValue !== null) {
+      if (typeof formValue === "object" && formValue !== null) {
         return JSON.stringify(formValue) !== JSON.stringify(schemaValue);
       }
       return formValue !== schemaValue;
@@ -218,37 +218,37 @@ const DetailView = (props: DetailViewProps) => {
     for (const key in formSchema) {
       // `id` is UI-only and `content` is edited by schema renderers/widgets, not this form watcher.
       // Other active-schema-only keys are handled by expandSameTypeBulkUpdateChanges.
-      if (['id', 'content'].includes(key)) continue;
+      if (["id", "content"].includes(key)) continue;
 
       let value = formSchema[key];
       if (formAndSchemaValuesDiffer(value, (activeSchema as Record<string, unknown>)[key])) {
         // FIXME memo: https://github.com/pdfme/pdfme/pull/367#issuecomment-1857468274
-        if (value === null && ['rotate', 'opacity'].includes(key)) {
+        if (value === null && ["rotate", "opacity"].includes(key)) {
           value = undefined;
         }
 
-        if (key === 'editable') {
+        if (key === "editable") {
           const readOnlyValue = !value;
-          changes.push({ key: 'readOnly', value: readOnlyValue, schemaId: activeSchema.id });
+          changes.push({ key: "readOnly", value: readOnlyValue, schemaId: activeSchema.id });
           if (readOnlyValue) {
-            changes.push({ key: 'required', value: false, schemaId: activeSchema.id });
+            changes.push({ key: "required", value: false, schemaId: activeSchema.id });
           } else if (
-            activeSchema.type === 'text' &&
-            (activeSchema as Record<string, unknown>).textFormat === 'inline-markdown'
+            activeSchema.type === "text" &&
+            (activeSchema as Record<string, unknown>).textFormat === "inline-markdown"
           ) {
-            changes.push({ key: 'textFormat', value: 'plain', schemaId: activeSchema.id });
+            changes.push({ key: "textFormat", value: "plain", schemaId: activeSchema.id });
           }
           continue;
         }
 
         changes.push({ key, value, schemaId: activeSchema.id });
         if (
-          key === 'overflow' &&
+          key === "overflow" &&
           value === TEXT_OVERFLOW_EXPAND &&
-          ['text', 'multiVariableText'].includes(activeSchema.type)
+          ["text", "multiVariableText"].includes(activeSchema.type)
         ) {
           changes.push({
-            key: 'dynamicFontSize',
+            key: "dynamicFontSize",
             value: undefined,
             schemaId: activeSchema.id,
           });
@@ -315,122 +315,122 @@ const DetailView = (props: DetailViewProps) => {
 
   // Create a type-safe schema object
   const propPanelSchema: PropPanelSchema = {
-    type: 'object',
+    type: "object",
     column: 2,
     properties: {
       type: {
-        title: typedI18n('type'),
-        type: 'string',
-        widget: 'select',
+        title: typedI18n("type"),
+        type: "string",
+        widget: "select",
         props: { options: typeOptions },
         required: true,
         span: 12,
       },
       name: {
-        title: typedI18n('fieldName'),
-        type: 'string',
+        title: typedI18n("fieldName"),
+        type: "string",
         required: true,
         span: 12,
         rules: [
           {
             validator: validateUniqueSchemaName,
-            message: typedI18n('validation.uniqueName'),
+            message: typedI18n("validation.uniqueName"),
           },
         ],
-        props: { autoComplete: 'off' },
+        props: { autoComplete: "off" },
       },
       editable: {
-        title: typedI18n('editable'),
-        type: 'boolean',
+        title: typedI18n("editable"),
+        type: "boolean",
         span: 8,
-        hidden: typeof defaultSchema.readOnly !== 'undefined',
+        hidden: typeof defaultSchema.readOnly !== "undefined",
       },
       required: {
-        title: typedI18n('required'),
-        type: 'boolean',
+        title: typedI18n("required"),
+        type: "boolean",
         span: 16,
-        hidden: '{{!formData.editable}}',
+        hidden: "{{!formData.editable}}",
       },
-      '-': { type: 'void', widget: 'Divider' },
-      align: { title: typedI18n('align'), type: 'void', widget: 'AlignWidget' },
+      "-": { type: "void", widget: "Divider" },
+      align: { title: typedI18n("align"), type: "void", widget: "AlignWidget" },
       position: {
-        type: 'object',
-        widget: 'card',
+        type: "object",
+        widget: "card",
         properties: {
           x: {
-            title: 'X',
-            type: 'number',
-            widget: 'inputNumber',
+            title: "X",
+            type: "number",
+            widget: "inputNumber",
             required: true,
             span: 8,
             min: paddingLeft,
             max: pageSize.width - paddingRight,
             rules: [
               {
-                validator: (_: unknown, value: number) => validatePosition(_, value, 'x'),
-                message: typedI18n('validation.outOfBounds'),
+                validator: (_: unknown, value: number) => validatePosition(_, value, "x"),
+                message: typedI18n("validation.outOfBounds"),
               },
             ],
           },
           y: {
-            title: 'Y',
-            type: 'number',
-            widget: 'inputNumber',
+            title: "Y",
+            type: "number",
+            widget: "inputNumber",
             required: true,
             span: 8,
             min: paddingTop,
             max: pageSize.height - paddingBottom,
             rules: [
               {
-                validator: (_: unknown, value: number) => validatePosition(_, value, 'y'),
-                message: typedI18n('validation.outOfBounds'),
+                validator: (_: unknown, value: number) => validatePosition(_, value, "y"),
+                message: typedI18n("validation.outOfBounds"),
               },
             ],
           },
         },
       },
       width: {
-        title: typedI18n('width'),
-        type: 'number',
-        widget: 'inputNumber',
+        title: typedI18n("width"),
+        type: "number",
+        widget: "inputNumber",
         required: true,
         span: 6,
         props: { min: 0, max: maxWidth },
         rules: [
           {
-            validator: (_: unknown, value: number) => validatePosition(_, value, 'width'),
-            message: typedI18n('validation.outOfBounds'),
+            validator: (_: unknown, value: number) => validatePosition(_, value, "width"),
+            message: typedI18n("validation.outOfBounds"),
           },
         ],
       },
       height: {
-        title: typedI18n('height'),
-        type: 'number',
-        widget: 'inputNumber',
+        title: typedI18n("height"),
+        type: "number",
+        widget: "inputNumber",
         required: true,
         span: 6,
         props: { min: 0, max: maxHeight },
         rules: [
           {
-            validator: (_: unknown, value: number) => validatePosition(_, value, 'height'),
-            message: typedI18n('validation.outOfBounds'),
+            validator: (_: unknown, value: number) => validatePosition(_, value, "height"),
+            message: typedI18n("validation.outOfBounds"),
           },
         ],
       },
       rotate: {
-        title: typedI18n('rotate'),
-        type: 'number',
-        widget: 'inputNumber',
-        disabled: typeof defaultSchema.rotate === 'undefined',
+        title: typedI18n("rotate"),
+        type: "number",
+        widget: "inputNumber",
+        disabled: typeof defaultSchema.rotate === "undefined",
         max: 360,
         props: { min: 0 },
         span: 6,
       },
       opacity: {
-        title: typedI18n('opacity'),
-        type: 'number',
-        widget: 'inputNumber',
-        disabled: typeof defaultSchema.opacity === 'undefined',
+        title: typedI18n("opacity"),
+        type: "number",
+        widget: "inputNumber",
+        disabled: typeof defaultSchema.opacity === "undefined",
         props: { step: 0.1, min: 0, max: 1 },
         span: 6,
       },
@@ -440,7 +440,7 @@ const DetailView = (props: DetailViewProps) => {
   // Create a safe copy of the properties
   const safeProperties = { ...propPanelSchema.properties };
 
-  if (typeof activePropPanelSchema === 'function') {
+  if (typeof activePropPanelSchema === "function") {
     // Create a new object without the schemasList property
     const { size, schemas, pageSize, basePdf, activeElements, deselectSchema, activeSchema } =
       props;
@@ -464,11 +464,11 @@ const DetailView = (props: DetailViewProps) => {
     });
 
     // Safely handle the result
-    const apps = functionResult && typeof functionResult === 'object' ? functionResult : {};
+    const apps = functionResult && typeof functionResult === "object" ? functionResult : {};
 
     // Create a divider if needed
     const dividerObj =
-      Object.keys(apps).length === 0 ? {} : { '--': { type: 'void', widget: 'Divider' } };
+      Object.keys(apps).length === 0 ? {} : { "--": { type: "void", widget: "Divider" } };
 
     // Assign properties safely - use type assertion to satisfy TypeScript
     propPanelSchema.properties = {
@@ -479,13 +479,13 @@ const DetailView = (props: DetailViewProps) => {
   } else {
     // Handle non-function case
     const apps =
-      activePropPanelSchema && typeof activePropPanelSchema === 'object'
+      activePropPanelSchema && typeof activePropPanelSchema === "object"
         ? activePropPanelSchema
         : {};
 
     // Create a divider if needed
     const dividerObj =
-      Object.keys(apps).length === 0 ? {} : { '--': { type: 'void', widget: 'Divider' } };
+      Object.keys(apps).length === 0 ? {} : { "--": { type: "void", widget: "Divider" } };
 
     // Assign properties safely - use type assertion to satisfy TypeScript
     propPanelSchema.properties = {
@@ -496,26 +496,26 @@ const DetailView = (props: DetailViewProps) => {
   }
 
   return (
-    <SidebarFrame className={DESIGNER_CLASSNAME + 'detail-view'}>
+    <SidebarFrame className={DESIGNER_CLASSNAME + "detail-view"}>
       <SidebarHeader>
         <Button
-          className={DESIGNER_CLASSNAME + 'back-button'}
+          className={DESIGNER_CLASSNAME + "back-button"}
           style={{
-            position: 'absolute',
+            position: "absolute",
             left: SIDEBAR_H_PADDING_PX,
             zIndex: 100,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: 'translateY(-50%)',
-            top: '50%',
-            paddingTop: '3px',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: "translateY(-50%)",
+            top: "50%",
+            paddingTop: "3px",
           }}
           onClick={deselectSchema}
           icon={<Menu strokeWidth={1.5} size={20} />}
         />
-        <Text strong style={{ textAlign: 'center', width: '100%' }}>
-          {typedI18n('editField')}
+        <Text strong style={{ textAlign: "center", width: "100%" }}>
+          {typedI18n("editField")}
         </Text>
       </SidebarHeader>
       <SidebarBody>
@@ -523,7 +523,7 @@ const DetailView = (props: DetailViewProps) => {
           form={form}
           schema={propPanelSchema as unknown as FormRenderSchema}
           widgets={widgets}
-          watch={{ '#': handleWatch }}
+          watch={{ "#": handleWatch }}
           locale="en-US"
         />
       </SidebarBody>

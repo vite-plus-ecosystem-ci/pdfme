@@ -1,5 +1,5 @@
-import { getFallbackFontName, mm2pt, pt2mm, type Font } from '@pdfme/common';
-import type { Font as FontKitFont } from 'fontkit';
+import { getFallbackFontName, mm2pt, pt2mm, type Font } from "@pdfme/common";
+import type { Font as FontKitFont } from "fontkit";
 import {
   DEFAULT_CHARACTER_SPACING,
   DEFAULT_DYNAMIC_FIT,
@@ -15,18 +15,18 @@ import {
   SYNTHETIC_BOLD_PDF_EXTRA_DRAWS,
   SYNTHETIC_ITALIC_SKEW_DEGREES,
   TEXT_FORMAT_INLINE_MARKDOWN,
-} from './constants.js';
+} from "./constants.js";
 import {
   fitDynamicFontSize,
   getFontKitFont,
   getLineBoxHeightPt,
   heightOfFontAtSize,
   widthOfTextAtSize,
-} from './helper.js';
-import { parseInlineMarkdown } from './inlineMarkdown.js';
-import type { RichTextRun, TextSchema } from './types.js';
-import { getBoxContentArea } from '../box.js';
-import { countGraphemes, layoutStyledRuns } from './wrap.js';
+} from "./helper.js";
+import { parseInlineMarkdown } from "./inlineMarkdown.js";
+import type { RichTextRun, TextSchema } from "./types.js";
+import { getBoxContentArea } from "../box.js";
+import { countGraphemes, layoutStyledRuns } from "./wrap.js";
 
 export type ResolvedRichTextRun = RichTextRun & {
   fontName: string;
@@ -59,7 +59,7 @@ const getLoadedFontName = (font: Font, fontName?: string) =>
 
 export const isInlineMarkdownTextSchema = (schema: TextSchema) =>
   schema.textFormat === TEXT_FORMAT_INLINE_MARKDOWN &&
-  !(schema.type === 'text' && schema.readOnly !== true);
+  !(schema.type === "text" && schema.readOnly !== true);
 
 export const resolveFontVariant = (
   run: RichTextRun,
@@ -174,10 +174,10 @@ export const measureRunText = (
 };
 
 export const countRichTextLineGraphemes = (line: RichTextLine) =>
-  countGraphemes(line.runs.map((run) => run.text).join(''));
+  countGraphemes(line.runs.map((run) => run.text).join(""));
 
 export const getRichTextLineText = (line: RichTextLine) =>
-  line.runs.map((run) => run.text).join('');
+  line.runs.map((run) => run.text).join("");
 
 export const layoutRichTextLines = (arg: {
   runs: ResolvedRichTextRun[];
@@ -211,11 +211,11 @@ const measureParagraphWidths = (
   characterSpacing: number,
 ) => {
   const widths: number[] = [];
-  let paragraphText = '';
+  let paragraphText = "";
   let paragraphRuns: ResolvedRichTextRun[] = [];
 
   const pushWidth = () => {
-    if (paragraphRuns.length === 0 && paragraphText === '') {
+    if (paragraphRuns.length === 0 && paragraphText === "") {
       widths.push(0);
       return;
     }
@@ -225,13 +225,13 @@ const measureParagraphWidths = (
       width += measureRunText(run, run.text, fontSize, characterSpacing);
     });
     widths.push(width);
-    paragraphText = '';
+    paragraphText = "";
     paragraphRuns = [];
   };
 
   runs.forEach((run) => {
     run.text.split(/(\r\n|\r|\n|\f|\v)/).forEach((part) => {
-      if (part === '\r\n' || part === '\r' || part === '\n' || part === '\f' || part === '\v') {
+      if (part === "\r\n" || part === "\r" || part === "\n" || part === "\f" || part === "\v") {
         pushWidth();
         return;
       }

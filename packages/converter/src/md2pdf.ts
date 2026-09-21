@@ -7,7 +7,7 @@ import {
   type PageSize,
   type Schema,
   type Template,
-} from '@pdfme/common';
+} from "@pdfme/common";
 import type {
   BlockContent,
   Blockquote,
@@ -25,10 +25,10 @@ import type {
   Table,
   TableCell,
   TableRow,
-} from 'mdast';
-import remarkGfm from 'remark-gfm';
-import remarkParse from 'remark-parse';
-import { unified } from 'unified';
+} from "mdast";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import { unified } from "unified";
 
 type BoxSides = {
   top?: number;
@@ -79,8 +79,8 @@ type Builder = {
 
 type TableCellStyle = {
   fontName?: string;
-  alignment: 'left' | 'center' | 'right';
-  verticalAlignment: 'top' | 'middle' | 'bottom';
+  alignment: "left" | "center" | "right";
+  verticalAlignment: "top" | "middle" | "bottom";
   fontSize: number;
   lineHeight: number;
   characterSpacing: number;
@@ -95,7 +95,7 @@ type TableCellStyle = {
 const DEFAULT_PAGE_MARGIN: [number, number, number, number] = [20, 15, 20, 15];
 const DEFAULT_FONT_SIZE = 10;
 const DEFAULT_LINE_HEIGHT = 1.25;
-const DEFAULT_FONT_COLOR = '#111827';
+const DEFAULT_FONT_COLOR = "#111827";
 const DEFAULT_HEADING_SCALE: Record<HeadingDepth, number> = {
   1: 2,
   2: 1.65,
@@ -109,33 +109,33 @@ const LIST_ITEM_SPACING = 1.4;
 const TABLE_HEADER_HEIGHT = 8.5;
 const TABLE_ROW_HEIGHT = 7.5;
 const IMAGE_HEIGHT = 45;
-const CODE_BLOCK_BACKGROUND_COLOR = '#f6f8fa';
-const CODE_BLOCK_BORDER_COLOR = '#d0d7de';
+const CODE_BLOCK_BACKGROUND_COLOR = "#f6f8fa";
+const CODE_BLOCK_BORDER_COLOR = "#d0d7de";
 const CODE_BLOCK_BORDER_WIDTH = 0.1;
 const CODE_BLOCK_PADDING: ResolvedBoxSides = { top: 2, right: 3, bottom: 2, left: 3 };
-const BLOCKQUOTE_BACKGROUND_COLOR = '#f8fafc';
-const BLOCKQUOTE_BORDER_COLOR = '#d0d7de';
+const BLOCKQUOTE_BACKGROUND_COLOR = "#f8fafc";
+const BLOCKQUOTE_BORDER_COLOR = "#d0d7de";
 const BLOCKQUOTE_BORDER_WIDTH: ResolvedBoxSides = { top: 0, right: 0, bottom: 0, left: 0.8 };
 const BLOCKQUOTE_PADDING: ResolvedBoxSides = { top: 2, right: 3, bottom: 2, left: 3 };
-const HORIZONTAL_RULE_COLOR = '#d0d7de';
+const HORIZONTAL_RULE_COLOR = "#d0d7de";
 const HORIZONTAL_RULE_HEIGHT = 0.25;
-const TABLE_BORDER_COLOR = '#d0d7de';
+const TABLE_BORDER_COLOR = "#d0d7de";
 const TABLE_CELL_BORDER_WIDTH = 0.1;
-const TABLE_HEAD_BACKGROUND_COLOR = '#f6f8fa';
-const TABLE_BODY_ALTERNATE_BACKGROUND_COLOR = '#f9fafb';
+const TABLE_HEAD_BACKGROUND_COLOR = "#f6f8fa";
+const TABLE_BODY_ALTERNATE_BACKGROUND_COLOR = "#f9fafb";
 const TABLE_CELL_PADDING = 3;
 
 const MARKDOWN_ESCAPE_PATTERN = /[\\*~`[\]()]/g;
 const DATA_IMAGE_PATTERN = /^data:image\/(?:png|jpe?g);base64,/i;
 const RENDERABLE_BLOCK_TYPES = new Set([
-  'blockquote',
-  'code',
-  'heading',
-  'html',
-  'list',
-  'paragraph',
-  'table',
-  'thematicBreak',
+  "blockquote",
+  "code",
+  "heading",
+  "html",
+  "list",
+  "paragraph",
+  "table",
+  "thematicBreak",
 ]);
 
 const markdownProcessor = unified().use(remarkParse).use(remarkGfm);
@@ -185,8 +185,8 @@ const createBuilder = (options: Md2PdfOptions): Builder => {
 
 const createBlankPdf = (options: Md2PdfOptions): BlankPdf => {
   const pageSize = resolvePageSize(
-    options.page?.size ?? 'A4',
-    options.page?.orientation ?? 'portrait',
+    options.page?.size ?? "A4",
+    options.page?.orientation ?? "portrait",
   );
   return {
     width: pageSize.width,
@@ -196,7 +196,7 @@ const createBlankPdf = (options: Md2PdfOptions): BlankPdf => {
 };
 
 const resolveMargin = (margin: MarkdownMargin): [number, number, number, number] => {
-  if (typeof margin === 'number') return [margin, margin, margin, margin];
+  if (typeof margin === "number") return [margin, margin, margin, margin];
   if (Array.isArray(margin)) return margin;
 
   const x = margin.x ?? 0;
@@ -206,31 +206,31 @@ const resolveMargin = (margin: MarkdownMargin): [number, number, number, number]
 
 const renderBlock = (node: RootContent | BlockContent, builder: Builder): void => {
   switch (node.type) {
-    case 'heading':
+    case "heading":
       renderHeading(node, builder);
       return;
-    case 'paragraph':
+    case "paragraph":
       renderParagraph(node, builder);
       return;
-    case 'list':
+    case "list":
       renderList(node, builder);
       return;
-    case 'code':
+    case "code":
       renderCode(node, builder);
       return;
-    case 'blockquote':
+    case "blockquote":
       renderBlockquote(node, builder);
       return;
-    case 'table':
+    case "table":
       renderTable(node, builder);
       return;
-    case 'thematicBreak':
+    case "thematicBreak":
       renderLine(builder);
       return;
-    case 'html':
-    case 'definition':
-    case 'footnoteDefinition':
-    case 'yaml':
+    case "html":
+    case "definition":
+    case "footnoteDefinition":
+    case "yaml":
       return;
     default:
       renderNestedBlocks(node, builder);
@@ -238,7 +238,7 @@ const renderBlock = (node: RootContent | BlockContent, builder: Builder): void =
 };
 
 const renderNestedBlocks = (node: RootContent | BlockContent, builder: Builder): void => {
-  if ('children' in node && Array.isArray(node.children)) {
+  if ("children" in node && Array.isArray(node.children)) {
     node.children.forEach((child) => {
       if (isBlockContent(child)) renderBlock(child, builder);
     });
@@ -255,12 +255,12 @@ const renderHeading = (node: Heading, builder: Builder): void => {
     fontSize,
     height: estimateTextHeight(content, fontSize, builder.lineHeight),
     gap: depth <= 1 ? 5 : depth === 2 ? 4.5 : BLOCK_GAP,
-    textFormat: 'inline-markdown',
+    textFormat: "inline-markdown",
   });
 };
 
 const renderParagraph = (node: Paragraph, builder: Builder): void => {
-  if (node.children.length === 1 && node.children[0]?.type === 'image') {
+  if (node.children.length === 1 && node.children[0]?.type === "image") {
     renderImage(node.children[0], builder);
     return;
   }
@@ -269,7 +269,7 @@ const renderParagraph = (node: Paragraph, builder: Builder): void => {
   if (!content.trim()) return;
   addTextSchema(builder, {
     content,
-    textFormat: 'inline-markdown',
+    textFormat: "inline-markdown",
   });
 };
 
@@ -279,32 +279,32 @@ const renderList = (node: List, builder: Builder): void => {
 
   const fontSize = builder.fontSize;
   const height =
-    items.length * estimateTextHeight('', fontSize, builder.lineHeight) +
+    items.length * estimateTextHeight("", fontSize, builder.lineHeight) +
     Math.max(0, items.length - 1) * LIST_ITEM_SPACING;
 
   const schema: Schema = {
-    name: resolveAutoName(builder, 'list'),
-    type: 'list',
+    name: resolveAutoName(builder, "list"),
+    type: "list",
     content: JSON.stringify(items),
     position: { x: builder.contentFrame.x, y: builder.cursorY },
     width: builder.contentFrame.width,
     height,
     readOnly: true,
-    alignment: 'left',
-    verticalAlignment: 'top',
+    alignment: "left",
+    verticalAlignment: "top",
     fontSize,
     fontName: builder.fontName,
     lineHeight: builder.lineHeight,
     characterSpacing: 0,
     fontColor: builder.fontColor,
-    backgroundColor: '',
-    listStyle: node.ordered ? 'ordered' : 'bullet',
+    backgroundColor: "",
+    listStyle: node.ordered ? "ordered" : "bullet",
     markerWidth: 6,
     markerGap: 2,
     indentSize: 6,
     itemSpacing: LIST_ITEM_SPACING,
-    textFormat: 'inline-markdown',
-    overflow: 'expand',
+    textFormat: "inline-markdown",
+    overflow: "expand",
   };
 
   addSchema(builder, schema);
@@ -318,14 +318,14 @@ const renderCode = (node: Code, builder: Builder): void => {
     borderColor: CODE_BLOCK_BORDER_COLOR,
     borderWidth: resolveBoxSides(CODE_BLOCK_BORDER_WIDTH),
     padding: CODE_BLOCK_PADDING,
-    textFormat: 'plain',
+    textFormat: "plain",
   });
 };
 
 const renderBlockquote = (node: Blockquote, builder: Builder): void => {
   const content = node.children
     .map((child) => blockToMarkdown(child))
-    .join('\n')
+    .join("\n")
     .trim();
 
   if (!content.trim()) return;
@@ -335,7 +335,7 @@ const renderBlockquote = (node: Blockquote, builder: Builder): void => {
     borderColor: BLOCKQUOTE_BORDER_COLOR,
     borderWidth: BLOCKQUOTE_BORDER_WIDTH,
     padding: BLOCKQUOTE_PADDING,
-    textFormat: 'inline-markdown',
+    textFormat: "inline-markdown",
   });
 };
 
@@ -350,8 +350,8 @@ const renderTable = (node: Table, builder: Builder): void => {
   const columnWidths = Array.from({ length: columnCount }, () => 100 / columnCount);
 
   const schema: Schema = {
-    name: resolveAutoName(builder, 'table'),
-    type: 'table',
+    name: resolveAutoName(builder, "table"),
+    type: "table",
     content: JSON.stringify(body),
     position: { x: builder.contentFrame.x, y: builder.cursorY },
     width: builder.contentFrame.width,
@@ -391,14 +391,14 @@ const renderImage = (node: Image, builder: Builder): void => {
       content: link
         ? `[${escapeInlineMarkdown(label)}](${escapeLinkDestination(link)})`
         : escapeInlineMarkdown(label),
-      textFormat: 'inline-markdown',
+      textFormat: "inline-markdown",
     });
     return;
   }
 
   const schema: Schema = {
-    name: resolveAutoName(builder, 'image'),
-    type: 'image',
+    name: resolveAutoName(builder, "image"),
+    type: "image",
     content: node.url,
     position: { x: builder.contentFrame.x, y: builder.cursorY },
     width: builder.contentFrame.width,
@@ -411,8 +411,8 @@ const renderImage = (node: Image, builder: Builder): void => {
 
 const renderLine = (builder: Builder): void => {
   const schema: Schema = {
-    name: resolveAutoName(builder, 'line'),
-    type: 'line',
+    name: resolveAutoName(builder, "line"),
+    type: "line",
     position: { x: builder.contentFrame.x, y: builder.cursorY },
     width: builder.contentFrame.width,
     height: HORIZONTAL_RULE_HEIGHT,
@@ -435,7 +435,7 @@ const addTextSchema = (
     borderColor?: string;
     borderWidth?: ResolvedBoxSides;
     padding?: ResolvedBoxSides;
-    textFormat?: 'plain' | 'inline-markdown';
+    textFormat?: "plain" | "inline-markdown";
     x?: number;
     width?: number;
   },
@@ -444,8 +444,8 @@ const addTextSchema = (
   const content = options.content;
   const boxVerticalInset = getBoxVerticalInset(options);
   const schema: Schema = {
-    name: options.name ?? resolveAutoName(builder, 'text'),
-    type: 'text',
+    name: options.name ?? resolveAutoName(builder, "text"),
+    type: "text",
     content,
     position: { x: options.x ?? builder.contentFrame.x, y: builder.cursorY },
     width: options.width ?? builder.contentFrame.width,
@@ -453,19 +453,19 @@ const addTextSchema = (
       (options.height ?? estimateTextHeight(content, fontSize, builder.lineHeight)) +
       boxVerticalInset,
     readOnly: true,
-    alignment: 'left',
-    verticalAlignment: 'top',
+    alignment: "left",
+    verticalAlignment: "top",
     fontSize,
     fontName: builder.fontName,
     lineHeight: builder.lineHeight,
     characterSpacing: 0,
     fontColor: builder.fontColor,
-    backgroundColor: options.backgroundColor ?? '',
+    backgroundColor: options.backgroundColor ?? "",
     borderColor: options.borderColor,
     borderWidth: options.borderWidth,
     padding: options.padding,
-    textFormat: options.textFormat ?? 'plain',
-    overflow: 'expand',
+    textFormat: options.textFormat ?? "plain",
+    overflow: "expand",
   };
 
   addSchema(builder, schema, options.gap);
@@ -478,13 +478,13 @@ const addSchema = (builder: Builder, schema: Schema, gap = BLOCK_GAP): void => {
 
 const collectListItems = (node: List, level = 0): string[] =>
   node.children.flatMap((item) => {
-    const prefix = typeof item.checked === 'boolean' ? `[${item.checked ? 'x' : ' '}] ` : '';
+    const prefix = typeof item.checked === "boolean" ? `[${item.checked ? "x" : " "}] ` : "";
     const text = item.children
-      .filter((child) => child.type !== 'list')
+      .filter((child) => child.type !== "list")
       .map((child) => blockToMarkdown(child))
-      .join(' ')
+      .join(" ")
       .trim();
-    const current = `${'\t'.repeat(level)}${prefix}${text}`;
+    const current = `${"\t".repeat(level)}${prefix}${text}`;
     const nested = item.children
       .filter(isList)
       .flatMap((child) => collectListItems(child, level + 1));
@@ -493,55 +493,55 @@ const collectListItems = (node: List, level = 0): string[] =>
 
 const blockToMarkdown = (node: RootContent | BlockContent): string => {
   switch (node.type) {
-    case 'paragraph':
-    case 'heading':
+    case "paragraph":
+    case "heading":
       return renderInlineChildren(node.children);
-    case 'code':
+    case "code":
       return node.value;
-    case 'list':
-      return collectListItems(node).join('\n');
-    case 'blockquote':
-      return node.children.map(blockToMarkdown).join('\n');
-    case 'table':
-      return node.children.map((row) => tableRowToStrings(row).join(' | ')).join('\n');
-    case 'thematicBreak':
-      return '---';
+    case "list":
+      return collectListItems(node).join("\n");
+    case "blockquote":
+      return node.children.map(blockToMarkdown).join("\n");
+    case "table":
+      return node.children.map((row) => tableRowToStrings(row).join(" | ")).join("\n");
+    case "thematicBreak":
+      return "---";
     default:
-      return '';
+      return "";
   }
 };
 
 const renderInlineChildren = (children: PhrasingContent[]): string =>
-  children.map(renderInline).join('');
+  children.map(renderInline).join("");
 
 const renderInline = (node: PhrasingContent): string => {
   switch (node.type) {
-    case 'text':
+    case "text":
       return escapeInlineMarkdown(node.value);
-    case 'emphasis':
+    case "emphasis":
       return `*${renderInlineChildren(node.children)}*`;
-    case 'strong':
+    case "strong":
       return `**${renderInlineChildren(node.children)}**`;
-    case 'delete':
+    case "delete":
       return `~~${renderInlineChildren(node.children)}~~`;
-    case 'inlineCode':
+    case "inlineCode":
       return renderInlineCode(node);
-    case 'break':
-      return '\n';
-    case 'link':
+    case "break":
+      return "\n";
+    case "link":
       return renderLink(node);
-    case 'image':
+    case "image":
       return renderInlineImage(node);
-    case 'html':
-      return '';
+    case "html":
+      return "";
     default:
-      return 'children' in node && Array.isArray(node.children)
+      return "children" in node && Array.isArray(node.children)
         ? renderInlineChildren(node.children as PhrasingContent[])
-        : '';
+        : "";
   }
 };
 
-const renderInlineCode = (node: InlineCode): string => `\`${node.value.replaceAll('`', '\\`')}\``;
+const renderInlineCode = (node: InlineCode): string => `\`${node.value.replaceAll("`", "\\`")}\``;
 
 const renderLink = (node: Link): string => {
   const label = renderInlineChildren(node.children);
@@ -560,27 +560,27 @@ const renderInlineImage = (node: Image): string => {
 const tableRowToStrings = (row: TableRow): string[] => row.children.map(tableCellToString);
 
 const tableCellToString = (cell: TableCell): string =>
-  cell.children.map(inlineToPlainText).join('');
+  cell.children.map(inlineToPlainText).join("");
 
 const normalizeRowLength = (row: string[], columnCount: number): string[] =>
-  Array.from({ length: columnCount }, (_, index) => row[index] ?? '');
+  Array.from({ length: columnCount }, (_, index) => row[index] ?? "");
 
 const defaultCellStyle = (builder: Builder): TableCellStyle => ({
   fontName: builder.fontName,
-  alignment: 'left',
-  verticalAlignment: 'middle',
+  alignment: "left",
+  verticalAlignment: "middle",
   fontSize: builder.fontSize,
   lineHeight: builder.lineHeight,
   characterSpacing: 0,
   fontColor: builder.fontColor,
-  backgroundColor: '#ffffff',
+  backgroundColor: "#ffffff",
   borderColor: TABLE_BORDER_COLOR,
   borderWidth: resolveBoxSides(TABLE_CELL_BORDER_WIDTH),
   padding: resolveBoxSides(TABLE_CELL_PADDING),
 });
 
 const resolveBoxSides = (value: number | BoxSides): ResolvedBoxSides => {
-  if (typeof value === 'number') return { top: value, right: value, bottom: value, left: value };
+  if (typeof value === "number") return { top: value, right: value, bottom: value, left: value };
   const x = value.x ?? 0;
   const y = value.y ?? 0;
   return {
@@ -601,7 +601,7 @@ const getBoxVerticalInset = (value: {
   (value.padding?.bottom ?? 0);
 
 const resolveAutoName = (builder: Builder, prefix: string): string => {
-  let name = '';
+  let name = "";
   do {
     builder.nameCounters[prefix] = (builder.nameCounters[prefix] ?? 0) + 1;
     name = `${prefix}_${builder.nameCounters[prefix]}`;
@@ -622,7 +622,7 @@ const resolveName = (builder: Builder, baseName: string): string => {
 };
 
 const estimateTextHeight = (content: string, fontSize: number, lineHeight: number): number => {
-  const lineCount = Math.max(1, content.split('\n').length);
+  const lineCount = Math.max(1, content.split("\n").length);
   return Math.max(4, lineCount * pt2mm(fontSize * lineHeight) + 1);
 };
 
@@ -636,60 +636,60 @@ const slugify = (value: string): string =>
   value
     .trim()
     .toLowerCase()
-    .replace(/[^\p{Letter}\p{Number}]+/gu, '-')
-    .replace(/^-|-$/g, '');
+    .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+    .replace(/^-|-$/g, "");
 
 const toPlainText = (node: Heading): string =>
   node.children
     .map((child) => {
-      if ('value' in child && typeof child.value === 'string') return child.value;
-      if ('alt' in child && typeof child.alt === 'string') return child.alt;
-      if ('children' in child && Array.isArray(child.children)) {
+      if ("value" in child && typeof child.value === "string") return child.value;
+      if ("alt" in child && typeof child.alt === "string") return child.alt;
+      if ("children" in child && Array.isArray(child.children)) {
         return (child.children as PhrasingContent[])
           .map((grandchild) => toPlainInlineText(grandchild))
-          .join('');
+          .join("");
       }
-      return '';
+      return "";
     })
-    .join('');
+    .join("");
 
 const toPlainInlineText = (node: PhrasingContent): string => {
-  if ('value' in node && typeof node.value === 'string') return node.value;
-  if ('alt' in node && typeof node.alt === 'string') return node.alt;
-  if ('children' in node && Array.isArray(node.children)) {
-    return (node.children as PhrasingContent[]).map(toPlainInlineText).join('');
+  if ("value" in node && typeof node.value === "string") return node.value;
+  if ("alt" in node && typeof node.alt === "string") return node.alt;
+  if ("children" in node && Array.isArray(node.children)) {
+    return (node.children as PhrasingContent[]).map(toPlainInlineText).join("");
   }
-  return '';
+  return "";
 };
 
 const inlineToPlainText = (node: PhrasingContent): string => {
   switch (node.type) {
-    case 'text':
-    case 'inlineCode':
+    case "text":
+    case "inlineCode":
       return node.value;
-    case 'break':
-      return '\n';
-    case 'image':
+    case "break":
+      return "\n";
+    case "image":
       return node.alt || node.title || node.url;
-    case 'link':
-    case 'emphasis':
-    case 'strong':
-    case 'delete':
-      return node.children.map(inlineToPlainText).join('');
-    case 'html':
-      return '';
+    case "link":
+    case "emphasis":
+    case "strong":
+    case "delete":
+      return node.children.map(inlineToPlainText).join("");
+    case "html":
+      return "";
     default:
-      return 'children' in node && Array.isArray(node.children)
-        ? (node.children as PhrasingContent[]).map(inlineToPlainText).join('')
-        : '';
+      return "children" in node && Array.isArray(node.children)
+        ? (node.children as PhrasingContent[]).map(inlineToPlainText).join("")
+        : "";
   }
 };
 
 const isBlockContent = (node: unknown): node is BlockContent =>
-  typeof node === 'object' &&
+  typeof node === "object" &&
   node !== null &&
-  'type' in node &&
-  typeof node.type === 'string' &&
+  "type" in node &&
+  typeof node.type === "string" &&
   RENDERABLE_BLOCK_TYPES.has(node.type);
 
-const isList = (node: ListItem['children'][number]): node is List => node.type === 'list';
+const isList = (node: ListItem["children"][number]): node is List => node.type === "list";

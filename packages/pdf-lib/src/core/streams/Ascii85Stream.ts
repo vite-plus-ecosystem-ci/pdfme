@@ -6,8 +6,8 @@
  * under the Apache 2.0 open source license.
  */
 
-import DecodeStream from './DecodeStream.js';
-import { StreamType } from './Stream.js';
+import DecodeStream from "./DecodeStream.js";
+import { StreamType } from "./Stream.js";
 
 const isSpace = (ch: number) => ch === 0x20 || ch === 0x09 || ch === 0x0d || ch === 0x0a;
 
