@@ -1,22 +1,22 @@
-import { describe, expect, it, vi } from 'vitest';
-import { BLANK_PDF, mm2pt, type PDFRenderProps } from '@pdfme/common';
-import * as pdfLib from '@pdfme/pdf-lib';
-import { ellipse, rectangle } from '../src/index.js';
-import type { ShapeSchema } from '../src/shapes/rectAndEllipse.js';
+import { describe, expect, it, vi } from "vite-plus/test";
+import { BLANK_PDF, mm2pt, type PDFRenderProps } from "@pdfme/common";
+import * as pdfLib from "@pdfme/pdf-lib";
+import { ellipse, rectangle } from "../src/index.js";
+import type { ShapeSchema } from "../src/shapes/rectAndEllipse.js";
 
 const PAGE_HEIGHT = 841.89;
 
 const getRectangleSchema = (overrides: Partial<ShapeSchema> = {}): ShapeSchema => ({
-  name: 'rect',
-  type: 'rectangle',
+  name: "rect",
+  type: "rectangle",
   position: { x: 20, y: 30 },
   width: 50,
   height: 30,
   rotate: 0,
   opacity: 1,
   borderWidth: 10,
-  borderColor: '#000000',
-  color: '',
+  borderColor: "#000000",
+  color: "",
   readOnly: true,
   radius: 0,
   ...overrides,
@@ -24,8 +24,8 @@ const getRectangleSchema = (overrides: Partial<ShapeSchema> = {}): ShapeSchema =
 
 const getEllipseSchema = (overrides: Partial<ShapeSchema> = {}): ShapeSchema => ({
   ...getRectangleSchema(overrides),
-  name: 'ellipse',
-  type: 'ellipse',
+  name: "ellipse",
+  type: "ellipse",
 });
 
 const createPage = () => ({
@@ -39,7 +39,7 @@ const renderPdf = (plugin: typeof rectangle, schema: ShapeSchema) => {
   const page = createPage();
 
   plugin.pdf({
-    value: '',
+    value: "",
     schema,
     basePdf: BLANK_PDF,
     pdfLib,
@@ -83,17 +83,17 @@ const expectedRectangleDraw = (schema: ShapeSchema) => {
     y: y + half * (Math.sin(theta) + Math.cos(theta)),
     width: boxWidth - borderWidth,
     height: boxHeight - borderWidth,
-    rotate: { type: 'degrees', angle: rotateDegrees },
+    rotate: { type: "degrees", angle: rotateDegrees },
     borderWidth,
   };
 };
 
-describe('rectangle.pdf border inset', () => {
+describe("rectangle.pdf border inset", () => {
   const angles = [0, 30, 45, 90, 180] as const;
   const borderWidths = [0, 1, 10, 25] as const;
 
   it.each(angles.flatMap((rotate) => borderWidths.map((borderWidth) => ({ rotate, borderWidth }))))(
-    'insets the stroke path in the local frame at rotate=$rotate borderWidth=$borderWidth',
+    "insets the stroke path in the local frame at rotate=$rotate borderWidth=$borderWidth",
     ({ rotate, borderWidth }) => {
       const schema = getRectangleSchema({ rotate, borderWidth });
       const page = renderPdf(rectangle, schema);
@@ -116,7 +116,7 @@ describe('rectangle.pdf border inset', () => {
     },
   );
 
-  it('reduces to an unrotated +borderWidth/2 offset at rotate 0', () => {
+  it("reduces to an unrotated +borderWidth/2 offset at rotate 0", () => {
     const schema = getRectangleSchema({ rotate: 0, borderWidth: 10 });
     const page = renderPdf(rectangle, schema);
     const drawn = page.drawRectangle.mock.calls[0][0] as { x: number; y: number };
@@ -128,7 +128,7 @@ describe('rectangle.pdf border inset', () => {
     expect(drawn.y).toBeCloseTo(y + borderWidth / 2, 8);
   });
 
-  it('stays on-page at rotate 90 instead of using a diverging tan offset', () => {
+  it("stays on-page at rotate 90 instead of using a diverging tan offset", () => {
     const schema = getRectangleSchema({ rotate: 90, borderWidth: 10 });
     const page = renderPdf(rectangle, schema);
     const drawn = page.drawRectangle.mock.calls[0][0] as { x: number; y: number };
@@ -139,12 +139,12 @@ describe('rectangle.pdf border inset', () => {
     expect(Math.abs(drawn.y)).toBeLessThan(PAGE_HEIGHT);
   });
 
-  it('does not offset a fill-only rectangle', () => {
+  it("does not offset a fill-only rectangle", () => {
     const schema = getRectangleSchema({
       rotate: 45,
       borderWidth: 0,
-      borderColor: '',
-      color: '#ff0000',
+      borderColor: "",
+      color: "#ff0000",
     });
     const page = renderPdf(rectangle, schema);
     const expected = expectedRectangleDraw(schema);
@@ -155,17 +155,17 @@ describe('rectangle.pdf border inset', () => {
     expect(drawn.width).toBeCloseTo(mm2pt(schema.width), 8);
   });
 
-  it('forwards radius when a rotated rounded rectangle is drawn', () => {
+  it("forwards radius when a rotated rounded rectangle is drawn", () => {
     const schema = getRectangleSchema({ rotate: 45, radius: 8, borderWidth: 10 });
     const page = renderPdf(rectangle, schema);
 
     expect(page.drawRectangle).toHaveBeenCalledWith(expect.objectContaining({ radius: mm2pt(8) }));
   });
 
-  it('does not draw when neither fill nor border color is set', () => {
+  it("does not draw when neither fill nor border color is set", () => {
     const page = renderPdf(
       rectangle,
-      getRectangleSchema({ color: '', borderColor: '', rotate: 45 }),
+      getRectangleSchema({ color: "", borderColor: "", rotate: 45 }),
     );
 
     expect(page.drawRectangle).not.toHaveBeenCalled();
@@ -173,8 +173,8 @@ describe('rectangle.pdf border inset', () => {
   });
 });
 
-describe('ellipse.pdf is unchanged by the rectangle inset', () => {
-  it.each([0, 45, 90])('draws a center-anchored ellipse at rotate=%s', (rotate) => {
+describe("ellipse.pdf is unchanged by the rectangle inset", () => {
+  it.each([0, 45, 90])("draws a center-anchored ellipse at rotate=%s", (rotate) => {
     const schema = getEllipseSchema({ rotate, borderWidth: 10 });
     const page = renderPdf(ellipse, schema);
     const width = mm2pt(schema.width);
@@ -191,7 +191,7 @@ describe('ellipse.pdf is unchanged by the rectangle inset', () => {
         y: y + height / 2,
         xScale: width / 2 - borderWidth / 2,
         yScale: height / 2 - borderWidth / 2,
-        rotate: { type: 'degrees', angle: schema.rotate ? -schema.rotate : 0 },
+        rotate: { type: "degrees", angle: schema.rotate ? -schema.rotate : 0 },
         borderWidth,
       }),
     );
