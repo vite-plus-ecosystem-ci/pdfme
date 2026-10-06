@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from "vite-plus/test";
 import {
   BUILT_IN_DYNAMIC_LAYOUT_SPLIT_UNITS,
   LIST_ITEM_SPLIT_UNIT,
@@ -10,20 +10,20 @@ import {
   getListItemRange,
   getTableBodyRange,
   getTextLineRange,
-} from '../src/splitRange.js';
+} from "../src/splitRange.js";
 
 const getSchema = (__splitRange: ReturnType<typeof createTextLineSplitRange>) => ({
-  name: 'field',
-  type: 'text',
-  content: '',
+  name: "field",
+  type: "text",
+  content: "",
   position: { x: 0, y: 0 },
   width: 10,
   height: 10,
   __splitRange,
 });
 
-describe('schema split range helpers', () => {
-  test('exposes typed built-in split units', () => {
+describe("schema split range helpers", () => {
+  test("exposes typed built-in split units", () => {
     expect(BUILT_IN_DYNAMIC_LAYOUT_SPLIT_UNITS).toEqual({
       tableBody: TABLE_BODY_SPLIT_UNIT,
       listItem: LIST_ITEM_SPLIT_UNIT,
@@ -31,7 +31,7 @@ describe('schema split range helpers', () => {
     });
   });
 
-  test('creates split ranges with schema-specific units', () => {
+  test("creates split ranges with schema-specific units", () => {
     expect(createTableBodySplitRange(1, 3)).toEqual({
       unit: TABLE_BODY_SPLIT_UNIT,
       start: 1,
@@ -48,7 +48,7 @@ describe('schema split range helpers', () => {
     });
   });
 
-  test('reads only matching split range units', () => {
+  test("reads only matching split range units", () => {
     const tableSchema = getSchema(createTableBodySplitRange(1, 3));
     const listSchema = getSchema(createListItemSplitRange(2, 4));
     const textSchema = getSchema(createTextLineSplitRange(5, 8));

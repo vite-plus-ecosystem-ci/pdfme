@@ -1,11 +1,11 @@
-import { readFileSync } from 'node:fs';
-import { builtinModules } from 'node:module';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { readFileSync } from "node:fs";
+import { builtinModules } from "node:module";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite-plus";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const packageJson = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf8')) as {
+const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8")) as {
   dependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
 };
@@ -20,7 +20,7 @@ const packageDependencies = [
 ];
 
 const isExternal = (id: string) => {
-  if (id.startsWith('air-datepicker/locale/')) {
+  if (id.startsWith("air-datepicker/locale/")) {
     return false;
   }
 
@@ -34,22 +34,22 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        builtins: resolve(__dirname, 'src/builtins.ts'),
-        dynamicLayout: resolve(__dirname, 'src/dynamicLayout.ts'),
-        index: resolve(__dirname, 'src/index.ts'),
-        lists: resolve(__dirname, 'src/lists.ts'),
-        tables: resolve(__dirname, 'src/tables.ts'),
-        texts: resolve(__dirname, 'src/texts.ts'),
-        types: resolve(__dirname, 'src/types.ts'),
-        utils: resolve(__dirname, 'src/utils.ts'),
+        builtins: resolve(__dirname, "src/builtins.ts"),
+        dynamicLayout: resolve(__dirname, "src/dynamicLayout.ts"),
+        index: resolve(__dirname, "src/index.ts"),
+        lists: resolve(__dirname, "src/lists.ts"),
+        tables: resolve(__dirname, "src/tables.ts"),
+        texts: resolve(__dirname, "src/texts.ts"),
+        types: resolve(__dirname, "src/types.ts"),
+        utils: resolve(__dirname, "src/utils.ts"),
       },
       fileName: (_, entryName) => `${entryName}.js`,
-      formats: ['es'],
+      formats: ["es"],
     },
     minify: false,
-    outDir: 'dist',
+    outDir: "dist",
     rollupOptions: { external: isExternal },
     sourcemap: true,
-    target: 'es2020',
+    target: "es2020",
   },
 });

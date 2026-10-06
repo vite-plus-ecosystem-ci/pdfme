@@ -1,9 +1,12 @@
-import { TextDecoder, TextEncoder } from 'node:util';
-import { cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom/vitest';
-import { afterEach, vi } from 'vitest';
+import { TextDecoder, TextEncoder } from "node:util";
+import { cleanup } from "@testing-library/react";
+import "@testing-library/jest-dom/vitest";
+import { afterEach, vi } from "vite-plus/test";
 
-if (typeof globalThis.TextDecoder === 'undefined' || typeof globalThis.TextEncoder === 'undefined') {
+if (
+  typeof globalThis.TextDecoder === "undefined" ||
+  typeof globalThis.TextEncoder === "undefined"
+) {
   Object.assign(globalThis, { TextDecoder, TextEncoder });
 }
 
@@ -12,12 +15,12 @@ const createCanvasContext2D = () => {
 
   return {
     canvas: undefined,
-    fillStyle: '#000000',
-    strokeStyle: '#000000',
+    fillStyle: "#000000",
+    strokeStyle: "#000000",
     lineWidth: 1,
-    font: '10px sans-serif',
-    textAlign: 'left',
-    textBaseline: 'alphabetic',
+    font: "10px sans-serif",
+    textAlign: "left",
+    textBaseline: "alphabetic",
     beginPath: noop,
     clearRect: noop,
     fill: noop,
@@ -36,7 +39,7 @@ const createCanvasContext2D = () => {
   };
 };
 
-Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+Object.defineProperty(HTMLCanvasElement.prototype, "getContext", {
   configurable: true,
   value: vi.fn(() => createCanvasContext2D()),
 });

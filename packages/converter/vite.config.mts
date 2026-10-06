@@ -1,11 +1,11 @@
-import { readFileSync } from 'node:fs';
-import { builtinModules } from 'node:module';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { readFileSync } from "node:fs";
+import { builtinModules } from "node:module";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite-plus";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const packageJson = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf8')) as {
+const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8")) as {
   dependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
 };
@@ -25,22 +25,22 @@ const isExternal = (id: string) =>
 
 export default defineConfig(() => {
   return {
-    base: './',
+    base: "./",
     build: {
       lib: {
         entry: {
-          index: resolve(__dirname, 'src/index.browser.ts'),
-          'index.node': resolve(__dirname, 'src/index.node.ts'),
-          md2pdf: resolve(__dirname, 'src/md2pdf.ts'),
+          index: resolve(__dirname, "src/index.browser.ts"),
+          "index.node": resolve(__dirname, "src/index.node.ts"),
+          md2pdf: resolve(__dirname, "src/md2pdf.ts"),
         },
         fileName: (_, entryName) => `${entryName}.js`,
-        formats: ['es'],
+        formats: ["es"],
       },
       minify: false,
-      outDir: 'dist',
+      outDir: "dist",
       rollupOptions: { external: isExternal },
       sourcemap: true,
-      target: 'es2020',
+      target: "es2020",
     },
   };
 });
