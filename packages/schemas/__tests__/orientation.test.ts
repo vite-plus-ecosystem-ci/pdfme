@@ -1,11 +1,11 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PDFDocument } from '@pdfme/pdf-lib';
-import * as pdfLib from '@pdfme/pdf-lib';
-import { BLANK_PDF, mm2pt, type Schema, type PDFRenderProps } from '@pdfme/common';
-import jpeg from 'jpeg-js';
-import UPNG from '@pdf-lib/upng';
-import { Buffer } from 'buffer';
-import { image } from '../src/index.js';
+import { afterEach, describe, expect, it, vi } from "vite-plus/test";
+import { PDFDocument } from "@pdfme/pdf-lib";
+import * as pdfLib from "@pdfme/pdf-lib";
+import { BLANK_PDF, mm2pt, type Schema, type PDFRenderProps } from "@pdfme/common";
+import jpeg from "jpeg-js";
+import UPNG from "@pdf-lib/upng";
+import { Buffer } from "buffer";
+import { image } from "../src/index.js";
 import {
   detectImageFormat,
   getJpegOrientation,
@@ -13,7 +13,7 @@ import {
   normalizeImageOrientation,
   parseTiffOrientation,
   transformRgba,
-} from '../src/graphics/orientation.js';
+} from "../src/graphics/orientation.js";
 
 const ORIENTATIONS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 const BYTE_ORDERS = [true, false] as const;
@@ -141,14 +141,14 @@ const pngWithOrientation = (
   orientation: number,
   littleEndian = true,
 ): Uint8Array =>
-  insertPngChunkBefore(pngBytes, buildExifChunk(buildTiff(orientation, littleEndian)), 'IDAT');
+  insertPngChunkBefore(pngBytes, buildExifChunk(buildTiff(orientation, littleEndian)), "IDAT");
 
 const pngWithOrientationAfterIdat = (
   pngBytes: Uint8Array,
   orientation: number,
   littleEndian = true,
 ): Uint8Array =>
-  insertPngChunkBefore(pngBytes, buildExifChunk(buildTiff(orientation, littleEndian)), 'IEND');
+  insertPngChunkBefore(pngBytes, buildExifChunk(buildTiff(orientation, littleEndian)), "IEND");
 
 const makePatternRgba = (): Uint8Array => {
   const data = new Uint8Array(PATTERN_WIDTH * PATTERN_HEIGHT * 4);
@@ -179,16 +179,16 @@ const encodePngPattern = (): Uint8Array =>
       | Uint8Array,
   );
 
-const toDataUrl = (mime: 'image/jpeg' | 'image/png', bytes: Uint8Array): string =>
-  `data:${mime};base64,${Buffer.from(bytes).toString('base64')}`;
+const toDataUrl = (mime: "image/jpeg" | "image/png", bytes: Uint8Array): string =>
+  `data:${mime};base64,${Buffer.from(bytes).toString("base64")}`;
 
 const renderImage = async (value: string, box = { width: 40, height: 20 }) => {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage();
   const _cache = new Map<string | number, unknown>();
   const schema = {
-    name: 'pic',
-    type: 'image',
+    name: "pic",
+    type: "image",
     content: value,
     position: { x: 0, y: 0 },
     width: box.width,
@@ -206,13 +206,13 @@ const renderImage = async (value: string, box = { width: 40, height: 20 }) => {
     options: {},
     _cache,
   } as unknown as PDFRenderProps<Schema>;
-  const drawImage = vi.spyOn(page, 'drawImage');
+  const drawImage = vi.spyOn(page, "drawImage");
   await image.pdf(arg);
   return { arg, page, _cache, drawImage };
 };
 
-describe('orientation parser', () => {
-  it('reads IFD0 tag 0x0112 for orientations 1–8 in both TIFF byte orders', () => {
+describe("orientation parser", () => {
+  it("reads IFD0 tag 0x0112 for orientations 1–8 in both TIFF byte orders", () => {
     for (const orientation of ORIENTATIONS) {
       for (const littleEndian of BYTE_ORDERS) {
         expect(parseTiffOrientation(buildTiff(orientation, littleEndian))).toBe(orientation);
@@ -220,7 +220,7 @@ describe('orientation parser', () => {
     }
   });
 
-  it('reads JPEG APP1 Exif and PNG eXIf for orientations 1–8 × both byte orders', () => {
+  it("reads JPEG APP1 Exif and PNG eXIf for orientations 1–8 × both byte orders", () => {
     const jpegBytes = encodeJpegPattern();
     const pngBytes = encodePngPattern();
     for (const orientation of ORIENTATIONS) {
@@ -235,7 +235,7 @@ describe('orientation parser', () => {
     }
   });
 
-  it('skips an XMP APP1 and still finds a later Exif APP1', () => {
+  it("skips an XMP APP1 and still finds a later Exif APP1", () => {
     const xmp = new Uint8Array([0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f]); // http://
     const jpegBytes = insertJpegSegments(encodeJpegPattern(), [
       jpegApp1(xmp),
@@ -244,7 +244,7 @@ describe('orientation parser', () => {
     expect(getJpegOrientation(jpegBytes)).toBe(6);
   });
 
-  it('skips 0xFF fill bytes and standalone RST markers before Exif APP1', () => {
+  it("skips 0xFF fill bytes and standalone RST markers before Exif APP1", () => {
     const fillAndRst = new Uint8Array([0xff, 0xff, 0xff, 0xd0]);
     const jpegBytes = insertJpegSegments(encodeJpegPattern(), [
       fillAndRst,
@@ -253,7 +253,7 @@ describe('orientation parser', () => {
     expect(getJpegOrientation(jpegBytes)).toBe(6);
   });
 
-  it('keeps scanning after an Exif APP1 with no valid Orientation', () => {
+  it("keeps scanning after an Exif APP1 with no valid Orientation", () => {
     const jpegBytes = insertJpegSegments(encodeJpegPattern(), [
       jpegApp1(exifPayload(0, true)),
       jpegApp1(exifPayload(6, true)),
@@ -261,11 +261,11 @@ describe('orientation parser', () => {
     expect(getJpegOrientation(jpegBytes)).toBe(6);
   });
 
-  it('reads a PNG eXIf chunk that appears after IDAT', () => {
+  it("reads a PNG eXIf chunk that appears after IDAT", () => {
     expect(getPngOrientation(pngWithOrientationAfterIdat(encodePngPattern(), 6))).toBe(6);
   });
 
-  it('returns undefined for missing, truncated, or out-of-range tags', () => {
+  it("returns undefined for missing, truncated, or out-of-range tags", () => {
     expect(getJpegOrientation(encodeJpegPattern())).toBeUndefined();
     expect(getPngOrientation(encodePngPattern())).toBeUndefined();
     expect(parseTiffOrientation(buildTiff(0, true))).toBeUndefined();
@@ -279,14 +279,14 @@ describe('orientation parser', () => {
     expect(getJpegOrientation(garbage)).toBeUndefined();
   });
 
-  it('detects JPEG/PNG by magic bytes', () => {
-    expect(detectImageFormat(encodeJpegPattern())).toBe('jpeg');
-    expect(detectImageFormat(encodePngPattern())).toBe('png');
-    expect(detectImageFormat(new Uint8Array([0x00, 0x01, 0x02]))).toBe('other');
+  it("detects JPEG/PNG by magic bytes", () => {
+    expect(detectImageFormat(encodeJpegPattern())).toBe("jpeg");
+    expect(detectImageFormat(encodePngPattern())).toBe("png");
+    expect(detectImageFormat(new Uint8Array([0x00, 0x01, 0x02]))).toBe("other");
   });
 });
 
-describe('orientation transform', () => {
+describe("orientation transform", () => {
   const src = makePatternRgba();
 
   it.each([
@@ -333,7 +333,7 @@ describe('orientation transform', () => {
       corners: { tl: [3, 0], tr: [3, 1], bl: [0, 0], br: [0, 1] },
     },
   ])(
-    'maps corners exactly for orientation $orientation',
+    "maps corners exactly for orientation $orientation",
     ({ orientation, width, height, corners }) => {
       const result = transformRgba(src, PATTERN_WIDTH, PATTERN_HEIGHT, orientation);
       expect(result.width).toBe(width);
@@ -354,8 +354,8 @@ describe('orientation transform', () => {
   );
 });
 
-describe('orientation bake', () => {
-  it('is a byte-identical passthrough when the tag is absent or 1', () => {
+describe("orientation bake", () => {
+  it("is a byte-identical passthrough when the tag is absent or 1", () => {
     const jpegBytes = encodeJpegPattern();
     const pngBytes = encodePngPattern();
     expect(normalizeImageOrientation(jpegBytes)).toBe(jpegBytes);
@@ -367,7 +367,7 @@ describe('orientation bake', () => {
     expect(normalizeImageOrientation(pngTag1)).toBe(pngTag1);
   });
 
-  it('re-encodes orientations 2–8 without a tag and swaps dims for 5–8', () => {
+  it("re-encodes orientations 2–8 without a tag and swaps dims for 5–8", () => {
     const jpegBytes = encodeJpegPattern();
     const pngBytes = encodePngPattern();
     for (const orientation of [2, 3, 4, 5, 6, 7, 8] as const) {
@@ -390,19 +390,19 @@ describe('orientation bake', () => {
     }
   });
 
-  it('throws when a tagged JPEG body cannot be decoded so callers can fall back', () => {
+  it("throws when a tagged JPEG body cannot be decoded so callers can fall back", () => {
     const tagged = jpegWithOrientation(new Uint8Array([0xff, 0xd8, 0xff, 0xd9]), 6);
     expect(() => normalizeImageOrientation(tagged)).toThrow();
   });
 });
 
-describe('image.pdf() orientation integration', () => {
+describe("image.pdf() orientation integration", () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('uses baked (swapped) dims for an orientation-6 JPEG and is cache-stable', async () => {
-    const value = toDataUrl('image/jpeg', jpegWithOrientation(encodeJpegPattern(), 6));
+  it("uses baked (swapped) dims for an orientation-6 JPEG and is cache-stable", async () => {
+    const value = toDataUrl("image/jpeg", jpegWithOrientation(encodeJpegPattern(), 6));
     const first = await renderImage(value);
     expect(first.drawImage).toHaveBeenCalledTimes(1);
 
@@ -425,16 +425,16 @@ describe('image.pdf() orientation integration', () => {
     expect(secondArgs.height).toBeCloseTo(drawArgs.height);
   });
 
-  it('uses baked (swapped) dims for an orientation-6 PNG', async () => {
-    const value = toDataUrl('image/png', pngWithOrientation(encodePngPattern(), 6));
+  it("uses baked (swapped) dims for an orientation-6 PNG", async () => {
+    const value = toDataUrl("image/png", pngWithOrientation(encodePngPattern(), 6));
     const { drawImage } = await renderImage(value);
     const drawArgs = drawImage.mock.calls[0][1] as { width: number; height: number };
     expect(drawArgs.width).toBeCloseTo(mm2pt(10));
     expect(drawArgs.height).toBeCloseTo(mm2pt(20));
   });
 
-  it('warns and embeds original bytes when the bake throws', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+  it("warns and embeds original bytes when the bake throws", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     // SOI + Exif APP1 + SOF0 (so pdf-lib can embed) + EOI. jpeg-js cannot decode
     // this — there is no scan data — so the bake throws and we fall back.
     const app1 = jpegApp1(exifPayload(6, true));
@@ -452,11 +452,11 @@ describe('image.pdf() orientation integration', () => {
 
     expect(() => normalizeImageOrientation(tagged)).toThrow();
 
-    const value = toDataUrl('image/jpeg', tagged);
+    const value = toDataUrl("image/jpeg", tagged);
     const { drawImage, _cache } = await renderImage(value);
     expect(drawImage).toHaveBeenCalledTimes(1);
     expect(warn).toHaveBeenCalled();
-    expect(String(warn.mock.calls[0][0])).toContain('EXIF orientation bake failed');
+    expect(String(warn.mock.calls[0][0])).toContain("EXIF orientation bake failed");
     const cached = [..._cache.values()][0] as { width: number; height: number };
     expect(cached.width).toBe(PATTERN_WIDTH);
     expect(cached.height).toBe(PATTERN_HEIGHT);

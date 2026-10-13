@@ -1,17 +1,17 @@
-import { describe, it, expect, vi } from 'vitest';
-import { PDFDocument } from '@pdfme/pdf-lib';
-import * as pdfLib from '@pdfme/pdf-lib';
-import { BLANK_PDF, type Schema, type PDFRenderProps } from '@pdfme/common';
-import { image } from '../src/index.js';
-import { getImageFitLayout, type ImageSchema } from '../src/graphics/image.js';
+import { describe, it, expect, vi } from "vite-plus/test";
+import { PDFDocument } from "@pdfme/pdf-lib";
+import * as pdfLib from "@pdfme/pdf-lib";
+import { BLANK_PDF, type Schema, type PDFRenderProps } from "@pdfme/common";
+import { image } from "../src/index.js";
+import { getImageFitLayout, type ImageSchema } from "../src/graphics/image.js";
 
 const minimalPng =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1J' +
-  'REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=';
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1J" +
+  "REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=";
 
 const getPropPanelSchema = (activeSchema: ImageSchema) => {
-  if (typeof image.propPanel.schema !== 'function') {
-    throw new Error('Expected image propPanel.schema to be a function');
+  if (typeof image.propPanel.schema !== "function") {
+    throw new Error("Expected image propPanel.schema to be a function");
   }
 
   return image.propPanel.schema({
@@ -20,8 +20,8 @@ const getPropPanelSchema = (activeSchema: ImageSchema) => {
   } as never);
 };
 
-describe('image plugin memory-safety', () => {
-  it('does not pin the full base64 input as a cache key', async () => {
+describe("image plugin memory-safety", () => {
+  it("does not pin the full base64 input as a cache key", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
     const _cache = new Map<string | number, unknown>();
@@ -30,8 +30,8 @@ describe('image plugin memory-safety', () => {
     // embedPng to succeed so the render path reaches the cache; the
     // cache key is derived from `value` regardless of image size.
     const schema = {
-      name: 'pic',
-      type: 'image',
+      name: "pic",
+      type: "image",
       content: minimalPng,
       position: { x: 0, y: 0 },
       width: 50,
@@ -63,32 +63,32 @@ describe('image plugin memory-safety', () => {
     expect(keys[0].length).toBeLessThan(100);
     // Schema type must still be part of the key so different plugins
     // can't collide on the same shared cache Map.
-    expect(keys[0].startsWith('image')).toBe(true);
+    expect(keys[0].startsWith("image")).toBe(true);
     // Same input hitting the cache a second time must be a cache hit, not
     // a new entry — proves the fingerprint is deterministic.
     await image.pdf(arg);
     expect([...(_cache.keys() as Iterable<string>)].length).toBe(1);
   });
 
-  it('distinguishes different images via the fingerprint', async () => {
+  it("distinguishes different images via the fingerprint", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
     const _cache = new Map<string | number, unknown>();
 
     const pngA =
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1J' +
-      'REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=';
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1J" +
+      "REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=";
     // Same size/header/trailer shape as pngA but different middle bytes —
     // the fingerprint must still distinguish them. Because the key is a
     // hash over every byte, any differing byte flips the hash with
     // overwhelming probability.
     const pngB =
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAD8S7TTAAAAAXNSR0IArs4c6QAAAA1J' +
-      'REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=';
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAD8S7TTAAAAAXNSR0IArs4c6QAAAA1J" +
+      "REFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=";
 
     const base = {
-      name: 'pic',
-      type: 'image',
+      name: "pic",
+      type: "image",
       position: { x: 0, y: 0 },
       width: 50,
       height: 50,
@@ -115,8 +115,8 @@ describe('image plugin memory-safety', () => {
   });
 });
 
-describe('image fit and position', () => {
-  it('defaults missing fit fields to contain centered placement', () => {
+describe("image fit and position", () => {
+  it("defaults missing fit fields to contain centered placement", () => {
     expect(
       getImageFitLayout({
         sourceWidth: 200,
@@ -125,8 +125,8 @@ describe('image fit and position', () => {
         boxHeight: 100,
       }),
     ).toMatchObject({
-      objectFit: 'contain',
-      objectPosition: 'center center',
+      objectFit: "contain",
+      objectPosition: "center center",
       width: 100,
       height: 50,
       offsetX: 0,
@@ -134,15 +134,15 @@ describe('image fit and position', () => {
     });
   });
 
-  it('aligns contained images within the leftover space', () => {
+  it("aligns contained images within the leftover space", () => {
     expect(
       getImageFitLayout({
         sourceWidth: 200,
         sourceHeight: 100,
         boxWidth: 100,
         boxHeight: 100,
-        objectFit: 'contain',
-        objectPosition: 'left top',
+        objectFit: "contain",
+        objectPosition: "left top",
       }),
     ).toMatchObject({ offsetX: 0, offsetY: 0 });
 
@@ -152,8 +152,8 @@ describe('image fit and position', () => {
         sourceHeight: 100,
         boxWidth: 100,
         boxHeight: 100,
-        objectFit: 'contain',
-        objectPosition: 'right bottom',
+        objectFit: "contain",
+        objectPosition: "right bottom",
       }),
     ).toMatchObject({ offsetX: 0, offsetY: 50 });
 
@@ -163,25 +163,25 @@ describe('image fit and position', () => {
         sourceHeight: 200,
         boxWidth: 100,
         boxHeight: 100,
-        objectFit: 'contain',
-        objectPosition: 'right bottom',
+        objectFit: "contain",
+        objectPosition: "right bottom",
       }),
     ).toMatchObject({ offsetX: 50, offsetY: 0 });
   });
 
-  it('cover center-crops and ignores stored objectPosition', () => {
+  it("cover center-crops and ignores stored objectPosition", () => {
     expect(
       getImageFitLayout({
         sourceWidth: 200,
         sourceHeight: 100,
         boxWidth: 100,
         boxHeight: 100,
-        objectFit: 'cover',
-        objectPosition: 'left top',
+        objectFit: "cover",
+        objectPosition: "left top",
       }),
     ).toMatchObject({
-      objectFit: 'cover',
-      objectPosition: 'center center',
+      objectFit: "cover",
+      objectPosition: "center center",
       width: 200,
       height: 100,
       offsetX: -50,
@@ -189,43 +189,43 @@ describe('image fit and position', () => {
     });
   });
 
-  it('hides objectPosition in the prop panel only for cover', () => {
+  it("hides objectPosition in the prop panel only for cover", () => {
     const containSchema = getPropPanelSchema({
-      name: 'pic',
-      type: 'image',
+      name: "pic",
+      type: "image",
       position: { x: 0, y: 0 },
       width: 40,
       height: 40,
-      objectFit: 'contain',
+      objectFit: "contain",
     });
     expect(containSchema.objectPosition.hidden).toBe(false);
 
     const coverSchema = getPropPanelSchema({
-      name: 'pic',
-      type: 'image',
+      name: "pic",
+      type: "image",
       position: { x: 0, y: 0 },
       width: 40,
       height: 40,
-      objectFit: 'cover',
-      objectPosition: 'right bottom',
+      objectFit: "cover",
+      objectPosition: "right bottom",
     });
     expect(coverSchema.objectPosition.hidden).toBe(true);
   });
 
-  it('clips PDF rendering for cover images', async () => {
+  it("clips PDF rendering for cover images", async () => {
     const embedPng = vi.fn(async () => ({ width: 200, height: 100 }));
     const drawImage = vi.fn();
     const pushOperators = vi.fn();
     const schema = {
-      name: 'pic',
-      type: 'image',
+      name: "pic",
+      type: "image",
       content: minimalPng,
       position: { x: 0, y: 0 },
       width: 40,
       height: 40,
       rotate: 30,
-      objectFit: 'cover',
-      objectPosition: 'left top',
+      objectFit: "cover",
+      objectPosition: "left top",
     } as ImageSchema;
 
     await image.pdf({
