@@ -21,3 +21,4 @@ coverage/
 
 # Playground verification screenshots, logs, and Chrome profile.
 /tmp/verify-playground/
+.vitest/
