@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
-import { theme as antdTheme } from 'antd';
-import type { ThemeConfig } from 'antd';
-import { defaultTheme, resolveTheme } from '../src/theme';
+import { describe, expect, it } from "vite-plus/test";
+import { theme as antdTheme } from "antd";
+import type { ThemeConfig } from "antd";
+import { defaultTheme, resolveTheme } from "../src/theme";
 
 type Rgba = [number, number, number, number];
 
@@ -13,12 +13,12 @@ const rgba = (color: string): Rgba => {
   }
   const match = /rgba?\(([^)]+)\)/.exec(color);
   if (!match) throw new Error(`Unsupported color: ${color}`);
-  const [r, g, b, a = 1] = match[1].split(',').map(Number);
+  const [r, g, b, a = 1] = match[1].split(",").map(Number);
   return [r, g, b, a];
 };
 
 /** Paints `color` over `background` (itself painted over white), as the browser does. */
-const paint = (color: string, background = '#ffffff'): Rgba => {
+const paint = (color: string, background = "#ffffff"): Rgba => {
   const [r, g, b, a] = rgba(color);
   const bg = rgba(background);
   const base: Rgba = bg[3] < 1 ? paint(background) : bg;
@@ -41,15 +41,15 @@ const contrast = (foreground: string, background: string) => {
 };
 
 const darkTheme: ThemeConfig = {
-  token: { colorPrimary: '#9ED3A3', colorBgBase: '#232422', colorTextBase: '#E3E2DF' },
+  token: { colorPrimary: "#9ED3A3", colorBgBase: "#232422", colorTextBase: "#E3E2DF" },
 };
 
-describe('resolveTheme', () => {
+describe("resolveTheme", () => {
   it.each([
-    ['default theme', defaultTheme],
-    ['dark colorBgBase', darkTheme],
-    ['dark algorithm', { algorithm: antdTheme.darkAlgorithm }],
-  ])('keeps placeholders and control borders at WCAG AA contrast (%s)', (_, input) => {
+    ["default theme", defaultTheme],
+    ["dark colorBgBase", darkTheme],
+    ["dark algorithm", { algorithm: antdTheme.darkAlgorithm }],
+  ])("keeps placeholders and control borders at WCAG AA contrast (%s)", (_, input) => {
     const token = antdTheme.getDesignToken(resolveTheme(input));
 
     expect(contrast(token.colorTextPlaceholder, token.colorBgContainer)).toBeGreaterThanOrEqual(
@@ -59,25 +59,25 @@ describe('resolveTheme', () => {
     expect(contrast(token.colorBorder, token.colorBgLayout)).toBeGreaterThanOrEqual(3);
   });
 
-  it('uses the dark algorithm for a dark colorBgBase without an algorithm', () => {
+  it("uses the dark algorithm for a dark colorBgBase without an algorithm", () => {
     expect(resolveTheme(darkTheme).algorithm).toBe(antdTheme.darkAlgorithm);
     expect(resolveTheme(defaultTheme).algorithm).toBeUndefined();
   });
 
-  it('keeps values set by the host', () => {
+  it("keeps values set by the host", () => {
     const resolved = resolveTheme({
       algorithm: antdTheme.defaultAlgorithm,
-      token: { ...darkTheme.token, colorBorder: '#111111', colorTextPlaceholder: '#222222' },
+      token: { ...darkTheme.token, colorBorder: "#111111", colorTextPlaceholder: "#222222" },
     });
 
     expect(resolved.algorithm).toBe(antdTheme.defaultAlgorithm);
     expect(resolved.token).toMatchObject({
-      colorBorder: '#111111',
-      colorTextPlaceholder: '#222222',
+      colorBorder: "#111111",
+      colorTextPlaceholder: "#222222",
     });
   });
 
-  it('does not mutate the input theme', () => {
+  it("does not mutate the input theme", () => {
     const input: ThemeConfig = { token: { ...darkTheme.token } };
     resolveTheme(input);
     expect(input).toEqual({ token: { ...darkTheme.token } });
