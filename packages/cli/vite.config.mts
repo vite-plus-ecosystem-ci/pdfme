@@ -1,11 +1,11 @@
-import { readFileSync } from 'node:fs';
-import { builtinModules } from 'node:module';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { readFileSync } from "node:fs";
+import { builtinModules } from "node:module";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite-plus";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const packageJson = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf8')) as {
+const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8")) as {
   version?: string;
   dependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
@@ -21,7 +21,7 @@ const packageDependencies = [
 ];
 
 // Also externalize transitive native deps that must not be bundled
-const alwaysExternal = ['@napi-rs/canvas', 'clawpdf', 'fontkit', '@pdfme/pdf-lib'];
+const alwaysExternal = ["@napi-rs/canvas", "clawpdf", "fontkit", "@pdfme/pdf-lib"];
 
 const isExternal = (id: string) =>
   builtinModuleSet.has(id) ||
@@ -30,23 +30,23 @@ const isExternal = (id: string) =>
 
 export default defineConfig({
   define: {
-    __CLI_VERSION__: JSON.stringify(packageJson.version ?? '0.0.0'),
+    __CLI_VERSION__: JSON.stringify(packageJson.version ?? "0.0.0"),
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      fileName: 'index',
-      formats: ['es'],
+      entry: resolve(__dirname, "src/index.ts"),
+      fileName: "index",
+      formats: ["es"],
     },
     minify: false,
-    outDir: 'dist',
+    outDir: "dist",
     rollupOptions: {
       external: isExternal,
       output: {
-        banner: '#!/usr/bin/env node',
+        banner: "#!/usr/bin/env node",
       },
     },
     sourcemap: true,
-    target: 'node20',
+    target: "node20",
   },
 });
